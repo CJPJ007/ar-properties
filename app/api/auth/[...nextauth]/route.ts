@@ -55,6 +55,38 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Handle Google sign-in success
+      if (account?.provider === 'google' && user.email) {
+        try {
+          // Call backend API to create/update customer
+          const response = await fetch(`${process.env.BACKEND_URL}/api/public/customer`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: user.name || '',
+              email: user.email,
+              mobile: null, // Google doesn't provide mobile
+              avatar: user.image || null,
+            }),
+          });
+
+          if (!response.ok) {
+            console.warn(`Failed to create/update customer for ${user.email}: ${response.status}`);
+            // Continue with sign-in even if customer creation fails
+          } else {
+            console.log(`Successfully created/updated customer for ${user.email}`);
+          }
+        } catch (error) {
+          console.error('Error creating/updating customer:', error);
+          // Continue with sign-in even if API call fails
+        }
+      }
+      
+      return true; // Allow sign-in to proceed
+    },
     async jwt({ token, user, trigger }) {
       if (user) {
         token.mobile = user.mobile
