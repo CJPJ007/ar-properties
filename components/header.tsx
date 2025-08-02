@@ -1,21 +1,77 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useCompanyDetails } from "@/hooks/use-company-details"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { useSession, signIn, signOut } from "next-auth/react"
+import { useEffect, useState } from "react"
+import Image from "next/image"
 
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Properties", href: "/properties" },
+  { name: "Blog", href: "/blogs" },
   { name: "About", href: "/about" },
   { name: "Services", href: "/services" },
   { name: "Gallery", href: "/gallery" },
   { name: "Contact", href: "/contact" },
 ]
 
+type CompanyDetails = {
+  id: number;
+  companyName: string;
+  tagline: string | null;
+  aboutDescription: string | null;
+  primaryEmail: string;
+  primaryPhone: string;
+  secondaryPhone: string | null;
+  whatsappNumber: string | null;
+  streetAddress: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  businessHoursWeekday: string | null;
+  businessHoursWeekend: string | null;
+  facebookUrl: string | null;
+  instagramUrl: string | null;
+  twitterUrl: string | null;
+  linkedinUrl: string | null;
+  youtubeUrl: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  establishedYear: number | null;
+  licenseNumber: string | null;
+  websiteUrl: string | null;
+  googleMapsUrl: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+};
+
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { data: session, status } = useSession()
+  const { company } = useCompanyDetails()
+
+  const handleGoogleLogin = () => {
+    if (session) {
+      signOut({ callbackUrl: '/' })
+    } else {
+      signIn('google', { callbackUrl: '/' })
+    }
+  }
+
+  const handleSignIn = () => {
+    if (session) {
+      signOut({ callbackUrl: '/' })
+    } else {
+      window.location.href = '/auth/login'
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +100,7 @@ export default function Header() {
                 "text-slate-800"
               }`}
             >
-              Ananta Realty
+              {company ? company.companyName : "Ananta Realty"}
             </Link>
           </motion.div>
 
@@ -63,6 +119,40 @@ export default function Header() {
                   </Link>
                 </motion.div>
               ))}
+              
+              {/* Google Login/Logout Button */}
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+                {session ? (
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href="/profile"
+                      className="text-sm text-slate-600 hover:text-blue-600 transition-colors"
+                    >
+                      <img src={session.user.image}
+                      width={20}
+                      height={20}
+                      className="rounded-full"/>
+                    </Link>
+                    <Button
+                      onClick={handleGoogleLogin}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2 border-red-200 hover:border-red-300 hover:bg-red-50"
+                    >
+                      <span className="text-sm font-medium text-red-600">Sign Out</span>
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={handleSignIn}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 border-slate-300 hover:border-blue-500 hover:bg-blue-50"
+                  >
+                    <span className="text-sm font-medium">Sign In</span>
+                  </Button>
+                )}
+              </motion.div>
             </div>
           </div>
         </div>

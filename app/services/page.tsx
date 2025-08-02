@@ -8,11 +8,12 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 import ChatBot from "@/components/chatbot"
 import { Slider } from "@/components/slider"
+import InquiryModal from "@/components/inquiry-modal"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" },
+  transition: { duration: 0.6, ease: "easeOut" as const },
 }
 
 const staggerContainer = {
@@ -148,12 +149,14 @@ export default function ServicesPage() {
               your goals.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
-              >
-                Schedule Consultation
-              </Button>
+              <InquiryModal
+                buttonText="Schedule Consultation"
+                buttonSize="lg"
+                buttonClassName="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                modalTitle="Schedule a Consultation"
+                modalDescription="Tell us about your real estate needs and we'll schedule a personalized consultation."
+                showAppointmentDate={true}
+              />
               <Button
                 size="lg"
                 variant="outline"
@@ -167,7 +170,7 @@ export default function ServicesPage() {
       </section>
 
       <Footer />
-      <ChatBot />
+      {/* <ChatBot /> */}
     </div>
   )
 }
@@ -195,16 +198,16 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
           </div>
         </div>
 
-        <CardContent className="p-6 flex flex-col h-full">
+        <CardContent className="flex-grow p-6 flex flex-col h-full">
           <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">
             {service.title}
           </h3>
-          <p className="text-slate-600 mb-4 flex-grow leading-relaxed">{service.description}</p>
+          <p className="text-slate-600 mb-4 leading-relaxed">{service.description}</p>
 
           <div className="mb-6">
             <h4 className="font-semibold text-slate-800 mb-2">Key Features:</h4>
             <ul className="space-y-1">
-              {service.features.map((feature, idx) => (
+              {service.features.map((feature: string, idx: number) => (
                 <li key={idx} className="text-sm text-slate-600 flex items-center">
                   <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2" />
                   {feature}
@@ -213,9 +216,7 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
             </ul>
           </div>
 
-          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105">
-            Learn More
-          </Button>
+          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105"></Button>
         </CardContent>
       </Card>
     </motion.div>

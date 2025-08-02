@@ -151,7 +151,7 @@ export default function GalleryPage() {
       </AnimatePresence>
 
       <Footer />
-      <ChatBot />
+      {/* <ChatBot /> */}
     </div>
   )
 }

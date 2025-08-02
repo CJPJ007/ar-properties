@@ -76,7 +76,7 @@ export default function HomePage() {
     try {
       const response = await fetch(`/api/properties/search?q=${encodeURIComponent(searchQuery)}`)
       const data = await response.json()
-      setSearchResults(data)
+      setSearchResults(data.data)
     } catch (error) {
       console.error("Error searching properties:", error)
     }
@@ -96,7 +96,7 @@ export default function HomePage() {
   }
 
   const openVideoModal = (videoLink: string) => {
-    setCurrentVideo(videoLink)
+    setCurrentVideo(videoLink.split("#VIDEO#")[0])
     setVideoModalOpen(true)
   }
 
@@ -180,20 +180,76 @@ export default function HomePage() {
           <AnimatePresence>
             {searchResults.length > 0 && (
               <motion.div
-                className="grid grid-cols-1 relative md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+                className="grid relative grid-cols-1 gap-6 max-w-6xl mx-auto my-10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
               >
-                {searchResults.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
+            <div className="max-h-[400px] overflow-y-auto border rounded-lg bg-white/80 shadow p-4 flex flex-col gap-4 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-blue-50">
+              {searchResults.map((property) => {
+                // Highlight search match in property title
+                const regex = new RegExp(`(${searchQuery})`, "ig");
+                const parts = property.title.split(regex);
+                const locationParts = property.location.split(regex);
+                const pinCodeParts = property.pinCode.toString().split(regex);
+                const typeParts = property.type.split(regex);
+                return (
+                  <div key={property.id} className="flex items-center justify-between gap-4 border-b last:border-b-0 py-2">
+                    <div className="flex gap-2 min-w-0 text-sm ">
+                      <span className="font-medium text-slate-800 truncate">
+                        Title : {parts.map((part, i) =>
+                          regex.test(part) ? (
+                            <mark key={i} className="bg-yellow-200 text-blue-900 rounded px-1">{part}</mark>
+                          ) : (
+                            <span key={i}>{part}</span>
+                          )
+                        )}
+                      </span>
+                      <span className="font-medium text-slate-800 truncate">
+                        Location : {locationParts.map((part, i) =>
+                          regex.test(part) ? (
+                            <mark key={i} className="bg-yellow-200 text-blue-900 rounded px-1">{part}</mark>
+                          ) : (
+                            <span key={i}>{part}</span>
+                          )
+                        )}
+                      </span>
+                      <span className="font-medium text-slate-800 truncate">
+                        Pincode : {pinCodeParts.map((part, i) =>
+                          regex.test(part) ? (
+                            <mark key={i} className="bg-yellow-200 text-blue-900 rounded px-1">{part}</mark>
+                          ) : (
+                            <span key={i}>{part}</span>
+                          )
+                        )}
+                      </span>
+                      <span className="font-medium text-slate-800 truncate">
+                        Type : {typeParts.map((part, i) =>
+                          regex.test(part) ? (
+                            <mark key={i} className="bg-yellow-200 text-blue-900 rounded px-1">{part}</mark>
+                          ) : (
+                            <span key={i}>{part}</span>
+                          )
+                        )}
+                      </span>
+                      <span className="text-amber-600 font-semibold">{property.price} INR</span>
+                    </div>
+                    <Link href={`/properties/${property.slug}`}>
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                        View Details
+                      </Button>
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          
               </motion.div>
             )}
           </AnimatePresence>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}>
+          {searchResults.length===0 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}>
             <Button
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
@@ -201,7 +257,7 @@ export default function HomePage() {
             >
               Explore Properties
             </Button>
-          </motion.div>
+          </motion.div>}
         </motion.div>
       </section>
 
@@ -359,7 +415,7 @@ export default function HomePage() {
       </AnimatePresence>
 
       <Footer />
-      <ChatBot />
+      {/* <ChatBot /> */}
     </div>
   )
 }
@@ -406,7 +462,7 @@ function PropertyCard({ property }: { property: Property }) {
             <MapPin className="w-4 h-4" />
             <span>{property.location}</span>
           </div>
-<Link href={`/property/${property.id}`}>
+<Link href={`/properties/${property.slug}`}>
             <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105">
               View Details
             </Button>
@@ -461,12 +517,15 @@ function SpotlightCard({ property }: { property: Property }) {
               <span>{property.bathrooms || 0} Baths</span>
             </div>
           </div>
+          <Link href={`/properties/${property.slug}`}>
+          
           <Button
             size="lg"
             className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all duration-300 transform hover:scale-105"
           >
             Schedule a Viewing
           </Button>
+          </Link>
         </CardContent>
       </Card>
     </motion.div>

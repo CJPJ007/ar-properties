@@ -1,13 +1,21 @@
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
-export async function POST() {
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/public/advancedSearch/Property`,
+export async function POST(request:Request) {
+  let requestJSON;
+  try {
+    requestJSON = await request.json();
+  } catch (error) {
+    
+  }
+  const url = `${process.env.BACKEND_URL}/api/public/advancedSearch/Property${request.url.split("?")[1] ? `?${request.url.split("?")[1]}` : ''}`;
 
+  console.log(url);
+  const response = await fetch(
+    url,
     {
       method: "POST",
-      body: JSON.stringify({
+      body: JSON.stringify(requestJSON?requestJSON:{
         criteriaList: [],
         operations: [],
       }),

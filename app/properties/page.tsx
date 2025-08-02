@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -29,14 +29,14 @@ import ChatBot from "@/components/chatbot";
 import Link from "next/link";
 // import { Carousel } from "@/components/carousel";
 import Image from "next/image";
-import { Property } from "@/lib/interfaces";
+import { AdvancedSearchRequest, Property } from "@/lib/interfaces";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Slider } from "@/components/slider";
 
 const fadeInUp = {
   // initial: { opacity: 0, y: 60 },
   // animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" },
+  transition: { duration: 0.6, ease: "easeOut" as const },
 };
 
 const staggerContainer = {
@@ -49,27 +49,52 @@ const staggerContainer = {
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState("all");
+  const [selectedType, setSelectedType] = useState("All");
   const [sortBy, setSortBy] = useState("featured");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProperties, setTotalProperties] = useState(0);
+  const propertiesPerPage = 9;
+  
+  // useEffect(() => {
+  //   fetchProperties();
+  // }, []);
+
+
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((query?:string) => {
+        filterAndSortProperties(query);
+      }, 500),
+    []
+  );
   
   useEffect(() => {
-    fetchProperties();
-  }, []);
-
-  useEffect(() => {
     filterAndSortProperties();
-  }, [properties, searchQuery, selectedType, sortBy]);
+  }, [selectedType, sortBy, currentPage]);
 
-  const fetchProperties = async () => {
+  useEffect(()=>{
+    if(searchQuery)
+      debouncedSearch(searchQuery);
+  },[searchQuery,debouncedSearch])
+
+  const fetchProperties = async (request?:AdvancedSearchRequest, sortByField?:string, sortDirection?:string) => {
     try {
-      const response = await fetch("/api/properties",{
-        method:"POST"
+      const response = await fetch(`/api/properties?${sortByField?`sortBy=${sortByField}&sortDirection=${sortDirection}`:
+        sortDirection?`sortDirection=${sortDirection}`:''
+      }&page=${currentPage}&size=${propertiesPerPage}`,{
+        method:"POST",
+        body:JSON.stringify(request?request:{
+          criteriaList: [],
+          operations: [],
+        }),
       });
       const data = await response.json();
       setProperties(data.data);
+      setTotalProperties(data.totalRecords || data.data.length);
+      setTotalPages(data.totalPages || Math.ceil((data.totalRecords || data.data.length) / propertiesPerPage));
     } catch (error) {
       console.error("Error fetching properties:", error);
     } finally {
@@ -77,53 +102,138 @@ export default function PropertiesPage() {
     }
   };
 
-  const filterAndSortProperties = () => {
-    let filtered = [...properties];
-
+  const filterAndSortProperties = async (searchQuery?:string) => {
+    let advancedSearchRequest:AdvancedSearchRequest={criteriaList:[],operations:[]};
     // Filter by search query
     if (searchQuery) {
-      filtered = filtered.filter(
-        (property) =>
-          property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          property.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          property.type.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+        advancedSearchRequest.criteriaList.push({
+          key:"title",
+          value:searchQuery,
+          operation:"contains"
+        },{
+          key:"location",
+          value:searchQuery,
+          operation:"contains"
+        },{
+          key:"type",
+          value:searchQuery,
+          operation:"contains"
+        });
+        advancedSearchRequest.operations.push("OR","OR");
     }
 
     // Filter by type
-    if (selectedType !== "all") {
-      filtered = filtered.filter((property) => property.type === selectedType);
+    if (selectedType !== "All") {
+      advancedSearchRequest.criteriaList.push({
+        key:"type",
+        value:selectedType,
+        operation:"equals"
+      })
+      if(advancedSearchRequest.criteriaList.length>1){
+        advancedSearchRequest.operations.push("AND")
+      }
     }
 
     // Sort properties
+    let sortByField;
+    let sortDirection;
     switch (sortBy) {
       case "price-low":
-        filtered.sort(
-          (a, b) =>
-            a.price -
-            b.price
-        );
+        sortByField = "price";
+        sortDirection = "asc";
         break;
       case "price-high":
-        filtered.sort(
-          (a, b) =>
-            a.price -
-            b.price
-        );
+        sortByField = "price";
+        sortDirection = "desc";
         break;
       case "beds":
-        filtered.sort((a, b) => b.bedrooms - a.bedrooms);
+        sortByField = "bedrooms";
+        sortDirection = "desc";
         break;
       case "featured":
       default:
-        filtered.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        sortByField = "featured";
+        sortDirection = "desc";
         break;
     }
 
-    setFilteredProperties(filtered);
+    await fetchProperties(advancedSearchRequest, sortByField, sortDirection)
   };
 
-  const propertyTypes = ["all", "house", "condo", "townhouse", "luxury"];
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSelectedType("All");
+    setSortBy("featured");
+    setCurrentPage(1);
+  };
+
+  const propertyTypes = ["All", "House", "Condo", "Townhouse", "Luxury", "Appartment"];
+
+  const PaginationComponent = () => (
+    <div className="flex items-center justify-center gap-2 mt-8">
+      <Button
+        variant="outline"
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="flex items-center gap-2"
+      >
+        ← Previous
+      </Button>
+      
+      <div className="flex items-center gap-1">
+        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+          let pageNum;
+          if (totalPages <= 5) {
+            pageNum = i + 1;
+          } else if (currentPage <= 3) {
+            pageNum = i + 1;
+          } else if (currentPage >= totalPages - 2) {
+            pageNum = totalPages - 4 + i;
+          } else {
+            pageNum = currentPage - 2 + i;
+          }
+          
+          return (
+            <Button
+              key={pageNum}
+              variant={currentPage === pageNum ? "default" : "outline"}
+              onClick={() => handlePageChange(pageNum)}
+              className="w-10 h-10"
+            >
+              {pageNum}
+            </Button>
+          );
+        })}
+      </div>
+      
+      <Button
+        variant="outline"
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="flex items-center gap-2"
+      >
+        Next →
+      </Button>
+    </div>
+  );
+
+  function debounce(func:()=>void, delay:number) {
+    let timeoutId:NodeJS.Timeout;
+    console.log("Inside debouce");
+
+    return function (...args:any[]) {
+      clearTimeout(timeoutId); // Clear the previous timer
+      console.log("Inside debouce");
+      timeoutId = setTimeout(() => {
+        func(...args); // Call the function with latest context and arguments
+      }, delay);
+    };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
@@ -132,7 +242,7 @@ export default function PropertiesPage() {
       {/* Hero Section */}
       <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
         <div className="absolute inset-0 z-0">
-          <Slider />
+          <Slider className="" />
         </div>
 
         <motion.div
@@ -176,9 +286,7 @@ export default function PropertiesPage() {
                 <SelectContent>
                   {propertyTypes.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type === "all"
-                        ? "All Types"
-                        : type.charAt(0).toUpperCase() + type.slice(1)}
+                     {type}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -209,9 +317,16 @@ export default function PropertiesPage() {
               Available Properties
             </h2>
             <p className="text-lg text-slate-600">
-              {filteredProperties.length} properties found
+              {totalProperties} properties found • Page {currentPage} of {totalPages}
             </p>
           </motion.div>
+
+          {/* Top Pagination */}
+          {!loading && properties.length > 0 && totalPages > 1 && (
+            <div className="mb-8">
+              <PaginationComponent />
+            </div>
+          )}
 
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -219,11 +334,9 @@ export default function PropertiesPage() {
                 <PropertyCardSkeleton key={i} />
               ))}
             </div>
-          ) : filteredProperties.length === 0 ? (
+          ) : properties.length === 0 ? (
             <motion.div
               className="text-center py-16"
-              // initial={{ opacity: 0 }}
-              // animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
             >
               <div className="text-6xl mb-4">🏠</div>
@@ -234,35 +347,36 @@ export default function PropertiesPage() {
                 Try adjusting your search criteria or filters
               </p>
               <Button
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedType("all");
-                  setSortBy("featured");
-                }}
+                onClick={resetFilters}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
               >
                 Clear Filters
               </Button>
             </motion.div>
           ) : (
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-            >
-              {/**<AnimatePresence>**/}
-                {filteredProperties.map((property) => (
+            <>
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+              >
+                {properties.map((property) => (
                   <PropertyCard key={property.id} property={property} />
                 ))}
-              {/**</AnimatePresence>**/}
-            </motion.div>
+              </motion.div>
+
+              {/* Bottom Pagination */}
+              {totalPages > 1 && (
+                <PaginationComponent />
+              )}
+            </>
           )}
         </div>
       </section>
 
       <Footer />
-      <ChatBot />
+      {/* <ChatBot /> */}
     </div>
   );
 }
@@ -311,7 +425,7 @@ function PropertyCard({ property }: { property: Property }) {
             <MapPin className="w-4 h-4" />
             <span>{property.location}</span>
           </div>
-<Link href={`/property/${property.id}`}>
+          <Link href={`/properties/${property.slug}`}>
             <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105">
               View Details
             </Button>

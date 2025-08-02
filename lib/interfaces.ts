@@ -6,6 +6,7 @@ export interface PropertyImage {
 
 export interface Property {
   id: string
+  slug: string
   title: string
   description: string
   price: number
@@ -44,4 +45,50 @@ export interface SliderProps {
   linkUrl: string
   imageUrl: string
   altText: string
+}
+
+export interface InquiryFormProps {
+  property?: string
+  showAppointmentDate?: boolean
+  className?: string
+}
+
+export interface InquiryFormData {
+  name: string
+  email: string
+  mobile: string
+  property?: string
+  appointmentDate?: string
+  message: string
+}
+export interface Criteria{
+  key:string,
+  value?:string|null|undefined,
+  operation:string
+}
+export interface AdvancedSearchRequest{
+  criteriaList:Criteria[],
+  operations:string[]
+}
+
+export interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  featuredImage?: string;
+  author?: {
+    id: number;
+    name: string;
+    email: string;
+    avatar?: string;
+  };
+  status: string;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  thumbnailImage?: string;
 }

@@ -1,9 +1,43 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { MapPin, Phone, Mail, Facebook, Twitter, Instagram } from "lucide-react"
+import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Youtube, LucideYoutube } from "lucide-react"
 import Link from "next/link"
 import { Home, Building, Users, Briefcase, Camera } from "lucide-react"
+import { useCompanyDetails } from "@/hooks/use-company-details"
+
+type CompanyDetails = {
+  id: number;
+  companyName: string;
+  tagline: string | null;
+  aboutDescription: string | null;
+  primaryEmail: string;
+  primaryPhone: string;
+  secondaryPhone: string | null;
+  whatsappNumber: string | null;
+  streetAddress: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  businessHoursWeekday: string | null;
+  businessHoursWeekend: string | null;
+  facebookUrl: string | null;
+  instagramUrl: string | null;
+  twitterUrl: string | null;
+  linkedinUrl: string | null;
+  youtubeUrl: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  establishedYear: number | null;
+  licenseNumber: string | null;
+  websiteUrl: string | null;
+  googleMapsUrl: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+};
 
 const quickLinks = [
   { name: "Home", href: "/" },
@@ -14,15 +48,18 @@ const quickLinks = [
   { name: "Contact", href: "/contact" },
 ]
 
-const socialLinks = [
-  { name: "Facebook", icon: Facebook, href: "#" },
-  { name: "Twitter", icon: Twitter, href: "#" },
-  { name: "Instagram", icon: Instagram, href: "#" },
-]
-
 export default function Footer() {
+  const { company } = useCompanyDetails()
+
+  const socialLinks = [
+    { name: "Facebook", icon: Facebook, href: company?.facebookUrl || "#" },
+    { name: "Twitter", icon: Twitter, href: company?.twitterUrl || "#" },
+    { name: "Instagram", icon: Instagram, href: company?.instagramUrl || "#" },
+    { name: "YouTube", icon: LucideYoutube, href: company?.youtubeUrl || "#" },
+  ]
+
   return (
-    <footer className="bg-gradient-to-r from-slate-900 to-blue-900 text-white pb-16 md:pb-0">
+    <footer className="hidden md:block bg-gradient-to-r from-slate-900 to-blue-900 text-white pb-16 md:pb-0">
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -34,27 +71,36 @@ export default function Footer() {
             className="lg:col-span-2"
           >
             <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-              Ananta Realty
+              {company ? company.companyName : "Ananta Realty"}
             </h3>
             <p className="text-blue-100 mb-6 leading-relaxed">
-              Discover your dream home with our expert team, dedicated to providing exceptional real estate services
-              tailored to your unique needs and preferences.
+              {company ? (company.aboutDescription || "") : "Discover your dream home with our expert team, dedicated to providing exceptional real estate services tailored to your unique needs and preferences."}
             </p>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-amber-400" />
-                <span className="text-blue-100">123 Estate Lane, City, ST 12345</span>
+                <span className="text-blue-100">
+                  {company
+                    ? `${company.streetAddress}, ${company.city}, ${company.state} ${company.postalCode}`
+                    : "123 Estate Lane, City, ST 12345"}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-amber-400" />
-                <a href="tel:+1234567890" className="text-blue-100 hover:text-amber-400 transition-colors">
-                  (123) 456-7890
+                <a
+                  href={company ? `tel:${company.primaryPhone}` : "tel:+1234567890"}
+                  className="text-blue-100 hover:text-amber-400 transition-colors"
+                >
+                  {company ? company.primaryPhone : "(123) 456-7890"}
                 </a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-amber-400" />
-                <a href="mailto:info@anantarealty.com" className="text-blue-100 hover:text-amber-400 transition-colors">
-                  info@anantarealty.com
+                <a
+                  href={company ? `mailto:${company.primaryEmail}` : "mailto:info@anantarealty.com"}
+                  className="text-blue-100 hover:text-amber-400 transition-colors"
+                >
+                  {company ? company.primaryEmail : "info@anantarealty.com"}
                 </a>
               </div>
             </div>
@@ -92,11 +138,14 @@ export default function Footer() {
             <h3 className="text-xl font-bold mb-6 text-amber-400">Connect With Us</h3>
             <div className="flex gap-4">
               {socialLinks.map((social) => {
+                if (!social.href || social.href === "#") return null
                 const Icon = social.icon
                 return (
                   <motion.a
                     key={social.name}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-blue-100 hover:text-amber-400 hover:bg-white/20 transition-all duration-300"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.95 }}
@@ -118,7 +167,7 @@ export default function Footer() {
           viewport={{ once: true }}
         >
           <p className="text-blue-200">
-            © 2025 Ananta Realty. All rights reserved. |{" "}
+            © 2025 {company ? company.companyName : "Ananta Realty"}. All rights reserved. |{" "}
             <Link href="/privacy" className="text-amber-400 hover:text-amber-300 transition-colors">
               Privacy Policy
             </Link>{" "}
@@ -129,31 +178,7 @@ export default function Footer() {
           </p>
         </motion.div>
       </div>
-      {/* Mobile Navigation - Only visible on mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50">
-        <div className="flex justify-around items-center py-2">
-          {[
-            { name: "Home", href: "/", icon: Home },
-            { name: "Properties", href: "/properties", icon: Building },
-            { name: "About", href: "/about", icon: Users },
-            { name: "Services", href: "/services", icon: Briefcase },
-            { name: "Gallery", href: "/gallery", icon: Camera },
-            { name: "Contact", href: "/contact", icon: Phone },
-          ].map((item) => {
-            const Icon = item.icon
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="flex flex-col items-center justify-center py-2 px-3 text-slate-600 hover:text-blue-600 transition-colors duration-200"
-              >
-                <Icon className="w-5 h-5 mb-1" />
-                <span className="text-xs font-medium">{item.name}</span>
-              </Link>
-            )
-          })}
-        </div>
-      </div>
+
     </footer>
   )
 }

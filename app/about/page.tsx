@@ -10,11 +10,12 @@ import Header from "@/components/header"
 import Footer from "@/components/footer"
 import ChatBot from "@/components/chatbot"
 import { Slider } from "@/components/slider"
+import { useEffect, useState } from "react"
+import { Loader2 } from "lucide-react"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" },
 }
 
 const staggerContainer = {
@@ -25,46 +26,37 @@ const staggerContainer = {
   },
 }
 
-const teamMembers = [
-  {
-    name: "Jane Doe",
-    role: "Lead Agent",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-    description: "With over 15 years of experience, Jane specializes in luxury properties and client satisfaction.",
-  },
-  {
-    name: "John Smith",
-    role: "Market Analyst",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
-    description: "John's data-driven insights ensure our clients make informed investment decisions.",
-  },
-  {
-    name: "Emily Johnson",
-    role: "Client Coordinator",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
-    description: "Emily ensures every client receives personalized support throughout their journey.",
-  },
-]
-
-const values = [
-  {
-    icon: Heart,
-    title: "Integrity",
-    description: "We uphold honesty and transparency in every transaction, building trust with our clients.",
-  },
-  {
-    icon: Award,
-    title: "Excellence",
-    description: "We strive for perfection, delivering top-tier service and results in every project.",
-  },
-  {
-    icon: Handshake,
-    title: "Community",
-    description: "We are committed to strengthening the communities we serve through meaningful partnerships.",
-  },
-]
+const iconMap: Record<string, any> = {
+  heart: Heart,
+  award: Award,
+  handshake: Handshake,
+}
 
 export default function AboutPage() {
+  const [story, setStory] = useState<string | null>(null)
+  const [storyLoading, setStoryLoading] = useState(true)
+  const [team, setTeam] = useState<any[]>([])
+  const [teamLoading, setTeamLoading] = useState(true)
+  const [values, setValues] = useState<any[]>([])
+  const [valuesLoading, setValuesLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/public/company-details/about-us')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setStory(data[0].content)
+      })
+      .finally(() => setStoryLoading(false))
+    fetch('/api/public/company-details/team-members')
+      .then(res => res.json())
+      .then(data => setTeam(Array.isArray(data) ? data : []))
+      .finally(() => setTeamLoading(false))
+    fetch('/api/public/company-details/company-values')
+      .then(res => res.json())
+      .then(data => setValues(Array.isArray(data) ? data : []))
+      .finally(() => setValuesLoading(false))
+  }, [])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
       <Header />
@@ -72,14 +64,14 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
         <div className="absolute inset-0 z-0">
-          <Slider />
+          <Slider className="w-full h-96" />
         </div>
 
         <motion.div
           className="relative z-10 text-center text-white px-4"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-4">About Ananta Realty</h1>
           <p className="text-xl md:text-2xl text-blue-100">Your trusted partner in finding the perfect home</p>
@@ -89,28 +81,27 @@ export default function AboutPage() {
       {/* Our Story */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <motion.div className="text-center mb-16" {...fadeInUp}>
+          <motion.div className="text-center mb-16" initial={fadeInUp.initial} animate={fadeInUp.animate} transition={{ duration: 0.6, ease: 'easeOut' }}>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Our Story</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
-              <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                Founded in 2010, Ananta Realty has grown into a leading real estate firm, dedicated to transforming the
-                home-buying experience. Our mission is to connect people with properties that inspire and fulfill their
-                dreams, offering unparalleled expertise and personalized service.
-              </p>
-              <p className="text-lg text-slate-600 leading-relaxed">
-                With a deep understanding of the market and a passion for excellence, we pride ourselves on delivering
-                seamless transactions and building lasting relationships with our clients.
-              </p>
+            <motion.div initial={fadeInUp.initial} animate={fadeInUp.animate} transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}>
+              {storyLoading ? (
+                <div className="flex justify-center items-center h-32"><Loader2 className="animate-spin w-8 h-8 text-blue-400" /></div>
+              ) : story ? (
+                <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: story }} />
+              ) : (
+                <p className="text-lg text-slate-600 leading-relaxed">No story available.</p>
+              )}
             </motion.div>
 
             <motion.div
               className="relative"
-              {...fadeInUp}
-              transition={{ delay: 0.4 }}
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
               whileHover={{ scale: 1.05, rotateY: 5 }}
             >
               <img
@@ -126,7 +117,7 @@ export default function AboutPage() {
       {/* Our Team */}
       <section className="py-20 bg-white/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div className="text-center mb-16" {...fadeInUp}>
+          <motion.div className="text-center mb-16" initial={fadeInUp.initial} animate={fadeInUp.animate} transition={{ duration: 0.6, ease: 'easeOut' }}>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Meet Our Team</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
@@ -138,9 +129,15 @@ export default function AboutPage() {
             whileInView="animate"
             viewport={{ once: true }}
           >
-            {teamMembers.map((member, index) => (
-              <TeamCard key={member.name} member={member} index={index} />
-            ))}
+            {teamLoading ? (
+              <div className="col-span-full flex justify-center items-center h-32"><Loader2 className="animate-spin w-8 h-8 text-blue-400" /></div>
+            ) : team.length > 0 ? (
+              team.map((member, index) => (
+                <TeamCard key={member.id || member.name} member={member} index={index} />
+              ))
+            ) : (
+              <p className="col-span-full text-center text-slate-500">No team members found.</p>
+            )}
           </motion.div>
         </div>
       </section>
@@ -148,7 +145,7 @@ export default function AboutPage() {
       {/* Our Values */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <motion.div className="text-center mb-16" {...fadeInUp}>
+          <motion.div className="text-center mb-16" initial={fadeInUp.initial} animate={fadeInUp.animate} transition={{ duration: 0.6, ease: 'easeOut' }}>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Our Values</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
@@ -160,9 +157,15 @@ export default function AboutPage() {
             whileInView="animate"
             viewport={{ once: true }}
           >
-            {values.map((value, index) => (
-              <ValueCard key={value.title} value={value} index={index} />
-            ))}
+            {valuesLoading ? (
+              <div className="col-span-full flex justify-center items-center h-32"><Loader2 className="animate-spin w-8 h-8 text-blue-400" /></div>
+            ) : values.length > 0 ? (
+              values.map((value, index) => (
+                <ValueCard key={value.id || value.title} value={value} index={index} />
+              ))
+            ) : (
+              <p className="col-span-full text-center text-slate-500">No values found.</p>
+            )}
           </motion.div>
         </div>
       </section>
@@ -170,7 +173,7 @@ export default function AboutPage() {
       {/* Contact Section */}
       <section className="py-20 bg-gradient-to-r from-slate-900 to-blue-900 text-white">
         <div className="max-w-4xl mx-auto px-4">
-          <motion.div className="text-center mb-16" {...fadeInUp}>
+          <motion.div className="text-center mb-16" initial={fadeInUp.initial} animate={fadeInUp.animate} transition={{ duration: 0.6, ease: 'easeOut' }}>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
@@ -192,6 +195,14 @@ export default function AboutPage() {
                     <Input
                       type="email"
                       placeholder="Your Email"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-blue-100 mb-2">Mobile Number</label>
+                    <Input
+                      type="button"
+                      placeholder="Your Mobile Number"
                       className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                     />
                   </div>
@@ -219,7 +230,7 @@ export default function AboutPage() {
       </section>
 
       <Footer />
-      <ChatBot />
+      {/* <ChatBot /> */}
     </div>
   )
 }
@@ -235,7 +246,7 @@ function TeamCard({ member, index }: { member: any; index: number }) {
       <Card className="overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
         <div className="relative overflow-hidden">
           <img
-            src={member.image || "/placeholder.svg"}
+            src={`/images/${member.imageUrl}` || "/placeholder.svg"}
             alt={member.name}
             className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
           />
@@ -257,8 +268,7 @@ function TeamCard({ member, index }: { member: any; index: number }) {
 }
 
 function ValueCard({ value, index }: { value: any; index: number }) {
-  const Icon = value.icon
-
+  const Icon = iconMap[(value.iconName || '').toLowerCase()] || Heart
   return (
     <motion.div
       variants={fadeInUp}
@@ -268,7 +278,7 @@ function ValueCard({ value, index }: { value: any; index: number }) {
     >
       <Card className="h-full bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
         <CardContent className="p-8 text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" style={{ background: value.iconColor || '#6366f1' }}>
             <Icon className="w-8 h-8 text-white" />
           </div>
           <h3 className="text-2xl font-bold text-slate-800 mb-4">{value.title}</h3>
