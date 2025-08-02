@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Mock data - replace with actual backend API call
+    // Mobile number is now automatically fetched and included in the session
     const userProfile = {
       id: 1,
       name: session.user.name || 'User',
