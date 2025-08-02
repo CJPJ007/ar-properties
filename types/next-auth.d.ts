@@ -28,5 +28,6 @@ declare module "next-auth/jwt" {
     accessToken?: string
     mobile?: string
     avatar?: string
+    mobileFetched?: boolean
   }
 } 

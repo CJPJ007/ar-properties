@@ -84,36 +84,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let mobile = session.user.mobile || null;
-
-    // If mobile is null, empty, or undefined, fetch from backend
-    if (!mobile || mobile.trim() === '') {
-      try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/public/customer/${encodeURIComponent(session.user.email)}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-
-        if (response.ok) {
-          const customerData = await response.json();
-          mobile = customerData.mobile || null;
-        } else {
-          console.warn(`Failed to fetch customer data for ${session.user.email}: ${response.status}`);
-        }
-      } catch (fetchError) {
-        console.error('Error fetching customer mobile:', fetchError);
-        // Continue with null mobile if API call fails
-      }
-    }
-
-    // Mock data - replace with actual backend API call
+    // Mobile number is now automatically fetched and included in the session
     const userProfile = {
       id: 1,
       name: session.user.name || 'User',
       email: session.user.email,
-      mobile: mobile,
+      mobile: session.user.mobile || null,
       avatar: session.user.image || null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
