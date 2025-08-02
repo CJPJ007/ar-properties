@@ -182,7 +182,7 @@ export default function MobileNavigation() {
               <div className="flex-1 p-6 bg-white overflow-y-auto">
                 <div className="space-y-6">
                   {/* Main Navigation */}
-                  <div>
+                  {/* <div>
                     <h3 className="text-sm font-semibold text-slate-600 uppercase tracking-wide mb-4">
                       Navigation
                     </h3>
@@ -207,7 +207,7 @@ export default function MobileNavigation() {
                         )
                       })}
                     </div>
-                  </div>
+                  </div> */}
                   
                   {/* Additional Navigation */}
                   <div>
