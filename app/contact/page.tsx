@@ -24,10 +24,10 @@ export default function ContactPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
-        <div className="absolute inset-0 z-0">
-          <Slider/>
-        </div>
+      {/* <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
+        <div className="absolute inset-0 z-0"> */}
+          <Slider className="" showSearch={false} page="Contact"/>
+        {/* </div>
 
         <motion.div
           className="relative z-10 text-center text-white px-4"
@@ -40,7 +40,7 @@ export default function ContactPage() {
             We're here to help you find your dream home. Get in touch today!
           </p>
         </motion.div>
-      </section>
+      </section> */}
 
       {/* Contact Section */}
       <section className="py-20 px-4">

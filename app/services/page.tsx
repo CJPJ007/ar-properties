@@ -1,14 +1,29 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Home, TrendingUp, Calculator, Key, Search, Users, DollarSign, MapPin } from "lucide-react"
+import {
+  Home,
+  TrendingUp,
+  Calculator,
+  Key,
+  Search,
+  Users,
+  DollarSign,
+  MapPin,
+  Building,
+  Briefcase,
+  Shield,
+  FileText,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import ChatBot from "@/components/chatbot"
 import { Slider } from "@/components/slider"
 import InquiryModal from "@/components/inquiry-modal"
+import Link from "next/link"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -24,94 +39,84 @@ const staggerContainer = {
   },
 }
 
-const services = [
-  {
-    icon: Home,
-    title: "Property Buying",
-    description:
-      "Our expert agents guide you through every step of the home-buying process, from property selection to closing the deal.",
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
-    features: ["Market Analysis", "Property Tours", "Negotiation Support", "Closing Assistance"],
-  },
-  {
-    icon: TrendingUp,
-    title: "Property Selling",
-    description:
-      "Maximize your property's value with our strategic marketing and negotiation expertise to ensure a smooth sale.",
-    image: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&w=800&q=80",
-    features: ["Property Valuation", "Marketing Strategy", "Professional Photography", "Open House Events"],
-  },
-  {
-    icon: Calculator,
-    title: "Real Estate Investment",
-    description: "Leverage our market insights and analysis to make informed investment decisions for maximum returns.",
-    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
-    features: ["ROI Analysis", "Market Research", "Portfolio Management", "Investment Strategy"],
-  },
-  {
-    icon: Key,
-    title: "Property Management",
-    description: "Let us handle the day-to-day operations of your rental properties, ensuring hassle-free management.",
-    image: "https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?auto=format&fit=crop&w=800&q=80",
-    features: ["Tenant Screening", "Rent Collection", "Maintenance Coordination", "Financial Reporting"],
-  },
-  {
-    icon: Search,
-    title: "Home Valuation",
-    description:
-      "Get an accurate assessment of your property's market value with our comprehensive valuation services.",
-    image: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&w=800&q=80",
-    features: ["Comparative Market Analysis", "Property Inspection", "Market Trends Report", "Valuation Certificate"],
-  },
-  {
-    icon: Users,
-    title: "Virtual Tours",
-    description: "Explore properties from the comfort of your home with our immersive 360° virtual property tours.",
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
-    features: ["360° Photography", "Interactive Floor Plans", "Virtual Staging", "Online Viewing"],
-  },
-  {
-    icon: DollarSign,
-    title: "Mortgage Consulting",
-    description:
-      "Navigate the mortgage process with ease through our partnerships with trusted lenders and expert advice.",
-    image: "https://images.unsplash.com/photo-1554224154-26032fced8bd?auto=format&fit=crop&w=800&q=80",
-    features: ["Loan Pre-approval", "Rate Comparison", "Application Support", "Closing Coordination"],
-  },
-  {
-    icon: MapPin,
-    title: "Relocation Services",
-    description:
-      "Simplify your move with our tailored relocation support, including neighborhood insights and logistics.",
-    image: "https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?auto=format&fit=crop&w=800&q=80",
-    features: ["Area Research", "School Information", "Moving Coordination", "Local Connections"],
-  },
-]
+// Icon mapping for different service types
+const iconMap: { [key: string]: any } = {
+  home: Home,
+  trending: TrendingUp,
+  calculator: Calculator,
+  key: Key,
+  search: Search,
+  users: Users,
+  dollar: DollarSign,
+  map: MapPin,
+  building: Building,
+  briefcase: Briefcase,
+  shield: Shield,
+  file: FileText,
+}
+
+interface Service {
+  id: number
+  title: string
+  description: string
+  shortDescription: string
+  imageUrl: string
+  iconName: string
+  keyFeatures: string
+}
 
 export default function ServicesPage() {
+  const [services, setServices] = useState<Service[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchServices()
+  }, [])
+
+  const fetchServices = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch("/api/public/company-details/services")
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch services")
+      }
+
+      const data = await response.json()
+      setServices(data)
+    } catch (error) {
+      console.error("Error fetching services:", error)
+      setError("Failed to load services. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-slate-800 mb-4">Unable to Load Services</h2>
+            <p className="text-slate-600 mb-6">{error}</p>
+            <Button onClick={fetchServices} className="bg-blue-600 hover:bg-blue-700">
+              Try Again
+            </Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
-        <div className="absolute inset-0 z-0">
-          <Slider/>
-        </div>
-
-        <motion.div
-          className="relative z-10 text-center text-white px-4"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Our Comprehensive Real Estate Services</h1>
-          <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
-            Discover how Ananta Realty can assist you in finding, buying, selling, or investing in your dream property
-            with our expert services
-          </p>
-        </motion.div>
-      </section>
+      <Slider className="" showSearch={false} page="Services"/>
 
       {/* Services Grid */}
       <section className="py-20 px-4">
@@ -125,17 +130,25 @@ export default function ServicesPage() {
             </p>
           </motion.div>
 
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {services.map((service, index) => (
-              <ServiceCard key={service.title} service={service} index={index} />
-            ))}
-          </motion.div>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <ServiceCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              {services.map((service, index) => (
+                <ServiceCard key={service.id} service={service} index={index} />
+              ))}
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -156,14 +169,17 @@ export default function ServicesPage() {
                 modalTitle="Schedule a Consultation"
                 modalDescription="Tell us about your real estate needs and we'll schedule a personalized consultation."
                 showAppointmentDate={true}
+                className="text-black"
               />
+              <Link href={"/properties"} passHref>
               <Button
                 size="lg"
                 variant="outline"
                 className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg font-semibold transition-all duration-300 bg-transparent"
-              >
+                >
                 View Properties
               </Button>
+                </Link>
             </div>
           </motion.div>
         </div>
@@ -175,8 +191,12 @@ export default function ServicesPage() {
   )
 }
 
-function ServiceCard({ service, index }: { service: any; index: number }) {
-  const Icon = service.icon
+function ServiceCard({ service, index }: { service: Service; index: number }) {
+  // Get icon from iconMap or default to Briefcase
+  const Icon = iconMap[service.iconName?.toLowerCase()] || Briefcase
+
+  // Parse key features from string (assuming comma-separated)
+  const features = service.keyFeatures ? service.keyFeatures.split("#FEATURES#").map((f) => f.trim()) : []
 
   return (
     <motion.div
@@ -188,9 +208,13 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
       <Card className="h-full overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
         <div className="relative overflow-hidden">
           <img
-            src={service.image || "/placeholder.svg"}
+            src={`/images/${service.imageUrl}` || "/placeholder.svg?height=300&width=400"}
             alt={service.title}
             className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement
+              target.src = "/placeholder.svg?height=300&width=400"
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute top-4 left-4 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -202,23 +226,59 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
           <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">
             {service.title}
           </h3>
-          <p className="text-slate-600 mb-4 leading-relaxed">{service.description}</p>
+          <p className="text-slate-600 mb-4 leading-relaxed">{service.shortDescription || service.description}</p>
 
-          <div className="mb-6">
-            <h4 className="font-semibold text-slate-800 mb-2">Key Features:</h4>
-            <ul className="space-y-1">
-              {service.features.map((feature: string, idx: number) => (
-                <li key={idx} className="text-sm text-slate-600 flex items-center">
-                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
+          {features.length > 0 && (
+            <div className="mb-6 flex-grow">
+              <h4 className="font-semibold text-slate-800 mb-2">Key Features:</h4>
+              <ul className="space-y-1">
+                {features.slice(0, 4).map((feature: string, idx: number) => (
+                  <li key={idx} className="text-sm text-slate-600 flex items-center">
+                    <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2 flex-shrink-0" />
+                    <span className="line-clamp-1">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="mt-auto">
+            <InquiryModal
+              buttonText="Learn More"
+              buttonSize="lg"
+              buttonClassName="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105"
+              modalTitle={`Inquiry about ${service.title}`}
+              modalDescription={service.description}
+              showAppointmentDate={true}
+              className="text-black"
+            />
           </div>
-
-          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105"></Button>
         </CardContent>
       </Card>
     </motion.div>
+  )
+}
+
+function ServiceCardSkeleton() {
+  return (
+    <Card className="h-full overflow-hidden">
+      <Skeleton className="w-full h-48" />
+      <CardContent className="p-6">
+        <Skeleton className="h-6 w-3/4 mb-3" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-2/3 mb-4" />
+
+        <div className="mb-6">
+          <Skeleton className="h-5 w-1/3 mb-2" />
+          <div className="space-y-1">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-4 w-full" />
+            ))}
+          </div>
+        </div>
+
+        <Skeleton className="h-10 w-full" />
+      </CardContent>
+    </Card>
   )
 }

@@ -1,308 +1,558 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
-import { 
-  ArrowLeft, 
-  Calendar, 
-  MapPin, 
-  Phone, 
-  Mail, 
+import { useState, useEffect, useCallback } from "react"
+import { motion } from "framer-motion"
+import {
+  ArrowLeft,
+  Calendar,
+  MapPin,
+  Phone,
+  Mail,
   Clock,
-  Building,
   MessageSquare,
   Eye,
   Search,
-  Filter,
   Edit,
   Save,
   X,
-  User
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { AdvancedSearchRequest } from "@/lib/interfaces";
+  User,
+  Trash2,
+  Share2,
+  Heart,
+  Square,
+  Bath,
+  Bed,
+  Users,
+  Gift,
+  Copy,
+  DollarSign,
+  TrendingUp,
+  UserPlus,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Header from "@/components/header"
+import Footer from "@/components/footer"
+import Link from "next/link"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
+import type { AdvancedSearchRequest, Property, WishlistItem } from "@/lib/interfaces"
+import { useWishlist } from "@/hooks/user-wishlist"
+import { useToast } from "@/hooks/use-toast"
+import { useCompanyDetails } from "@/hooks/use-company-details"
+import Image from "next/image"
 
 interface Inquiry {
-  id: number;
-  name: string;
-  email: string;
-  mobile: string | null;
-  message: string;
-  property: string | null;
-  status: string;
-  source: string;
-  appointmentDate: string | null;
-  createdAt: string;
-  updatedAt: string;
+  id: number
+  name: string
+  email: string
+  mobile: string | null
+  message: string
+  property: string | null
+  status: string
+  source: string
+  appointmentDate: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 interface SiteVisit {
-  id: number;
-  name: string;
-  email: string;
-  mobile: string | null;
-  message: string;
-  property: string | null;
-  status: string;
-  source: string;
-  appointmentDate: string | null;
-  createdAt: string;
-  updatedAt: string;
+  id: number
+  name: string
+  email: string
+  mobile: string | null
+  message: string
+  property: string | null
+  status: string
+  source: string
+  appointmentDate: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+interface ReferralData {
+  id: number
+  referredEmail: string
+  referredName: string
+  status:"completed"
+  referralAmount: number
+  createdAt: string
+  completedAt?: string
 }
 
 interface ApiResponse<T> {
-  totalRecords: number;
-  data: T[];
-  totalPages: number;
-  currentPage: number;
+  totalRecords: number
+  data: T[]
+  totalPages: number
+  currentPage: number
+}
+
+interface ReferralStats {
+  totalReferrals: number
+  completedReferrals: number
+  pendingReferrals: number
+  totalEarnings: number
+  pendingEarnings: number
+  paidEarnings: number
 }
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
-  const [activeTab, setActiveTab] = useState("inquiries");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: session, status } = useSession()
+  const [activeTab, setActiveTab] = useState("inquiries")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isEditing, setIsEditing] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
-    name: session?.user?.name || '',
-    email: session?.user?.email || '',
-    mobile: session?.user?.mobile || '',
-    avatar: session?.user?.image || ''
-  });
+    name: session?.user?.name || "",
+    email: session?.user?.email || "",
+    mobile: session?.user?.mobile || "",
+    avatar: session?.user?.image || "",
+  })
 
   // Pagination states
-  const [inquiriesPage, setInquiriesPage] = useState(1);
-  const [siteVisitsPage, setSiteVisitsPage] = useState(1);
-  const [inquiriesData, setInquiriesData] = useState<ApiResponse<Inquiry> | null>(null);
-  const [siteVisitsData, setSiteVisitsData] = useState<ApiResponse<SiteVisit> | null>(null);
-  const [isLoadingInquiries, setIsLoadingInquiries] = useState(false);
-  const [isLoadingSiteVisits, setIsLoadingSiteVisits] = useState(false);
-  
+  const [inquiriesPage, setInquiriesPage] = useState(1)
+  const [siteVisitsPage, setSiteVisitsPage] = useState(1)
+  const [wishlistPage, setWishlistPage] = useState(1)
+  const [referralsPage, setReferralsPage] = useState(1)
+
+  const [inquiriesData, setInquiriesData] = useState<ApiResponse<Inquiry> | null>(null)
+  const [siteVisitsData, setSiteVisitsData] = useState<ApiResponse<SiteVisit> | null>(null)
+  const [wishlistData, setWishlistData] = useState<ApiResponse<WishlistItem> | null>(null)
+  const [referralsData, setReferralsData] = useState<ApiResponse<ReferralData> | null>(null)
+  const [referralStats, setReferralStats] = useState<ReferralStats | null>(null)
+
+  const [isLoadingInquiries, setIsLoadingInquiries] = useState(false)
+  const [isLoadingSiteVisits, setIsLoadingSiteVisits] = useState(false)
+  const [isLoadingWishlist, setIsLoadingWishlist] = useState(false)
+  const [isLoadingReferrals, setIsLoadingReferrals] = useState(false)
+
+  const { removeFromWishlist } = useWishlist()
+  const { toast } = useToast()
+  const { company:companyDetails } = useCompanyDetails()
+
   // Debounced search state
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
+
+  // Generate referral link
+  const referralLink = `${typeof window !== "undefined" ? window.location.origin : ""}/auth/login?ref=${session?.user?.email}`
 
   // Fetch inquiries data
-  const fetchInquiries = async (page: number = 1, search?: string) => {
-    setIsLoadingInquiries(true);
+  const fetchInquiries = async (page = 1, search?: string) => {
+    setIsLoadingInquiries(true)
     try {
-      const requestBody:AdvancedSearchRequest = {
+      const requestBody: AdvancedSearchRequest = {
         criteriaList: [
           {
             key: "appointmentDate",
             operation: "isEmpty",
-            value: null
-          }
+            value: null,
+          },
         ],
-        operations: []
-      };
+        operations: [],
+      }
 
       if (search) {
         requestBody.criteriaList.push({
           key: "property",
           operation: "contains",
-          value: search
-        });
-        requestBody.operations.push("AND");
+          value: search,
+        })
+        requestBody.operations.push("AND")
       }
 
-      const response = await fetch(`/api/inquiries?page=${page}&size=10`, {
-        method: 'POST',
+      const response = await fetch(`/api/user/inquiries?page=${page}&size=10`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Failed to fetch inquiries');
+        throw new Error("Failed to fetch inquiries")
       }
 
-      const data = await response.json();
-      setInquiriesData(data);
+      const data = await response.json()
+      setInquiriesData(data)
     } catch (error) {
-      console.error('Error fetching inquiries:', error);
+      console.error("Error fetching inquiries:", error)
     } finally {
-      setIsLoadingInquiries(false);
+      setIsLoadingInquiries(false)
     }
-  };
+  }
 
   // Fetch site visits data
-  const fetchSiteVisits = async (page: number = 1, search?: string) => {
-    setIsLoadingSiteVisits(true);
+  const fetchSiteVisits = async (page = 1, search?: string) => {
+    setIsLoadingSiteVisits(true)
     try {
-      const requestBody:AdvancedSearchRequest = {
+      const requestBody: AdvancedSearchRequest = {
         criteriaList: [
           {
             key: "appointmentDate",
-            operation: "isNotEmpty"
-          }
+            operation: "isNotEmpty",
+          },
         ],
-        operations: []
-      };
+        operations: [],
+      }
 
       if (search) {
         requestBody.criteriaList.push({
           key: "property",
           operation: "contains",
-          value: search
-        });
-        requestBody.operations.push("AND");
+          value: search,
+        })
+        requestBody.operations.push("AND")
       }
 
       const response = await fetch(`/api/site-visits?page=${page}&size=10`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Failed to fetch site visits');
+        throw new Error("Failed to fetch site visits")
       }
 
-      const data = await response.json();
-      setSiteVisitsData(data);
+      const data = await response.json()
+      setSiteVisitsData(data)
     } catch (error) {
-      console.error('Error fetching site visits:', error);
+      console.error("Error fetching site visits:", error)
     } finally {
-      setIsLoadingSiteVisits(false);
+      setIsLoadingSiteVisits(false)
     }
-  };
+  }
+
+  // Fetch wishlist data
+  const fetchWishlist = async (page = 1, search?: string) => {
+    setIsLoadingWishlist(true)
+    try {
+      const requestBody: AdvancedSearchRequest = {
+        criteriaList: [
+          {
+            key: "customer.email",
+            operation: "equals",
+            value: session?.user?.email,
+          },
+        ],
+        operations: [],
+      }
+
+      if (search) {
+        requestBody.criteriaList.push({
+          key: "property.title",
+          operation: "contains",
+          value: search,
+        })
+        requestBody.operations.push("AND")
+      }
+
+      const response = await fetch(`/api/wishlistSearch?page=${page}&size=10`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch wishlist")
+      }
+
+      const data = await response.json()
+      setWishlistData(data)
+    } catch (error) {
+      console.error("Error fetching wishlist:", error)
+    } finally {
+      setIsLoadingWishlist(false)
+    }
+  }
+
+  // Fetch referrals data
+  const fetchReferrals = async (page = 1, search?: string) => {
+    setIsLoadingReferrals(true)
+    try {
+      const requestBody: AdvancedSearchRequest = {
+        criteriaList: [
+          {
+            key: "email",
+            operation: "equals",
+            value: session?.user?.email,
+          },
+        ],
+        operations: [],
+      }
+
+      if (search) {
+        requestBody.criteriaList.push({
+          key: "referredName",
+          operation: "contains",
+          value: search,
+        })
+        requestBody.operations.push("AND")
+      }
+
+      const response = await fetch(`/api/referrals?page=${page}&size=10`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch referrals")
+      }
+
+      const data = await response.json()
+      setReferralsData(data)
+    } catch (error) {
+      console.error("Error fetching referrals:", error)
+    } finally {
+      setIsLoadingReferrals(false)
+    }
+  }
+
+  // Fetch referral stats
+  const fetchReferralStats = async () => {
+    try {
+      const response = await fetch(`/api/user/referrals/stats?email=${session?.user?.email}`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch referral stats")
+      }
+      const data = await response.json()
+      setReferralStats(data)
+    } catch (error) {
+      console.error("Error fetching referral stats:", error)
+    }
+  }
 
   // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 500); // 500ms delay
+      setDebouncedSearchQuery(searchQuery)
+    }, 500) // 500ms delay
 
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
-  // useEffect to fetch data when component mounts or search changes
-  useEffect(() => {
-    if (status === "loading") return;
-    
-    if (activeTab === "inquiries") {
-      fetchInquiries(inquiriesPage, debouncedSearchQuery);
-    } else {
-      fetchSiteVisits(siteVisitsPage, debouncedSearchQuery);
-    }
-  }, [activeTab, inquiriesPage, siteVisitsPage, debouncedSearchQuery, status]);
-
-  // Redirect if not authenticated
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  if (status === "unauthenticated") {
-    redirect("/auth/login");
-  }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending':
-      case 'scheduled':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'responded':
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-
-
-
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   // Handle search with debouncing
   const handleSearch = useCallback((query: string) => {
-    setSearchQuery(query);
-    // Reset to page 1 when searching
+    setSearchQuery(query)
+  }, [])
+
+  // useEffect to fetch data when component mounts or search changes
+  useEffect(() => {
+    if (status === "loading") return
     if (activeTab === "inquiries") {
-      setInquiriesPage(1);
-    } else {
-      setSiteVisitsPage(1);
+      fetchInquiries(inquiriesPage, debouncedSearchQuery)
+    } else if (activeTab === "site-visits") {
+      fetchSiteVisits(siteVisitsPage, debouncedSearchQuery)
+    } else if (activeTab === "wishlist") {
+      fetchWishlist(wishlistPage, debouncedSearchQuery)
+    } else if (activeTab === "referrals") {
+      fetchReferrals(referralsPage, debouncedSearchQuery)
+      fetchReferralStats()
     }
-  }, [activeTab]);
+  }, [activeTab, inquiriesPage, siteVisitsPage, wishlistPage, referralsPage, debouncedSearchQuery])
+
+  // Redirect if not authenticated
+  if (status === "loading") {
+    return <div>Loading...</div>
+  }
+
+  if (status === "unauthenticated") {
+    redirect("/auth/login")
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+      case "scheduled":
+        return "bg-yellow-100 text-yellow-800"
+      case "responded":
+      case "completed":
+        return "bg-green-100 text-green-800"
+      case "cancelled":
+      case "paid":
+        return "bg-blue-100 text-blue-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const formatPrice = (price: number) => {
+    // console.log("price : ",companyDetails?.referralAmount, companyDetails?.googleMapsUrl);
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
+
+  const formatArea = (area: number) => {
+    return new Intl.NumberFormat("en-US").format(area)
+  }
 
   // Handle page changes
   const handleInquiriesPageChange = useCallback((page: number) => {
-    setInquiriesPage(page);
-  }, []);
+    setInquiriesPage(page)
+  }, [])
 
   const handleSiteVisitsPageChange = useCallback((page: number) => {
-    setSiteVisitsPage(page);
-  }, []);
+    setSiteVisitsPage(page)
+  }, [])
+
+  const handleWishlistPageChange = useCallback((page: number) => {
+    setWishlistPage(page)
+  }, [])
+
+  const handleReferralsPageChange = useCallback((page: number) => {
+    setReferralsPage(page)
+  }, [])
 
   const handleSave = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const response = await fetch('/api/user/profile', {
-        method: 'PUT',
+      const response = await fetch("/api/user/profile", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: formData.name,
           mobile: formData.mobile,
-          avatar: formData.avatar
+          avatar: formData.avatar,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update profile');
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to update profile")
       }
 
-      const result = await response.json();
-      console.log('Profile updated successfully:', result);
-      
-      // In a real app, you might want to refresh the session here
-      // or update the session data with the new information
-      
-      setIsEditing(false);
+      const result = await response.json()
+      console.log("Profile updated successfully:", result)
+
+      setIsEditing(false)
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+      })
     } catch (error) {
-      console.error('Error updating profile:', error);
-      // You could add a toast notification here to show the error
+      console.error("Error updating profile:", error)
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleCancel = () => {
     setFormData({
-      name: session?.user?.name || '',
-      email: session?.user?.email || '',
-      mobile: session?.user?.mobile || '',
-      avatar: session?.user?.image || ''
-    });
-    setIsEditing(false);
-  };
+      name: session?.user?.name || "",
+      email: session?.user?.email || "",
+      mobile: session?.user?.mobile || "",
+      avatar: session?.user?.image || "",
+    })
+    setIsEditing(false)
+  }
+
+  // Handle wishlist removal
+  const handleRemoveFromWishlist = async (propertyId: number, propertyTitle: string) => {
+    const success = await removeFromWishlist(propertyId, propertyTitle)
+    if (success) {
+      // Refresh wishlist data
+      fetchWishlist(wishlistPage, debouncedSearchQuery)
+    }
+  }
+
+  // Share property
+  const shareProperty = (property: Property) => {
+    const propertyUrl = `${window.location.origin}/properties/${property.slug}`
+
+    if (navigator.share) {
+      navigator.share({
+        title: property.title,
+        text: `Check out this amazing property: ${property.title}`,
+        url: propertyUrl,
+      })
+    } else {
+      navigator.clipboard.writeText(propertyUrl)
+      toast({
+        title: "Link Copied!",
+        description: "Property link copied to clipboard.",
+      })
+    }
+  }
+
+  // Copy referral link
+  const copyReferralLink = () => {
+    navigator.clipboard.writeText(referralLink)
+    toast({
+      title: "Referral Link Copied!",
+      description: "Share this link with friends to earn referral rewards.",
+    })
+  }
+
+  // Share referral link
+  const shareReferralLink = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Join our platform and get amazing deals!",
+        text: `I'm inviting you to join our real estate platform. Use my referral link to get started!`,
+        url: referralLink,
+      })
+    } else {
+      copyReferralLink()
+    }
+  }
+
+  // Reset page on tab change
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab)
+    setSearchQuery("") // Clear search query
+
+    // Reset pagination to page 1
+    setInquiriesPage(1)
+    setSiteVisitsPage(1)
+    setWishlistPage(1)
+    setReferralsPage(1)
+  }
+
+  useEffect(() => {
+    // Reset to page 1 when searching
+    if (activeTab === "inquiries") {
+      setInquiriesPage(1)
+    } else if (activeTab === "site-visits") {
+      setSiteVisitsPage(1)
+    } else if (activeTab === "wishlist") {
+      setWishlistPage(1)
+    } else if (activeTab === "referrals") {
+      setReferralsPage(1)
+    }
+  }, [activeTab, handleSearch])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
@@ -323,161 +573,147 @@ export default function ProfilePage() {
       {/* Profile Header */}
       <section className="px-4 mb-8">
         <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-                         <Card className="bg-gradient-to-r from-blue-600 to-blue-700 text-white border-0">
-               <CardContent className="p-8">
-                 <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                   <div className="relative">
-                     {session?.user?.image ? (
-                       <Avatar className="w-24 h-24 border-4 border-white/20">
-                         <AvatarImage src={session.user.image} />
-                         <AvatarFallback className="text-2xl bg-white/20 text-white">
-                           {session.user.name?.charAt(0) || 'U'}
-                         </AvatarFallback>
-                       </Avatar>
-                     ) : (
-                       <Avatar className="w-24 h-24 border-4 border-white/20 bg-white/20">
-                         <AvatarFallback className="text-2xl text-white">
-                           {session?.user?.name?.charAt(0) || 'U'}
-                         </AvatarFallback>
-                       </Avatar>
-                     )}
-                   </div>
-                   
-                   <div className="flex-1 text-center md:text-left">
-                     <div className="flex items-center justify-between mb-2">
-                       <h1 className="text-3xl font-bold">{session?.user?.name || 'User'}</h1>
-                       {!isEditing && (
-                         <Button
-                           onClick={() => setIsEditing(true)}
-                           variant="ghost"
-                           size="sm"
-                           className="text-white hover:bg-white/20"
-                         >
-                           <Edit className="w-4 h-4 mr-2" />
-                           Edit Profile
-                         </Button>
-                       )}
-                     </div>
-                     <p className="text-blue-100 text-lg mb-4">{session?.user?.email}</p>
-                     
-                     <div className="flex flex-col md:flex-row gap-4 text-sm">
-                       {session?.user?.mobile && (
-                         <div className="flex items-center gap-2">
-                           <Phone className="w-4 h-4" />
-                           <span>{session.user.mobile}</span>
-                         </div>
-                       )}
-                       <div className="flex items-center gap-2">
-                         <Mail className="w-4 h-4" />
-                         <span>{session?.user?.email}</span>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </CardContent>
-             </Card>
-             
-             {/* Edit Profile Form */}
-             {isEditing && (
-               <motion.div
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ duration: 0.3 }}
-               >
-                 <Card className="mt-6">
-                   <CardHeader>
-                     <CardTitle className="flex items-center gap-2">
-                       <Edit className="w-5 h-5" />
-                       Edit Profile Information
-                     </CardTitle>
-                   </CardHeader>
-                   <CardContent className="space-y-4">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                       <div>
-                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                           <User className="w-4 h-4 inline mr-2" />
-                           Full Name
-                         </label>
-                         <Input
-                           type="text"
-                           value={formData.name}
-                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                           placeholder="Enter your full name"
-                           className="w-full"
-                         />
-                       </div>
-                       
-                       <div>
-                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                           <Mail className="w-4 h-4 inline mr-2" />
-                           Email Address
-                         </label>
-                         <Input
-                           type="email"
-                           value={formData.email}
-                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                           placeholder="Enter your email"
-                           className="w-full"
-                           disabled
-                         />
-                         <p className="text-xs text-slate-500 mt-1">Email cannot be changed</p>
-                       </div>
-                       
-                       <div>
-                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                           <Phone className="w-4 h-4 inline mr-2" />
-                           Mobile Number
-                         </label>
-                         <Input
-                           type="tel"
-                           value={formData.mobile}
-                           onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                           placeholder="Enter your mobile number"
-                           className="w-full"
-                         />
-                       </div>
-                       
-                       <div>
-                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                           Profile Picture URL
-                         </label>
-                         <Input
-                           type="url"
-                           value={formData.avatar}
-                           onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
-                           placeholder="Enter profile picture URL"
-                           className="w-full"
-                         />
-                       </div>
-                     </div>
-                     
-                     <div className="flex gap-3 pt-4">
-                       <Button
-                         onClick={handleSave}
-                         disabled={isLoading}
-                         className="flex items-center gap-2"
-                       >
-                         <Save className="w-4 h-4" />
-                         {isLoading ? 'Saving...' : 'Save Changes'}
-                       </Button>
-                       <Button
-                         onClick={handleCancel}
-                         variant="outline"
-                         className="flex items-center gap-2"
-                       >
-                         <X className="w-4 h-4" />
-                         Cancel
-                       </Button>
-                     </div>
-                   </CardContent>
-                 </Card>
-               </motion.div>
-             )}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <Card className="bg-gradient-to-r from-blue-600 to-blue-700 text-white border-0">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                  <div className="relative">
+                    {session?.user?.image ? (
+                      <Avatar className="w-24 h-24 border-4 border-white/20">
+                        <AvatarImage src={session.user.image || "/placeholder.svg"} />
+                        <AvatarFallback className="text-2xl bg-white/20 text-white">
+                          {session.user.name?.charAt(0) || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <Avatar className="w-24 h-24 border-4 border-white/20 bg-white/20">
+                        <AvatarFallback className="text-2xl text-white">
+                          {session?.user?.name?.charAt(0) || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+
+                  <div className="flex-1 text-center md:text-left">
+                    <div className="flex items-center justify-between mb-2">
+                      <h1 className="text-3xl font-bold">{session?.user?.name || "User"}</h1>
+                      {!isEditing && (
+                        <Button
+                          onClick={() => setIsEditing(true)}
+                          variant="ghost"
+                          size="sm"
+                          className="text-white hover:bg-white/20"
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit Profile
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-blue-100 text-lg mb-4">{session?.user?.email}</p>
+
+                    <div className="flex flex-col md:flex-row gap-4 text-sm">
+                      {session?.user?.mobile && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4" />
+                          <span>{session.user.mobile}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        <span>{session?.user?.email}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Edit Profile Form */}
+            {isEditing && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+                <Card className="mt-6">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Edit className="w-5 h-5" />
+                      Edit Profile Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          <User className="w-4 h-4 inline mr-2" />
+                          Full Name
+                        </label>
+                        <Input
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="Enter your full name"
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          <Mail className="w-4 h-4 inline mr-2" />
+                          Email Address
+                        </label>
+                        <Input
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="Enter your email"
+                          className="w-full"
+                          disabled
+                        />
+                        <p className="text-xs text-slate-500 mt-1">Email cannot be changed</p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          <Phone className="w-4 h-4 inline mr-2" />
+                          Mobile Number
+                        </label>
+                        <Input
+                          type="tel"
+                          value={formData.mobile}
+                          onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                          placeholder="Enter your mobile number"
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Profile Picture URL</label>
+                        <Input
+                          type="url"
+                          value={formData.avatar}
+                          onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
+                          placeholder="Enter profile picture URL"
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 pt-4">
+                      <Button onClick={handleSave} disabled={isLoading} className="flex items-center gap-2">
+                        <Save className="w-4 h-4" />
+                        {isLoading ? "Saving..." : "Save Changes"}
+                      </Button>
+                      <Button
+                        onClick={handleCancel}
+                        variant="outline"
+                        className="flex items-center gap-2 bg-transparent"
+                      >
+                        <X className="w-4 h-4" />
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -494,24 +730,27 @@ export default function ProfilePage() {
               <CardHeader>
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <CardTitle className="text-2xl">My Activity</CardTitle>
-                  
+
                   {/* Search */}
                   <div className="relative max-w-md">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
                       type="text"
-                      placeholder="Search properties..."
+                      placeholder={activeTab === "referrals" ? "Search referrals..." : "Search properties..."}
                       value={searchQuery}
-                      onChange={(e) => handleSearch(e.target.value)}
+                      onChange={(e) => {
+                        handleSearch(e.target.value)
+                        setSearchQuery(e.target.value)
+                      }}
                       className="pl-10"
                     />
                   </div>
                 </div>
               </CardHeader>
-              
+
               <CardContent>
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
+                <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+                  <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="inquiries" className="flex items-center gap-2">
                       <MessageSquare className="w-4 h-4" />
                       Inquiries ({inquiriesData?.totalRecords || 0})
@@ -519,6 +758,14 @@ export default function ProfilePage() {
                     <TabsTrigger value="site-visits" className="flex items-center gap-2">
                       <Eye className="w-4 h-4" />
                       Site Visits ({siteVisitsData?.totalRecords || 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="wishlist" className="flex items-center gap-2">
+                      <Heart className="w-4 h-4" />
+                      Wishlist ({wishlistData?.totalRecords || 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="referrals" className="flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      Referrals ({referralsData?.totalRecords || 0})
                     </TabsTrigger>
                   </TabsList>
 
@@ -547,17 +794,13 @@ export default function ProfilePage() {
                                   <div className="flex-1">
                                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
                                       <h3 className="font-semibold text-slate-800">
-                                        {inquiry.property || 'General Inquiry'}
+                                        {inquiry.property || "General Inquiry"}
                                       </h3>
-                                      <Badge className={getStatusColor(inquiry.status)}>
-                                        {inquiry.status}
-                                      </Badge>
+                                      <Badge className={getStatusColor(inquiry.status)}>{inquiry.status}</Badge>
                                     </div>
-                                    
-                                    <p className="text-slate-600 text-sm mb-3 line-clamp-2">
-                                      {inquiry.message}
-                                    </p>
-                                    
+
+                                    <p className="text-slate-600 text-sm mb-3 line-clamp-2">{inquiry.message}</p>
+
                                     <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500">
                                       <div className="flex items-center gap-1">
                                         <Clock className="w-3 h-3" />
@@ -572,7 +815,7 @@ export default function ProfilePage() {
                               </CardContent>
                             </Card>
                           ))}
-                          
+
                           {/* Pagination */}
                           {inquiriesData.totalPages > 1 && (
                             <div className="flex items-center justify-center gap-2 mt-8">
@@ -584,20 +827,20 @@ export default function ProfilePage() {
                               >
                                 ← Previous
                               </Button>
-                              
+
                               <div className="flex items-center gap-1">
                                 {Array.from({ length: Math.min(5, inquiriesData.totalPages) }, (_, i) => {
-                                  let pageNum;
+                                  let pageNum
                                   if (inquiriesData.totalPages <= 5) {
-                                    pageNum = i + 1;
+                                    pageNum = i + 1
                                   } else if (inquiriesPage <= 3) {
-                                    pageNum = i + 1;
+                                    pageNum = i + 1
                                   } else if (inquiriesPage >= inquiriesData.totalPages - 2) {
-                                    pageNum = inquiriesData.totalPages - 4 + i;
+                                    pageNum = inquiriesData.totalPages - 4 + i
                                   } else {
-                                    pageNum = inquiriesPage - 2 + i;
+                                    pageNum = inquiriesPage - 2 + i
                                   }
-                                  
+
                                   return (
                                     <Button
                                       key={pageNum}
@@ -607,10 +850,10 @@ export default function ProfilePage() {
                                     >
                                       {pageNum}
                                     </Button>
-                                  );
+                                  )
                                 })}
                               </div>
-                              
+
                               <Button
                                 variant="outline"
                                 onClick={() => handleInquiriesPageChange(inquiriesPage + 1)}
@@ -651,21 +894,20 @@ export default function ProfilePage() {
                                   <div className="flex-1">
                                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
                                       <h3 className="font-semibold text-slate-800">
-                                        {visit.property || 'General Site Visit'}
+                                        {visit.property || "General Site Visit"}
                                       </h3>
-                                      <Badge className={getStatusColor(visit.status)}>
-                                        {visit.status}
-                                      </Badge>
+                                      <Badge className={getStatusColor(visit.status)}>{visit.status}</Badge>
                                     </div>
-                                    
-                                    <p className="text-slate-600 text-sm mb-3 line-clamp-2">
-                                      {visit.message}
-                                    </p>
-                                    
+
+                                    <p className="text-slate-600 text-sm mb-3 line-clamp-2">{visit.message}</p>
+
                                     <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500">
                                       <div className="flex items-center gap-1">
                                         <Calendar className="w-3 h-3" />
-                                        <span>Scheduled: {visit.appointmentDate ? formatDate(visit.appointmentDate) : 'Not scheduled'}</span>
+                                        <span>
+                                          Scheduled:{" "}
+                                          {visit.appointmentDate ? formatDate(visit.appointmentDate) : "Not scheduled"}
+                                        </span>
                                       </div>
                                       <div className="flex items-center gap-1">
                                         <Clock className="w-3 h-3" />
@@ -680,7 +922,7 @@ export default function ProfilePage() {
                               </CardContent>
                             </Card>
                           ))}
-                          
+
                           {/* Pagination */}
                           {siteVisitsData.totalPages > 1 && (
                             <div className="flex items-center justify-center gap-2 mt-8">
@@ -692,20 +934,20 @@ export default function ProfilePage() {
                               >
                                 ← Previous
                               </Button>
-                              
+
                               <div className="flex items-center gap-1">
                                 {Array.from({ length: Math.min(5, siteVisitsData.totalPages) }, (_, i) => {
-                                  let pageNum;
+                                  let pageNum
                                   if (siteVisitsData.totalPages <= 5) {
-                                    pageNum = i + 1;
+                                    pageNum = i + 1
                                   } else if (siteVisitsPage <= 3) {
-                                    pageNum = i + 1;
+                                    pageNum = i + 1
                                   } else if (siteVisitsPage >= siteVisitsData.totalPages - 2) {
-                                    pageNum = siteVisitsData.totalPages - 4 + i;
+                                    pageNum = siteVisitsData.totalPages - 4 + i
                                   } else {
-                                    pageNum = siteVisitsPage - 2 + i;
+                                    pageNum = siteVisitsPage - 2 + i
                                   }
-                                  
+
                                   return (
                                     <Button
                                       key={pageNum}
@@ -715,10 +957,10 @@ export default function ProfilePage() {
                                     >
                                       {pageNum}
                                     </Button>
-                                  );
+                                  )
                                 })}
                               </div>
-                              
+
                               <Button
                                 variant="outline"
                                 onClick={() => handleSiteVisitsPageChange(siteVisitsPage + 1)}
@@ -733,6 +975,289 @@ export default function ProfilePage() {
                       )}
                     </div>
                   </TabsContent>
+
+                  <TabsContent value="wishlist" className="mt-6">
+                    <div className="space-y-4">
+                      {isLoadingWishlist ? (
+                        <div className="text-center py-8">
+                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                          <p className="text-slate-500">Loading wishlist...</p>
+                        </div>
+                      ) : !wishlistData?.data || wishlistData.data.length === 0 ? (
+                        <div className="text-center py-8">
+                          <Heart className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                          <h3 className="text-lg font-semibold text-slate-600 mb-2">Your Wishlist is Empty</h3>
+                          <p className="text-slate-500">Start exploring properties and save your favorites</p>
+                          <Link href="/properties">
+                            <Button className="mt-4">Browse Properties</Button>
+                          </Link>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {wishlistData.data.map((wishlist) => (
+                              <WishlistCard
+                                key={wishlist.property.id}
+                                property={wishlist.property}
+                                onRemove={() => handleRemoveFromWishlist(wishlist.property.id, wishlist.property.title)}
+                                onShare={() => shareProperty(wishlist.property)}
+                              />
+                            ))}
+                          </div>
+
+                          {/* Pagination */}
+                          {wishlistData.totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-2 mt-8">
+                              <Button
+                                variant="outline"
+                                onClick={() => handleWishlistPageChange(wishlistPage - 1)}
+                                disabled={wishlistPage === 1}
+                                className="flex items-center gap-2"
+                              >
+                                ← Previous
+                              </Button>
+
+                              <div className="flex items-center gap-1">
+                                {Array.from({ length: Math.min(5, wishlistData.totalPages) }, (_, i) => {
+                                  let pageNum
+                                  if (wishlistData.totalPages <= 5) {
+                                    pageNum = i + 1
+                                  } else if (wishlistPage <= 3) {
+                                    pageNum = i + 1
+                                  } else if (wishlistPage >= wishlistData.totalPages - 2) {
+                                    pageNum = wishlistData.totalPages - 4 + i
+                                  } else {
+                                    pageNum = wishlistPage - 2 + i
+                                  }
+
+                                  return (
+                                    <Button
+                                      key={pageNum}
+                                      variant={wishlistPage === pageNum ? "default" : "outline"}
+                                      onClick={() => handleWishlistPageChange(pageNum)}
+                                      className="w-10 h-10"
+                                    >
+                                      {pageNum}
+                                    </Button>
+                                  )
+                                })}
+                              </div>
+
+                              <Button
+                                variant="outline"
+                                onClick={() => handleWishlistPageChange(wishlistPage + 1)}
+                                disabled={wishlistPage === wishlistData.totalPages}
+                                className="flex items-center gap-2"
+                              >
+                                Next →
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="referrals" className="mt-6">
+                    <div className="space-y-6">
+                      {/* Referral Stats */}
+                      {referralStats && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+                            <CardContent className="p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="text-blue-100 text-sm">Total Referrals</p>
+                                  <p className="text-2xl font-bold">{referralStats.totalReferrals}</p>
+                                </div>
+                                <Users className="w-8 h-8 text-blue-200" />
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+                            <CardContent className="p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="text-green-100 text-sm">Completed</p>
+                                  <p className="text-2xl font-bold">{referralStats.completedReferrals}</p>
+                                </div>
+                                <UserPlus className="w-8 h-8 text-green-200" />
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+                            <CardContent className="p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="text-amber-100 text-sm">Total Earnings</p>
+                                  <p className="text-2xl font-bold">{formatPrice(referralStats.totalEarnings)}</p>
+                                </div>
+                                <DollarSign className="w-8 h-8 text-amber-200" />
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+                            <CardContent className="p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="text-purple-100 text-sm">Pending Earnings</p>
+                                  <p className="text-2xl font-bold">{formatPrice(referralStats.pendingEarnings)}</p>
+                                </div>
+                                <TrendingUp className="w-8 h-8 text-purple-200" />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      )}
+
+                      {/* Referral Link Section */}
+                      <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-3 mb-4">
+                            <Gift className="w-6 h-6 text-indigo-600" />
+                            <h3 className="text-lg font-semibold text-indigo-900">
+                              Earn {formatPrice(Number.parseInt(companyDetails?.referralAmount || '0') || 0)} per referral!
+                            </h3>
+                          </div>
+                          <p className="text-indigo-700 mb-4">
+                            Share your referral link with friends and earn rewards when they sign up and make their
+                            first purchase.
+                          </p>
+
+                          <div className="flex flex-col md:flex-row gap-3">
+                            <div className="flex-1">
+                              <Input value={referralLink} readOnly className="bg-white border-indigo-200" />
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                onClick={copyReferralLink}
+                                variant="outline"
+                                className="flex items-center gap-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 bg-transparent"
+                              >
+                                <Copy className="w-4 h-4" />
+                                Copy
+                              </Button>
+                              <Button
+                                onClick={shareReferralLink}
+                                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700"
+                              >
+                                <Share2 className="w-4 h-4" />
+                                Share
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Referrals List */}
+                      <div className="space-y-4">
+                        {isLoadingReferrals ? (
+                          <div className="text-center py-8">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                            <p className="text-slate-500">Loading referrals...</p>
+                          </div>
+                        ) : !referralsData?.data || referralsData.data.length === 0 ? (
+                          <div className="text-center py-8">
+                            <Users className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                            <h3 className="text-lg font-semibold text-slate-600 mb-2">No Referrals Yet</h3>
+                            <p className="text-slate-500">Start sharing your referral link to earn rewards</p>
+                            <Button onClick={shareReferralLink} className="mt-4">
+                              Share Referral Link
+                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            {referralsData.data.map((referral) => (
+                              <Card key={referral.id} className="hover:shadow-md transition-shadow">
+                                <CardContent className="p-6">
+                                  <div className="flex flex-col md:flex-row gap-4">
+                                    <div className="flex-1">
+                                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
+                                        <div>
+                                          <h3 className="font-semibold text-slate-800">{referral.referredName}</h3>
+                                          <p className="text-slate-600 text-sm">{referral.referredEmail}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                          <Badge className={getStatusColor(referral.status)}>{referral.status}</Badge>
+                                          <span className="font-semibold text-green-600">
+                                            {formatPrice(referral.referralAmount)}
+                                          </span>
+                                        </div>
+                                      </div>
+
+                                      <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500">
+                                        <div className="flex items-center gap-1">
+                                          <Clock className="w-3 h-3" />
+                                          <span>Referred: {formatDate(referral.createdAt)}</span>
+                                        </div>
+                                        {referral.completedAt && (
+                                          <div className="flex items-center gap-1">
+                                            <span>Completed: {formatDate(referral.completedAt)}</span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+
+                            {/* Pagination */}
+                            {referralsData.totalPages > 1 && (
+                              <div className="flex items-center justify-center gap-2 mt-8">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => handleReferralsPageChange(referralsPage - 1)}
+                                  disabled={referralsPage === 1}
+                                  className="flex items-center gap-2"
+                                >
+                                  ← Previous
+                                </Button>
+
+                                <div className="flex items-center gap-1">
+                                  {Array.from({ length: Math.min(5, referralsData.totalPages) }, (_, i) => {
+                                    let pageNum
+                                    if (referralsData.totalPages <= 5) {
+                                      pageNum = i + 1
+                                    } else if (referralsPage <= 3) {
+                                      pageNum = i + 1
+                                    } else if (referralsPage >= referralsData.totalPages - 2) {
+                                      pageNum = referralsData.totalPages - 4 + i
+                                    } else {
+                                      pageNum = referralsPage - 2 + i
+                                    }
+
+                                    return (
+                                      <Button
+                                        key={pageNum}
+                                        variant={referralsPage === pageNum ? "default" : "outline"}
+                                        onClick={() => handleReferralsPageChange(pageNum)}
+                                        className="w-10 h-10"
+                                      >
+                                        {pageNum}
+                                      </Button>
+                                    )
+                                  })}
+                                </div>
+
+                                <Button
+                                  variant="outline"
+                                  onClick={() => handleReferralsPageChange(referralsPage + 1)}
+                                  disabled={referralsPage === referralsData.totalPages}
+                                  className="flex items-center gap-2"
+                                >
+                                  Next →
+                                </Button>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </TabsContent>
                 </Tabs>
               </CardContent>
             </Card>
@@ -742,5 +1267,108 @@ export default function ProfilePage() {
 
       <Footer />
     </div>
-  );
-} 
+  )
+
+  function WishlistCard({
+    property,
+    onRemove,
+    onShare,
+  }: {
+    property: Property
+    onRemove: () => void
+    onShare: () => void
+  }) {
+    return (
+      <Card className="overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+        <div className="relative overflow-hidden">
+          <Image
+            src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
+            alt={property.title}
+            width={400}
+            height={192}
+            className="w-full h-48 object-cover"
+          />
+
+          {/* Status Badge */}
+          <Badge
+            className={`absolute top-3 left-3 ${property.sold ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}
+          >
+            {property.sold ? "Sold" : "Available"}
+          </Badge>
+
+          {/* Featured Badge */}
+          {property.featured && (
+            <Badge className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+              Featured
+            </Badge>
+          )}
+
+          {/* Action Buttons */}
+          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <Button
+              onClick={onShare}
+              variant="ghost"
+              size="sm"
+              className="bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm"
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
+            <Button
+              onClick={onRemove}
+              variant="ghost"
+              size="sm"
+              className="bg-black/20 text-white hover:bg-red-500 backdrop-blur-sm"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        <CardContent className="p-4">
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-lg font-bold text-slate-800 line-clamp-1">{property.title}</h3>
+            <Heart className="w-5 h-5 text-red-500 fill-current flex-shrink-0" />
+          </div>
+
+          <p className="text-xl font-bold text-amber-600 mb-3">{formatPrice(property.price)}</p>
+
+          <div className="flex items-center gap-3 text-slate-600 mb-3">
+            <div className="flex items-center gap-1">
+              <Bed className="w-4 h-4" />
+              <span className="text-sm">{property.bedrooms}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Bath className="w-4 h-4" />
+              <span className="text-sm">{property.bathrooms || 0}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Square className="w-4 h-4" />
+              <span className="text-sm">{property.areaSqft} sqft</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-slate-500 mb-3">
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm">{property.location}</span>
+          </div>
+
+          <div className="flex gap-2">
+            <Link href={`/properties/${property.slug}`} className="flex-1">
+              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm">
+                View Details
+              </Button>
+            </Link>
+            <Button
+              onClick={onRemove}
+              variant="outline"
+              size="sm"
+              className="px-3 hover:bg-red-50 hover:border-red-200 hover:text-red-600 bg-transparent"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+}

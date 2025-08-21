@@ -10,6 +10,7 @@ declare module "next-auth" {
       image?: string | null
       mobile?: string
       avatar?: string
+      mobileFetched?: boolean
     }
   }
 

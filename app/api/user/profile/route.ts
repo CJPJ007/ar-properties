@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       id: 1,
       name: session.user.name || 'User',
       email: session.user.email,
-      mobile: session.user.mobile || null,
+      mobile: session.user.mobile,
       avatar: session.user.image || null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()

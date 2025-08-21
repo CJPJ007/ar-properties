@@ -32,6 +32,7 @@ import Image from "next/image";
 import { AdvancedSearchRequest, Property } from "@/lib/interfaces";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Slider } from "@/components/slider";
+import PropertyCard from "@/components/property-card";
 
 const fadeInUp = {
   // initial: { opacity: 0, y: 60 },
@@ -172,7 +173,7 @@ export default function PropertiesPage() {
     setCurrentPage(1);
   };
 
-  const propertyTypes = ["All", "House", "Condo", "Townhouse", "Luxury", "Appartment"];
+  const propertyTypes = ["All", "House", "Condo", "Townhouse", "Luxury", "Appartment", "Plot"];
 
   const PaginationComponent = () => (
     <div className="flex items-center justify-center gap-2 mt-8">
@@ -185,7 +186,7 @@ export default function PropertiesPage() {
         ← Previous
       </Button>
       
-      <div className="flex items-center gap-1">
+      {/* <div className="flex items-center gap-1">
         {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
           let pageNum;
           if (totalPages <= 5) {
@@ -209,7 +210,7 @@ export default function PropertiesPage() {
             </Button>
           );
         })}
-      </div>
+      </div> */}
       
       <Button
         variant="outline"
@@ -240,12 +241,12 @@ export default function PropertiesPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
-        <div className="absolute inset-0 z-0">
-          <Slider className="" />
-        </div>
+      {/* <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16"> */}
+        {/* <div className="absolute inset-0 z-0"> */}
+          <Slider className="" showSearch={false} page="Properties"/>
+        {/* </div> */}
 
-        <motion.div
+        {/* <motion.div
           className="relative z-10 text-center text-white px-4"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -257,8 +258,8 @@ export default function PropertiesPage() {
           <p className="text-xl md:text-2xl text-blue-100">
             Discover your dream home with Ananta Realty's curated selection
           </p>
-        </motion.div>
-      </section>
+        </motion.div> */}
+      {/* </section> */}
 
       {/* Filters */}
       <section className="py-8 bg-white/80 backdrop-blur-sm border-b">
@@ -383,58 +384,58 @@ export default function PropertiesPage() {
 
 
 
-function PropertyCard({ property }: { property: Property }) {
-  return (
-    <motion.div variants={fadeInUp} whileHover={{ y: -10, rotateX: 5, rotateY: 5 }} className="group">
-      <Card className="overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
-        <div className="overflow-hidden">
-          <Image
-            src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
-            alt={property.title}
-            width={640}
-            height={64}
-            className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-          {property.featured && (
-            <Badge className="absolute top-4 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
-              Featured
-            </Badge>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </div>
-        <CardContent className="p-6">
-          <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">
-            {property.title}
-          </h3>
-          <p className="text-2xl font-bold text-amber-600 mb-3">{property.price} INR</p>
-          <div className="flex items-center gap-4 text-slate-600 mb-4">
-            <div className="flex items-center gap-1">
-              <Bed className="w-4 h-4" />
-              <span>{property.bedrooms}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Bath className="w-4 h-4" />
-              <span>{property.bathrooms || 0}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Square className="w-4 h-4" />
-              <span>{property.areaSqft} sqft</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-slate-500 mb-4">
-            <MapPin className="w-4 h-4" />
-            <span>{property.location}</span>
-          </div>
-          <Link href={`/properties/${property.slug}`}>
-            <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105">
-              View Details
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-    </motion.div>
-  )
-}
+// function PropertyCard({ property }: { property: Property }) {
+//   return (
+//     <motion.div variants={fadeInUp} whileHover={{ y: -10, rotateX: 5, rotateY: 5 }} className="group">
+//       <Card className="overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
+//         <div className="overflow-hidden">
+//           <Image
+//             src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
+//             alt={property.title}
+//             width={640}
+//             height={64}
+//             className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+//           />
+//           {property.featured && (
+//             <Badge className="absolute top-4 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+//               Featured
+//             </Badge>
+//           )}
+//           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+//         </div>
+//         <CardContent className="p-6">
+//           <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">
+//             {property.title}
+//           </h3>
+//           <p className="text-2xl font-bold text-amber-600 mb-3">{property.price} INR</p>
+//           <div className="flex items-center gap-4 text-slate-600 mb-4">
+//             <div className="flex items-center gap-1">
+//               <Bed className="w-4 h-4" />
+//               <span>{property.bedrooms}</span>
+//             </div>
+//             <div className="flex items-center gap-1">
+//               <Bath className="w-4 h-4" />
+//               <span>{property.bathrooms || 0}</span>
+//             </div>
+//             <div className="flex items-center gap-1">
+//               <Square className="w-4 h-4" />
+//               <span>{property.areaSqft} sqft</span>
+//             </div>
+//           </div>
+//           <div className="flex items-center gap-2 text-slate-500 mb-4">
+//             <MapPin className="w-4 h-4" />
+//             <span>{property.location}</span>
+//           </div>
+//           <Link href={`/properties/${property.slug}`}>
+//             <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105">
+//               View Details
+//             </Button>
+//           </Link>
+//         </CardContent>
+//       </Card>
+//     </motion.div>
+//   )
+// }
 
 function PropertyCardSkeleton() {
   return (

@@ -15,6 +15,7 @@ import { Property, Testimonial } from "@/lib/interfaces"
 import Image from "next/image"
 import Link from "next/link"
 import { Slider } from "@/components/slider"
+import PropertyCard from "@/components/property-card"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -36,9 +37,10 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
-  const [currentTestimonial, setCurrentTestimonial] = useState(0)
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [videoModalOpen, setVideoModalOpen] = useState(false)
   const [currentVideo, setCurrentVideo] = useState("")
+  const [totalTestimonials, setTotalTestimonials] = useState(0);
 
   useEffect(() => {
     fetchProperties()
@@ -59,14 +61,27 @@ export default function HomePage() {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch("/api/testimonials")
+      const response = await fetch(`/api/testimonials?page=${currentTestimonial+1}&size=1`,{
+        method:"POST",
+        headers:{
+          "Content-type":"application/json"
+        },
+        body:JSON.stringify({
+          criteriaList:[],
+          operations:[]
+        })
+      })
       const data = await response.json()
-      setTestimonials(data)
+      setTotalTestimonials(data.totalRecords);
+      setTestimonials(data.data)
     } catch (error) {
       console.error("Error fetching testimonials:", error)
     }
   }
 
+  useEffect(()=>{
+    fetchTestimonials();
+  }, [currentTestimonial])
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
       setSearchResults([])
@@ -88,11 +103,11 @@ export default function HomePage() {
   }
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
+    setCurrentTestimonial((prev) => (prev + 1) % totalTestimonials)
   }
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+    setCurrentTestimonial((prev) => (prev - 1 + totalTestimonials) % totalTestimonials)
   }
 
   const openVideoModal = (videoLink: string) => {
@@ -112,7 +127,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
       <Header />
 
-      {/* Hero Section */}
+      {/* Hero Section
       <section className="relative h-screen flex items-center justify-center overflow-hidden mt-0 md:mt-16">
         <div className="absolute inset-0 z-0">
           <Slider className="w-full h-screen relative"/>
@@ -142,7 +157,7 @@ export default function HomePage() {
           </motion.p>
 
           {/* Search Bar */}
-          <motion.div
+          {/* <motion.div
             className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -177,7 +192,7 @@ export default function HomePage() {
           </motion.div>
 
           {/* Search Results */}
-          <AnimatePresence>
+          {/* <AnimatePresence>
             {searchResults.length > 0 && (
               <motion.div
                 className="grid relative grid-cols-1 gap-6 max-w-6xl mx-auto my-10"
@@ -247,9 +262,9 @@ export default function HomePage() {
           
               </motion.div>
             )}
-          </AnimatePresence>
+          </AnimatePresence> */}
 
-          {searchResults.length===0 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}>
+          {/* {searchResults.length===0 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}>
             <Button
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
@@ -258,8 +273,9 @@ export default function HomePage() {
               Explore Properties
             </Button>
           </motion.div>}
-        </motion.div>
-      </section>
+        </motion.div> */}
+      {/* </section> */}
+      <Slider className="w-full h-screen" showSearch page="Home"/>
 
       {/* Featured Properties */}
       <section id="properties" className="py-20 px-4">
@@ -350,7 +366,7 @@ export default function HomePage() {
           <div className="relative">
             <AnimatePresence mode="wait">
               {testimonials.length > 0 && (
-                <TestimonialCard key={currentTestimonial} testimonial={testimonials[currentTestimonial]} />
+                <TestimonialCard testimonial={testimonials[0]} onPlay={() => openVideoModal(testimonials[0].youtubeUrl)}/>
               )}
             </AnimatePresence>
 
@@ -420,58 +436,58 @@ export default function HomePage() {
   )
 }
 
-function PropertyCard({ property }: { property: Property }) {
-  return (
-    <motion.div variants={fadeInUp} whileHover={{ y: -10, rotateX: 5, rotateY: 5 }} className="group">
-      <Card className="overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
-        <div className="relative overflow-hidden">
-          <Image
-            src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
-            alt={property.title}
-            width={640}
-            height={64}
-            className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-          {property.featured && (
-            <Badge className="absolute top-4 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
-              Featured
-            </Badge>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </div>
-        <CardContent className="p-6">
-          <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">
-            {property.title}
-          </h3>
-          <p className="text-2xl font-bold text-amber-600 mb-3">{property.price} INR</p>
-          <div className="flex items-center gap-4 text-slate-600 mb-4">
-            <div className="flex items-center gap-1">
-              <Bed className="w-4 h-4" />
-              <span>{property.bedrooms}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Bath className="w-4 h-4" />
-              <span>{property.bathrooms || 0}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Square className="w-4 h-4" />
-              <span>{property.areaSqft} sqft</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-slate-500 mb-4">
-            <MapPin className="w-4 h-4" />
-            <span>{property.location}</span>
-          </div>
-<Link href={`/properties/${property.slug}`}>
-            <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105">
-              View Details
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-    </motion.div>
-  )
-}
+// function PropertyCard({ property }: { property: Property }) {
+//   return (
+//     <motion.div variants={fadeInUp} whileHover={{ y: -10, rotateX: 5, rotateY: 5 }} className="group">
+//       <Card className="overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
+//         <div className="relative overflow-hidden">
+//           <Image
+//             src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
+//             alt={property.title}
+//             width={640}
+//             height={64}
+//             className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+//           />
+//           {property.featured && (
+//             <Badge className="absolute top-4 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+//               Featured
+//             </Badge>
+//           )}
+//           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+//         </div>
+//         <CardContent className="p-6">
+//           <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">
+//             {property.title}
+//           </h3>
+//           <p className="text-2xl font-bold text-amber-600 mb-3">{property.price} INR</p>
+//           <div className="flex items-center gap-4 text-slate-600 mb-4">
+//             <div className="flex items-center gap-1">
+//               <Bed className="w-4 h-4" />
+//               <span>{property.bedrooms}</span>
+//             </div>
+//             <div className="flex items-center gap-1">
+//               <Bath className="w-4 h-4" />
+//               <span>{property.bathrooms || 0}</span>
+//             </div>
+//             <div className="flex items-center gap-1">
+//               <Square className="w-4 h-4" />
+//               <span>{property.areaSqft} sqft</span>
+//             </div>
+//           </div>
+//           <div className="flex items-center gap-2 text-slate-500 mb-4">
+//             <MapPin className="w-4 h-4" />
+//             <span>{property.location}</span>
+//           </div>
+// <Link href={`/properties/${property.slug}`}>
+//             <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105">
+//               View Details
+//             </Button>
+//           </Link>
+//         </CardContent>
+//       </Card>
+//     </motion.div>
+//   )
+// }
 
 function PropertyCardSkeleton() {
   return (
@@ -542,18 +558,19 @@ function VideoCard({ property, onPlay }: { property: Property; onPlay: () => voi
     >
       <Card className="overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500">
         <div className="relative">
-          <img
-            src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
-            alt={property.title}
-            className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <iframe
+                src={property.virtualTourLink.split("#VIDEO#")[0]}
+                className="w-full h-64"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center">
               <Play className="w-8 h-8 text-slate-800 ml-1" />
             </div>
           </div>
         </div>
-        <CardContent className="p-6">
+        {/* <CardContent className="p-6">
           <h3 className="text-lg font-bold text-slate-800 mb-3">{property.title}</h3>
           <div className="flex items-center gap-4 text-sm text-slate-600 mb-3">
             <div className="flex items-center gap-1">
@@ -569,26 +586,34 @@ function VideoCard({ property, onPlay }: { property: Property; onPlay: () => voi
               <span>{property.bedrooms} Beds</span>
             </div>
           </div>
-          <p className="text-slate-600 text-sm">{property.description}</p>
-        </CardContent>
+          <p className="text-slate-600 text-sm">{property.description}</p> */}
+        {/* </CardContent> */}
       </Card>
     </motion.div>
   )
 }
 
-function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
+function TestimonialCard({ testimonial, onPlay  }: { testimonial: Testimonial, onPlay: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
       transition={{ duration: 0.5 }}
+            onClick={onPlay}
+
     >
       <Card className="bg-white/80 backdrop-blur-sm shadow-xl border-0 p-8">
         <CardContent className="text-center">
-          <img
-            src={testimonial.image || "/placeholder.svg"}
-            alt={testimonial.name}
+          <iframe
+                src={testimonial.youtubeUrl}
+                className="w-full h-64"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+          {/* <img
+            src={testimonial.customer.avatar || "/placeholder.svg"}
+            alt={testimonial.customer.name}
             className="w-20 h-20 rounded-full mx-auto mb-6 object-cover"
           />
           <div className="flex justify-center mb-4">
@@ -599,13 +624,13 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
               />
             ))}
           </div>
-          <p className="text-lg text-slate-700 mb-6 italic leading-relaxed">"{testimonial.content}"</p>
-          <h4 className="text-xl font-bold text-slate-800 mb-1">{testimonial.name}</h4>
-          <p className="text-slate-600 mb-2">{testimonial.role}</p>
-          <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
+          <p className="text-lg text-slate-700 mb-6 italic leading-relaxed">"{testimonial.review}"</p>
+          <h4 className="text-xl font-bold text-slate-800 mb-1">{testimonial.customer.name}</h4> */}
+          {/* <p className="text-slate-600 mb-2">{testimonial.role}</p> */}
+          {/* <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
             <span>Purchased:</span>
             <span className="font-medium">{testimonial.property}</span>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </motion.div>

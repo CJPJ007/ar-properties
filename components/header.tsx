@@ -6,7 +6,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useEffect, useState } from "react"
-import Image from "next/image"
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -54,7 +53,7 @@ type CompanyDetails = {
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const { company } = useCompanyDetails()
 
   const handleGoogleLogin = () => {
@@ -83,8 +82,8 @@ export default function Header() {
 
   return (
     <motion.header
-      className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-transparent"
+      className={`hidden md:block text-white fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        "bg-white/95 text-black backdrop-blur-md shadow-lg" 
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -128,10 +127,13 @@ export default function Header() {
                       href="/profile"
                       className="text-sm text-slate-600 hover:text-blue-600 transition-colors"
                     >
-                      <img src={session.user.image}
-                      width={20}
-                      height={20}
-                      className="rounded-full"/>
+                      <img 
+                        src={session.user?.image || "/default-avatar.png"}
+                        width={24}
+                        height={24}
+                        className="rounded-full"
+                        alt="user"
+                      />
                     </Link>
                     <Button
                       onClick={handleGoogleLogin}
@@ -149,7 +151,7 @@ export default function Header() {
                     size="sm"
                     className="flex items-center gap-2 border-slate-300 hover:border-blue-500 hover:bg-blue-50"
                   >
-                    <span className="text-sm font-medium">Sign In</span>
+                    <span className="text-sm text-black font-medium">Sign In</span>
                   </Button>
                 )}
               </motion.div>
@@ -157,6 +159,17 @@ export default function Header() {
           </div>
         </div>
       </nav>
+
+      {/* 🔥 Live Scrolling Banner */}
+      <div className="w-full overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
+        <motion.div
+          className="whitespace-nowrap text-sm md:text-base font-medium"
+          animate={{ x: ["100%", "-100%"] }}
+          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+        >
+          {[1,1,1,1,1,1,1,1,1,1].map((i)=>company?.tagline || "Ananta Realty is your way to property" + " | ")}
+        </motion.div>
+      </div>
     </motion.header>
   )
 }

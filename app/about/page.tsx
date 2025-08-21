@@ -62,12 +62,12 @@ export default function AboutPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
-        <div className="absolute inset-0 z-0">
-          <Slider className="w-full h-96" />
-        </div>
+      {/* <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16"> */}
+        {/* <div className="absolute inset-0 z-0"> */}
+          <Slider className="" showSearch={false} page="About"/>
+        {/* </div> */}
 
-        <motion.div
+        {/* <motion.div
           className="relative z-10 text-center text-white px-4"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -75,8 +75,8 @@ export default function AboutPage() {
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-4">About Ananta Realty</h1>
           <p className="text-xl md:text-2xl text-blue-100">Your trusted partner in finding the perfect home</p>
-        </motion.div>
-      </section>
+        </motion.div> */}
+      {/* </section> */}
 
       {/* Our Story */}
       <section className="py-20 px-4">
@@ -248,7 +248,7 @@ function TeamCard({ member, index }: { member: any; index: number }) {
           <img
             src={`/images/${member.imageUrl}` || "/placeholder.svg"}
             alt={member.name}
-            className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-64 transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
             <div className="text-white">

@@ -90,7 +90,7 @@ export default function InquiryForm({
         />
       </div>
 
-      <div>
+      {/* <div>
         <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
           Email *
         </label>
@@ -104,7 +104,7 @@ export default function InquiryForm({
           className="h-12 border-slate-200 focus:border-blue-500"
           placeholder="your.email@example.com"
         />
-      </div>
+      </div> */}
 
       <div>
         <label htmlFor="mobile" className="block text-sm font-medium text-slate-700 mb-2">
@@ -157,12 +157,11 @@ export default function InquiryForm({
 
       <div>
         <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
-          Message *
+          Message
         </label>
         <Textarea
           id="message"
           name="message"
-          required
           value={formData.message}
           onChange={handleInputChange}
           rows={5}

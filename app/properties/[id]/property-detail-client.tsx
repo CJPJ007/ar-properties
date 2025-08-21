@@ -1,21 +1,7 @@
 "use client"
-
-import type React from "react"
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import {
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  MapPin,
-  Bed,
-  Bath,
-  Square,
-  Play,
-  X,
-  Share2,
-  Heart,
-} from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, MapPin, Bed, Bath, Square, Play, X, Share2, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -23,26 +9,9 @@ import { useToast } from "@/hooks/use-toast"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import InquiryModal from "@/components/inquiry-modal"
+import TestimonialModal from "@/components/testimonial-modal"
 import Link from "next/link"
-
-interface Property {
-  id: string
-  title: string
-  description: string
-  location: string
-  price: string
-  bedrooms: number
-  bathrooms: number
-  areaSqft: number
-  type: string
-  status: string
-  featured: boolean
-  thumbnailImage: string
-  images: Array<{ imageUrl: string }>
-  virtualTourLink?: string
-  seoTitle?: string
-  seoDescription?: string
-}
+import { Property } from "@/lib/interfaces"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -59,7 +28,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
 
   // Add thumbnail image to images array if not already present
   const allImages = property.images || []
-  if (property.thumbnailImage && !allImages.find(img => img.imageUrl === property.thumbnailImage)) {
+  if (property.thumbnailImage && !allImages.find((img) => img.imageUrl === property.thumbnailImage)) {
     allImages.push({ imageUrl: property.thumbnailImage })
   }
 
@@ -99,6 +68,17 @@ export default function PropertyDetailClient({ property }: { property: Property 
         description: "Property link copied to clipboard.",
       })
     }
+  }
+
+
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price)
   }
 
   return (
@@ -224,7 +204,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
       {/* Property Details */}
       <section className="px-4 mb-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Details */}
             <div className="lg:col-span-2">
               <motion.div {...fadeInUp}>
@@ -236,11 +216,17 @@ export default function PropertyDetailClient({ property }: { property: Property 
                       <span className="text-lg">{property.location}</span>
                     </div>
                   </div>
+                  <div className="text-right">
+                    <p className="text-3xl md:text-4xl font-bold text-amber-600">{property.type==="Plot"?`${property.cents} Cents = ${formatPrice(property.price)}` :formatPrice( property.price)}</p>
+                    {property.featured && (
+                      <Badge className="mt-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white">Featured</Badge>
+                    )}
+                  </div>
                 </div>
 
                 {/* Key Features */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                  <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                  {property.type!=="Plot" && <><div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
                     <Bed className="w-6 h-6 text-blue-600" />
                     <div>
                       <p className="text-2xl font-bold text-slate-800">{property.bedrooms}</p>
@@ -253,7 +239,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
                       <p className="text-2xl font-bold text-slate-800">{property.bathrooms}</p>
                       <p className="text-sm text-slate-600">Bathrooms</p>
                     </div>
-                  </div>
+                  </div></>}
                   <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
                     <Square className="w-6 h-6 text-blue-600" />
                     <div>
@@ -267,7 +253,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
                 <Card className="mb-8">
                   <CardContent className="p-6">
                     <h2 className="text-2xl font-bold text-slate-800 mb-4">Description</h2>
-                    <p className="text-slate-600 leading-relaxed text-clip">{property.description}</p>
+                    <div className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: property.description }}></div>
                   </CardContent>
                 </Card>
 
@@ -286,7 +272,9 @@ export default function PropertyDetailClient({ property }: { property: Property 
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-200">
                         <span className="text-slate-600">Status</span>
-                        <span className="font-medium text-slate-800">{property.status.charAt(0).toUpperCase() + property.status.slice(1)}</span>
+                        <span className="font-medium text-slate-800">
+                          {property.status.charAt(0).toUpperCase() + property.status.slice(1)}
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -297,24 +285,34 @@ export default function PropertyDetailClient({ property }: { property: Property 
             {/* Sidebar */}
             <div className="lg:col-span-1">
               <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
-                {/* Agent Card */}
+                {/* Contact Card */}
                 <Card className="mb-6">
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold text-slate-800 mb-4">Interested in this property?</h3>
                     <p className="text-slate-600 mb-6">
                       Get in touch with us to learn more about this property or schedule a viewing.
                     </p>
-                    
+
                     {/* Contact Button */}
-                    <InquiryModal 
+                    <InquiryModal
                       buttonText="Contact Agent"
                       buttonSize="lg"
-                      buttonClassName="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+                      buttonClassName="w-full mb-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
                       modalTitle="Property Inquiry"
                       modalDescription={`Tell us about your interest in ${property?.title}`}
                       property={property?.title}
                       showAppointmentDate={true}
                     />
+
+                    {/* Testimonial Button */}
+                    {/* <TestimonialModal
+                      buttonText="Share Your Experience"
+                      buttonSize="lg"
+                      buttonClassName="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+                      modalTitle="Share Your Experience"
+                      modalDescription="Help others by sharing your experience with this property"
+                      propertyTitle={property?.title}
+                    /> */}
                   </CardContent>
                 </Card>
               </motion.div>
@@ -329,7 +327,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeInUp} transition={{ delay: 0.3 }}>
               <h2 className="text-3xl font-bold text-slate-800 mb-6">Virtual Tours</h2>
-              
+
               <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden bg-black">
                 <AnimatePresence mode="wait">
                   <motion.iframe
@@ -433,7 +431,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
               >
                 <X className="w-6 h-6" />
               </Button>
-              
+
               {/* Video Navigation in Modal */}
               {property.virtualTourLink.split("#").length > 1 && (
                 <>
@@ -458,7 +456,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
                   </div>
                 </>
               )}
-              
+
               <iframe
                 src={property.virtualTourLink.split("#")[currentVideoIndex]}
                 className="w-full h-full"
@@ -474,4 +472,4 @@ export default function PropertyDetailClient({ property }: { property: Property 
       <Footer />
     </div>
   )
-} 
+}

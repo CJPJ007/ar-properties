@@ -12,6 +12,7 @@ import Footer from "@/components/footer";
 import Link from "next/link";
 import Image from "next/image";
 import { Blog } from "@/lib/interfaces";
+import { Slider } from "@/components/slider";
 
 interface BlogsClientProps {
   blogsData: {
@@ -65,9 +66,11 @@ export default function BlogsClient({ blogsData, currentPage }: BlogsClientProps
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-90"></div>
-        <motion.div
+      {/* <section className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden mt-0 md:mt-16"> */}
+        <Slider className="" showSearch={false} page="Blogs" />
+        {/* 
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-90"></div> */}
+        {/* <motion.div
           className="relative z-10 text-center text-white px-4"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,8 +82,8 @@ export default function BlogsClient({ blogsData, currentPage }: BlogsClientProps
           <p className="text-xl md:text-2xl text-blue-100">
             Insights, Tips & Market Trends
           </p>
-        </motion.div>
-      </section>
+        </motion.div> */}
+      {/* </section> */}
 
       {/* Search Section */}
       <section className="py-8 bg-white/80 backdrop-blur-sm border-b">
@@ -218,10 +221,10 @@ function BlogCard({ blog }: { blog: Blog }) {
             <Image
               src={getImageUrl(blog)}
               alt={blog.title}
-              fill
               className="object-cover transition-transform duration-700 group-hover:scale-110"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
+              width={1200}
+              height={628}
+/>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
           

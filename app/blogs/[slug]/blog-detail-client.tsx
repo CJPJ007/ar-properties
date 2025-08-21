@@ -109,9 +109,11 @@ export default function BlogDetailClient({ blog }: BlogDetailClientProps) {
               <Image
                 src={getImageUrl()}
                 alt={blog.title}
-                fill
+                // fill
+                width={1200}
+                height={628}
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
+                // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

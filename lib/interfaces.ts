@@ -1,3 +1,5 @@
+import { Session } from "next-auth"
+
 export interface PropertyImage {
   id: string
   imageUrl: string
@@ -5,7 +7,7 @@ export interface PropertyImage {
 }
 
 export interface Property {
-  id: string
+  id: number
   slug: string
   title: string
   description: string
@@ -26,16 +28,20 @@ export interface Property {
   seoTitle: string
   seoDescription: string
   virtualTourLink: string
+  cents: number
+}
+
+export interface Customer {
+  id: string,
+  name: string,
+  email: string,
+  mobile: string,
+  avatar:string
 }
 
 export interface Testimonial {
   id: string
-  name: string
-  role: string
-  content: string
-  rating: number
-  image: string
-  property: string
+  youtubeUrl: string
 }
 
 export interface SliderProps {
@@ -51,6 +57,12 @@ export interface InquiryFormProps {
   property?: string
   showAppointmentDate?: boolean
   className?: string
+}
+
+export interface WishlistItem {
+  id: number
+  customer: Session['user']
+  property: Property
 }
 
 export interface InquiryFormData {
@@ -91,4 +103,25 @@ export interface Blog {
   createdAt: string;
   updatedAt: string;
   thumbnailImage?: string;
+}
+
+export interface Notification {
+  id: string
+  userId: string
+  title: string
+  message: string
+  type: "inquiry" | "site_visit" | "property_update" | "system"
+  read: boolean
+  actionUrl?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface NotificationPreferences {
+  browser: boolean
+  email: boolean
+  inquiries: boolean
+  siteVisits: boolean
+  propertyUpdates: boolean
+  system: boolean
 }

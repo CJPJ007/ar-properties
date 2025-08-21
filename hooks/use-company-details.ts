@@ -31,6 +31,7 @@ export type CompanyDetails = {
   longitude: number | null;
   createdAt: string | null;
   updatedAt: string | null;
+  referralAmount: string | null;
 };
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())

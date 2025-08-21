@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Youtube, LucideYoutube } from "lucide-react"
+import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Youtube, LucideYoutube, MessageCircleIcon, LinkedinIcon } from "lucide-react"
 import Link from "next/link"
 import { Home, Building, Users, Briefcase, Camera } from "lucide-react"
 import { useCompanyDetails } from "@/hooks/use-company-details"
@@ -56,6 +56,8 @@ export default function Footer() {
     { name: "Twitter", icon: Twitter, href: company?.twitterUrl || "#" },
     { name: "Instagram", icon: Instagram, href: company?.instagramUrl || "#" },
     { name: "YouTube", icon: LucideYoutube, href: company?.youtubeUrl || "#" },
+    { name: "WhatsApp", icon:MessageCircleIcon, href:`https://wa.me/${company?.whatsappNumber?.replace(/\D/g, '') || '1234567890'}?text=Hello, I'm interested in your real estate services`},
+    { name: "LinkedIn", icon: LinkedinIcon, href: company?.linkedinUrl || "#" },
   ]
 
   return (
@@ -80,9 +82,11 @@ export default function Footer() {
               <div className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-amber-400" />
                 <span className="text-blue-100">
+                  <a href={company?.googleMapsUrl || "#"} className="text-blue-100 hover:text-amber-400 transition-colors">
                   {company
                     ? `${company.streetAddress}, ${company.city}, ${company.state} ${company.postalCode}`
                     : "123 Estate Lane, City, ST 12345"}
+                    </a>
                 </span>
               </div>
               <div className="flex items-center gap-3">

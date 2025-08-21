@@ -5,14 +5,10 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const page = searchParams.get('page') || '1';
-    const size = searchParams.get('size') || '10';
-    
     const body = await request.json();
-
+    console.log(body);
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/public/advancedSearch/Inquiries?page=${page}&size=${size}`,
+      `${process.env.BACKEND_URL}/api/public/createInquiry`,
       {
         method: 'POST',
         headers: {
@@ -26,7 +22,7 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to fetch inquiries');
     }
 
-    const data = await response.json();
+    const data = await response.text();
     return NextResponse.json(data);
 
   } catch (error) {
