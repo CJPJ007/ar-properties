@@ -275,7 +275,7 @@ export default function HomePage() {
           </motion.div>}
         </motion.div> */}
       {/* </section> */}
-      <Slider className="w-full h-[600px]" showSearch page="Home"/>
+      <Slider className="w-full h-[522px]" showSearch page="Home"/>
 
       {/* Featured Properties */}
       <section id="properties" className="py-20 px-4">
