@@ -61,7 +61,7 @@ export default function HomePage() {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch(`/api/testimonials?page=${currentTestimonial+1}&size=1`,{
+      const response = await fetch(`/api/testimonials?page=${currentTestimonial+1}&size=3`,{
         method:"POST",
         headers:{
           "Content-type":"application/json"
@@ -275,7 +275,7 @@ export default function HomePage() {
           </motion.div>}
         </motion.div> */}
       {/* </section> */}
-      <Slider className="w-full h-screen" showSearch page="Home"/>
+      <Slider className="w-full h-screen" page="Home"/>
 
       {/* Featured Properties */}
       <section id="properties" className="py-20 px-4">
@@ -365,9 +365,14 @@ export default function HomePage() {
 
           <div className="relative">
             <AnimatePresence mode="wait">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
               {testimonials.length > 0 && (
-                <TestimonialCard testimonial={testimonials[0]} onPlay={() => openVideoModal(testimonials[0].youtubeUrl)}/>
+                testimonials.map((testimonial, index) => (
+                  <TestimonialCard key={index} testimonial={testimonial} onPlay={() => openVideoModal(testimonial.youtubeUrl)}/>
+                ))
               )}
+              </div>
             </AnimatePresence>
 
             <div className="flex justify-center gap-4 mt-8">
@@ -603,8 +608,8 @@ function TestimonialCard({ testimonial, onPlay  }: { testimonial: Testimonial, o
             onClick={onPlay}
 
     >
-      <Card className="bg-white/80 backdrop-blur-sm shadow-xl border-0 p-8">
-        <CardContent className="text-center">
+      <Card className="bg-white/80 shadow-xl border-0">
+        <div className="text-center rounded-lg overflow-hidden">
           <iframe
                 src={testimonial.youtubeUrl}
                 className="w-full h-64"
@@ -631,7 +636,7 @@ function TestimonialCard({ testimonial, onPlay  }: { testimonial: Testimonial, o
             <span>Purchased:</span>
             <span className="font-medium">{testimonial.property}</span>
           </div> */}
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   )

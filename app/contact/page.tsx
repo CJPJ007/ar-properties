@@ -10,6 +10,7 @@ import Footer from "@/components/footer"
 import ChatBot from "@/components/chatbot"
 import { Slider } from "@/components/slider"
 import InquiryForm from "@/components/inquiry-form"
+import { useCompanyDetails } from "@/hooks/use-company-details"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -19,6 +20,42 @@ const fadeInUp = {
 
 export default function ContactPage() {
 
+  const {company} = useCompanyDetails();
+
+
+
+  // Add this helper inside your component
+const isInWebView = () => {
+  const ua = navigator.userAgent || navigator.vendor || window.opera
+  return (
+    ua.includes("wv") || ua.includes("WebView") || (ua.includes("Version/") && /; wv/.test(ua))
+  )
+}
+
+const handleWhatsApp = (number: string) => {
+  const formatted = number.replace(/\D/g, "")
+  if (isInWebView()) {
+    // Force open WhatsApp via Android intent
+    window.location.href = `intent://send/${formatted}#Intent;scheme=smsto;package=com.whatsapp;end`
+  } else {
+    // Browser normal
+    window.open(
+      `https://wa.me/${formatted}?text=Hello, I'm interested in your real estate services`,
+      "_blank"
+    )
+  }
+}
+
+const handleCall = (number: string
+) => {
+  const formatted = number.replace(/\D/g, "")
+  if (isInWebView()) {
+    // Force open dialer via intent
+    window.location.href = `intent://${formatted}#Intent;scheme=tel;end`
+  } else {
+    window.location.href = `tel:${formatted}`
+  }
+}
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
       <Header />
@@ -57,25 +94,25 @@ export default function ContactPage() {
               </div>
 
               <div className="space-y-6">
-                <ContactInfo icon={MapPin} title="Address" content="123 Estate Lane, City, ST 12345" />
-                <ContactInfo icon={Phone} title="Phone" content="(123) 456-7890" href="tel:+1234567890" />
+                <ContactInfo icon={MapPin} title="Address" content={company?.streetAddress}/>
+                <ContactInfo icon={Phone} title="Phone" content={company?.primaryPhone} href={`tel:${company?.primaryPhone}`} />
                 <ContactInfo
                   icon={Mail}
                   title="Email"
-                  content="info@anantarealty.com"
+                  content={company?.email}
                   href="mailto:info@anantarealty.com"
                 />
-                <ContactInfo icon={Clock} title="Office Hours" content="Monday - Sunday: 9 AM - 6 PM" />
+                <ContactInfo icon={Clock} title="Office Hours" content={company?.businessHoursWeekday} />
               </div>
 
               {/* Map */}
-              <motion.div
+              {/* <motion.div
                 className="rounded-lg overflow-hidden shadow-lg"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.086093285335!2d-122.4194156846813!3d37.77492977975966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808f5e3b3b1b%3A0x4b2b3b3b3b3b3b3b!2s123%20Estate%20Lane%2C%20City%2C%20ST%2012345!5e0!3m2!1sen!2sus!4v1634567890123!5m2!1sen!2sus"
+                  src={company?.googleMapsUrl}
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
@@ -83,7 +120,7 @@ export default function ContactPage() {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
-              </motion.div>
+              </motion.div> */}
             </motion.div>
 
             {/* Contact Form */}

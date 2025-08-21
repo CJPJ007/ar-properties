@@ -108,20 +108,20 @@ export const Slider = ({
       className={`relative ${className ? className : "w-full h-96 bg-gradient-to-r from-blue-600 to-yellow-400"} flex items-center justify-center overflow-hidden mt-16`}
     >
       <div className="absolute inset-0 z-0">
-        <div className="relative w-full h-full">
+        <div className={`relative w-full h-full`}>
           <Carousel
             setApi={setApi}
             // ⬇️ Use the stable plugin instance
             plugins={[autoplayRef.current]}
             className="w-full h-full"
           >
-            <CarouselContent>
+            <CarouselContent className="w-full h-full">
               {sliders.map((slider, index) => (
-                <CarouselItem className="relative w-full h-96 bg-gradient-to-r from-blue-600 to-yellow-400">
-  <Image
+                <CarouselItem className="relative w-full h-full bg-gradient-to-r from-blue-600 to-yellow-400">
+  <img
     src={`/images/${slider.imageUrl}`}
     alt={slider.altText || `Slide ${index + 1}`}
-    fill
+    
     className="object-cover h-full w-full bg-black" // or object-cover if you prefer full-bleed
     priority={index === 0}
   />
