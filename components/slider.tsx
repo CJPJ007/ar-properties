@@ -118,10 +118,10 @@ export const Slider = ({
             <CarouselContent className="w-full h-full">
               {sliders.map((slider, index) => (
                 <CarouselItem className="relative w-full h-full bg-gradient-to-r from-blue-600 to-yellow-400">
-  <img
+  <Image
     src={`/images/${slider.imageUrl}`}
     alt={slider.altText || `Slide ${index + 1}`}
-    
+    fill
     className="object-cover h-full w-full bg-black" // or object-cover if you prefer full-bleed
     priority={index === 0}
   />
