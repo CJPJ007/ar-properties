@@ -222,7 +222,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           </div>
         </div>
 
-        <CardContent className="flex-grow p-6 flex flex-col h-full">
+        <CardContent className="flex-grow p-6 flex flex-col">
           <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">
             {service.title}
           </h3>

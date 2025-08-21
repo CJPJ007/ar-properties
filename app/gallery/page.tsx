@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Play, X, ZoomIn } from "lucide-react"
+import { Loader2, Play, X, ZoomIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -35,8 +35,10 @@ export default function GalleryPage() {
   const [currentVideo, setCurrentVideo] = useState("")
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setLoading(true)
     fetch(`/api/galleryItems?type=${filter}&page=${currentPage}&size=9`)
       .then((response) => response.json())
       .then((data) => {
@@ -45,7 +47,8 @@ export default function GalleryPage() {
         setTotalPages(data.body.totalPages || 1);
         setGalleryItems(galleryItems);
       })
-      .catch((error) => console.error("Error fetching gallery items:", error));
+      .catch((error) => console.error("Error fetching gallery items:", error))
+      .finally(() => setLoading(false));
   }, [filter, currentPage]);
   const openLightbox = (item: any) => {
     setSelectedImage(item)
@@ -173,7 +176,10 @@ export default function GalleryPage() {
           <div className="mb-8">
               <PaginationComponent />
             </div>
-          {filter === "Images" ?
+            {loading ? (
+                <div className="flex justify-center items-center h-32"><Loader2 className="animate-spin w-8 h-8 text-blue-400" /></div>
+              ):
+          (filter === "Images" ?
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             variants={staggerContainer}
@@ -198,8 +204,8 @@ export default function GalleryPage() {
                         if (!galleryItem) return null
                         return <VideoCard key={index} videoLink={galleryItem.youtubeUrl} onPlay={() => openVideoModal(galleryItem.youtubeUrl)} />
                       })}
-                    </motion.div>}
-
+                    </motion.div>)
+                    }
           <PaginationComponent />
 
         </div>

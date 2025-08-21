@@ -295,7 +295,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
 
                     {/* Contact Button */}
                     <InquiryModal
-                      buttonText="Contact Agent"
+                      buttonText="Contact"
                       buttonSize="lg"
                       buttonClassName="w-full mb-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
                       modalTitle="Property Inquiry"

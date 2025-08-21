@@ -97,7 +97,7 @@ export default function ManagingDirectorPage() {
                   <div className="relative mb-6">
                     <div className="w-full aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900">
                       <img
-                        src="/placeholder.svg?height=300&width=300&text=Managing+Director"
+                        src="/md.jpg"
                         alt="KATTA SUBRAMANYAM"
                         className="w-full h-full object-cover"
                       />

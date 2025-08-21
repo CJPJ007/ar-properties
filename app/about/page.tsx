@@ -12,6 +12,8 @@ import ChatBot from "@/components/chatbot"
 import { Slider } from "@/components/slider"
 import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react"
+import InquiryModal from "@/components/inquiry-modal"
+import InquiryForm from "@/components/inquiry-form"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -121,7 +123,7 @@ export default function AboutPage() {
           rel="noopener noreferrer"
           className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-lg shadow hover:from-amber-600 hover:to-orange-600 transition-all duration-300"
         >
-          Read our story about MD
+          Read story about our MD
         </a>
       </section>
       {/* Our Team */}
@@ -189,7 +191,7 @@ export default function AboutPage() {
           </motion.div>
 
           <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            {/* <Card className="bg-white/10 backdrop-blur-sm border-white/20">
               <CardContent className="p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -234,7 +236,11 @@ export default function AboutPage() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
+            <InquiryForm
+              showAppointmentDate={false}
+              className="bg-transparent backdrop-blur-sm text-black border-2 p-4 rounded-md border-white/20"
+            />
           </motion.div>
         </div>
       </section>
@@ -263,13 +269,13 @@ function TeamCard({ member, index }: { member: any; index: number }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
             <div className="text-white">
               <h3 className="text-lg font-bold">{member.name}</h3>
-              <p className="text-blue-200">{member.role}</p>
+              <p className="text-blue-200">{member.position}</p>
             </div>
           </div>
         </div>
         <CardContent className="p-6">
           <h3 className="text-xl font-bold text-slate-800 mb-2">{member.name}</h3>
-          <p className="text-amber-600 font-medium mb-3">{member.role}</p>
+          <p className="text-amber-600 font-medium mb-3">{member.position}</p>
           <p className="text-slate-600 text-sm leading-relaxed">{member.description}</p>
         </CardContent>
       </Card>

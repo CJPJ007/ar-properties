@@ -11,9 +11,13 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Ananta Realty - Find Your Dream Home",
+  icons: {
+    icon: "/header-logo.png",
+  },
   description:
     "Discover your dream home with Ananta Realty's expert team, dedicated to providing exceptional real estate services.",
     generator: 'v0.dev'
+    
 }
 
 export default function RootLayout({
