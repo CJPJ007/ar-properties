@@ -113,7 +113,17 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
+      {/* About Us Markdown Link */}
+      <section className="flex justify-center py-4">
+        <a
+          href="/md"
+          // target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-lg shadow hover:from-amber-600 hover:to-orange-600 transition-all duration-300"
+        >
+          Read our story about MD
+        </a>
+      </section>
       {/* Our Team */}
       <section className="py-20 bg-white/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4">
