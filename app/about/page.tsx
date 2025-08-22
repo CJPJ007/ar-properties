@@ -134,7 +134,7 @@ export default function AboutPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
 
-          <motion.div
+          <div
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
             variants={staggerContainer}
             initial="initial"
@@ -150,7 +150,7 @@ export default function AboutPage() {
             ) : (
               <p className="col-span-full text-center text-slate-500">No team members found.</p>
             )}
-          </motion.div>
+          </div>
         </div>
       </section>
 
