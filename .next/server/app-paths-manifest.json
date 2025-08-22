@@ -1,10 +1,11 @@
 {
   "/contact/page": "app/contact/page.js",
+  "/api/notifications/route": "app/api/notifications/route.js",
   "/properties/page": "app/properties/page.js",
   "/blogs/page": "app/blogs/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/notifications/route": "app/api/notifications/route.js",
   "/about/page": "app/about/page.js",
   "/page": "app/page.js",
-  "/api/company-details/route": "app/api/company-details/route.js"
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/company-details/route": "app/api/company-details/route.js",
+  "/api/sliders/route": "app/api/sliders/route.js"
 }
