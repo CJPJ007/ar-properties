@@ -63,7 +63,7 @@ const handleCall = (number: string
       {/* Hero Section */}
       {/* <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
         <div className="absolute inset-0 z-0"> */}
-          <Slider className="" showSearch={false} page="Contact"/>
+          <Slider className="w-full h-[650px]" showSearch={false} page="Contact"/>
         {/* </div>
 
         <motion.div
