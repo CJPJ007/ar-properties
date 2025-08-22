@@ -102,7 +102,20 @@ export const Slider = ({
       autoplayRef.current.reset(); // or: autoplayRef.current.play()
     }, ms);
   };
+  // Re-render UI on screen size change
+  const [, setWindowSize] = useState({ width: 0, height: 0 });
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    handleResize(); // Set initial size
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   return (
     <section
       className={`relative ${className ? className : "w-full h-96 bg-gradient-to-r from-blue-600 to-yellow-400"} flex items-center justify-center overflow-hidden mt-[6.5rem]`}
@@ -118,14 +131,18 @@ export const Slider = ({
             <CarouselContent className="w-full h-full">
               {sliders.map((slider, index) => (
                 <CarouselItem className="relative w-full h-full bg-gradient-to-r from-blue-600 to-yellow-400">
-  <Image
-    src={`/images/${slider.imageUrl}`}
-    alt={slider.altText || `Slide ${index + 1}`}
-    fill
-    className="object-cover h-full w-full bg-black" // or object-cover if you prefer full-bleed
-    priority={index === 0}
-  />
-</CarouselItem>
+                  <Image
+                    src={
+                      typeof window !== "undefined" && window.innerWidth < 768 && slider.mobileImageUrl
+                        ? `/images/${slider.mobileImageUrl}`
+                        : `/images/${slider.imageUrl}`
+                    }
+                    alt={slider.altText || `Slide ${index + 1}`}
+                    fill
+                    className="object-cover h-full w-full bg-black"
+                    priority={index === 0}
+                  />
+                </CarouselItem>
 
               ))}
             </CarouselContent>

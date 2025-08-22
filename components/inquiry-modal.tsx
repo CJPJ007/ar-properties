@@ -58,78 +58,82 @@ const isInWebView = () => {
   }
 }
   return (
-    <>
-      {/* Trigger Button */}
-      <Button
-        onClick={openModal}
-        variant={buttonVariant}
-        size={buttonSize}
-        className={`${buttonClassName}`}
+   <>
+  {/* Trigger Button */}
+  <Button
+    onClick={openModal}
+    variant={buttonVariant}
+    size={buttonSize}
+    className={`${buttonClassName}`}
+  >
+    <MessageCircle className="w-4 h-4 mr-2" />
+    {buttonText}
+  </Button>
+
+  {/* Modal */}
+  <AnimatePresence>
+    {isOpen && (
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 mt-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={closeModal}
       >
-        <MessageCircle className="w-4 h-4 mr-2" />
-        {buttonText}
-      </Button>
+        <motion.div
+          className="relative w-full max-w-2xl bg-white dark:bg-slate-900 h-[90%] overflow-y-auto rounded-lg shadow-2xl dark:shadow-gray-800 overflow-hidden"
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Modal Header */}
+          <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-2xl font-bold">{modalTitle}</CardTitle>
+                <p className="text-blue-100 mt-1">{modalDescription}</p>
 
-      {/* Modal */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 mt-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeModal}
-          >
-            <motion.div
-              className="relative w-full max-w-2xl bg-white h-[90%] overflow-y-auto rounded-lg shadow-2xl overflow-hidden"
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Modal Header */}
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-2xl font-bold">{modalTitle}</CardTitle>
-                    <p className="text-blue-100 mt-1">{modalDescription}</p>
-                    <motion.button
-                              onClick={() => handleWhatsApp(company?.whatsappNumber || '1234567890')}
-                              rel="noopener noreferrer"
-                              className="fixed bottom-32 right-5 w-14 h-14 bg-green-500 p-2 hover:bg-green-600 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.95 }}
-                              initial={{ scale: 0, rotate: -180 }}
-                              animate={{ scale: 1, rotate: 0 }}
-                              transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 20 }}
-                            >
-                              {/* WhatsApp SVG Icon */}
-                              <Whatsapp className="rounded-full"/>
-                            </motion.button>
-                  </div>
-                  <Button
-                    onClick={closeModal}
-                    variant="ghost"
-                    size="sm"
-                    className="text-white hover:bg-white/20"
-                  >
-                    <X className="w-5 h-5" />
-                  </Button>
-                </div>
-              </CardHeader>
+                {/* WhatsApp Button */}
+                <motion.button
+                  onClick={() => handleWhatsApp(company?.whatsappNumber || '1234567890')}
+                  rel="noopener noreferrer"
+                  className="fixed bottom-32 right-5 w-14 h-14 bg-green-500 p-2 hover:bg-green-600 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 20 }}
+                >
+                  <Whatsapp className="rounded-full text-white" />
+                </motion.button>
+              </div>
 
-              {/* Modal Content */}
-              <CardContent className="p-6">
-                <InquiryForm
-                  {...inquiryFormProps}
-                  
-                />
-              </CardContent>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+              {/* Close Button */}
+              <Button
+                onClick={closeModal}
+                variant="ghost"
+                size="sm"
+                className="text-white hover:bg-white/20"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+          </CardHeader>
+
+          {/* Modal Content */}
+          <CardContent className="p-6 bg-white dark:bg-slate-900">
+            <InquiryForm
+              {...inquiryFormProps}
+              className="text-slate-800 dark:text-slate-200"
+            />
+          </CardContent>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</>
+
   )
 } 

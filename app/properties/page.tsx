@@ -175,53 +175,63 @@ export default function PropertiesPage() {
 
   const propertyTypes = ["All", "House", "Condo", "Townhouse", "Luxury", "Appartment", "Plot"];
 
-  const PaginationComponent = () => (
-    <div className="flex items-center justify-center gap-2 mt-8">
-      <Button
-        variant="outline"
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="flex items-center gap-2"
-      >
-        ← Previous
-      </Button>
-      
-      {/* <div className="flex items-center gap-1">
-        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-          let pageNum;
-          if (totalPages <= 5) {
-            pageNum = i + 1;
-          } else if (currentPage <= 3) {
-            pageNum = i + 1;
-          } else if (currentPage >= totalPages - 2) {
-            pageNum = totalPages - 4 + i;
-          } else {
-            pageNum = currentPage - 2 + i;
-          }
-          
-          return (
-            <Button
-              key={pageNum}
-              variant={currentPage === pageNum ? "default" : "outline"}
-              onClick={() => handlePageChange(pageNum)}
-              className="w-10 h-10"
-            >
-              {pageNum}
-            </Button>
-          );
-        })}
-      </div> */}
-      
-      <Button
-        variant="outline"
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="flex items-center gap-2"
-      >
-        Next →
-      </Button>
-    </div>
-  );
+  
+    const PaginationComponent = () => (
+      <div className="flex items-center justify-center gap-2 mt-8">
+  <Button
+    variant="outline"
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="flex items-center gap-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+  >
+    ← Previous
+  </Button>
+
+  {/* Page Numbers */}
+  {/* 
+  <div className="flex items-center gap-1">
+    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+      let pageNum;
+      if (totalPages <= 5) {
+        pageNum = i + 1;
+      } else if (currentPage <= 3) {
+        pageNum = i + 1;
+      } else if (currentPage >= totalPages - 2) {
+        pageNum = totalPages - 4 + i;
+      } else {
+        pageNum = currentPage - 2 + i;
+      }
+
+      return (
+        <Button
+          key={pageNum}
+          variant={currentPage === pageNum ? "default" : "outline"}
+          onClick={() => handlePageChange(pageNum)}
+          className={`w-10 h-10 border-slate-300 dark:border-slate-600 ${
+            currentPage === pageNum
+              ? "bg-blue-600 text-white dark:bg-blue-500"
+              : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+          } transition-colors`}
+        >
+          {pageNum}
+        </Button>
+      );
+    })}
+  </div>
+  */}
+
+  <Button
+    variant="outline"
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className="flex items-center gap-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+  >
+    Next →
+  </Button>
+</div>
+
+    );
+
 
   function debounce(func:()=>void, delay:number) {
     let timeoutId:NodeJS.Timeout;
@@ -237,148 +247,125 @@ export default function PropertiesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
-      <Header />
+<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 pb-16 md:pb-0 text-slate-900 dark:text-slate-100">
+  <Header />
 
-      {/* Hero Section */}
-      {/* <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16"> */}
-        {/* <div className="absolute inset-0 z-0"> */}
-          <Slider className="w-full h-[300px]" showSearch={false} page="Properties"/>
-        {/* </div> */}
+  {/* Hero Slider */}
+  <Slider className="w-full h-[300px]" showSearch={false} page="Properties" />
 
-        {/* <motion.div
-          className="relative z-10 text-center text-white px-4"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Explore Our Properties
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-100">
-            Discover your dream home with Ananta Realty's curated selection
-          </p>
-        </motion.div> */}
-      {/* </section> */}
-
-      {/* Filters */}
-      <section className="py-8 bg-white/80 backdrop-blur-sm border-b">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-              <Input
-                type="text"
-                placeholder="Search properties..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 bg-white border-slate-200 focus:border-blue-500"
-              />
-            </div>
-
-            {/* Filters */}
-            <div className="flex gap-4 items-center">
-              <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-40 h-12 bg-white border-slate-200">
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Property Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {propertyTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                     {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40 h-12 bg-white border-slate-200">
-                  <SlidersHorizontal className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="featured">Featured</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="beds">Most Bedrooms</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+  {/* Filters Section */}
+  <section className="py-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-slate-200 dark:border-gray-700">
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        {/* Search Input */}
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-400 w-5 h-5" />
+          <Input
+            type="text"
+            placeholder="Search properties..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 h-12 bg-white dark:bg-gray-900 border-slate-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 text-slate-900 dark:text-slate-100"
+          />
         </div>
-      </section>
 
-      {/* Properties Grid */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div className="text-center mb-12" {...fadeInUp}>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
-              Available Properties
-            </h2>
-            <p className="text-lg text-slate-600">
-              {totalProperties} properties found • Page {currentPage} of {totalPages}
-            </p>
+        {/* Filters */}
+        <div className="flex gap-4 items-center">
+          <Select value={selectedType} onValueChange={setSelectedType}>
+            <SelectTrigger className="w-40 h-12 bg-white dark:bg-gray-900 border-slate-200 dark:border-gray-700">
+              <Filter className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Property Type" />
+            </SelectTrigger>
+            <SelectContent className="dark:bg-gray-900 dark:text-slate-100">
+              {propertyTypes.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-40 h-12 bg-white dark:bg-gray-900 border-slate-200 dark:border-gray-700">
+              <SlidersHorizontal className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Sort By" />
+            </SelectTrigger>
+            <SelectContent className="dark:bg-gray-900 dark:text-slate-100">
+              <SelectItem value="featured">Featured</SelectItem>
+              <SelectItem value="price-low">Price: Low to High</SelectItem>
+              <SelectItem value="price-high">Price: High to Low</SelectItem>
+              <SelectItem value="beds">Most Bedrooms</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Properties Grid */}
+  <section className="py-16 px-4">
+    <div className="max-w-7xl mx-auto">
+      {/* Page Header */}
+      <motion.div className="text-center mb-12" {...fadeInUp}>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-800 dark:text-slate-100">
+          Available Properties
+        </h2>
+        <p className="text-lg text-slate-600 dark:text-slate-300">
+          {totalProperties} properties found • Page {currentPage} of {totalPages}
+        </p>
+      </motion.div>
+
+      {/* Top Pagination */}
+      {!loading && properties.length > 0 && totalPages > 1 && (
+        <div className="mb-8">
+          <PaginationComponent darkMode />
+        </div>
+      )}
+
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[...Array(6)].map((_, i) => (
+            <PropertyCardSkeleton key={i} darkMode />
+          ))}
+        </div>
+      ) : properties.length === 0 ? (
+        <motion.div className="text-center py-16" transition={{ duration: 0.6 }}>
+          <div className="text-6xl mb-4">🏠</div>
+          <h3 className="text-2xl font-bold mb-2 text-slate-800 dark:text-slate-100">No Properties Found</h3>
+          <p className="text-slate-600 dark:text-slate-300 mb-6">
+            Try adjusting your search criteria or filters
+          </p>
+          <Button
+            onClick={resetFilters}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          >
+            Clear Filters
+          </Button>
+        </motion.div>
+      ) : (
+        <>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+          >
+            {properties.map((property) => (
+              <PropertyCard key={property.id} property={property} darkMode />
+            ))}
           </motion.div>
 
-          {/* Top Pagination */}
-          {!loading && properties.length > 0 && totalPages > 1 && (
-            <div className="mb-8">
-              <PaginationComponent />
-            </div>
-          )}
-
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <PropertyCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : properties.length === 0 ? (
-            <motion.div
-              className="text-center py-16"
-              transition={{ duration: 0.6 }}
-            >
-              <div className="text-6xl mb-4">🏠</div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-2">
-                No Properties Found
-              </h3>
-              <p className="text-slate-600 mb-6">
-                Try adjusting your search criteria or filters
-              </p>
-              <Button
-                onClick={resetFilters}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                Clear Filters
-              </Button>
-            </motion.div>
-          ) : (
-            <>
-              <motion.div
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                variants={staggerContainer}
-                initial="initial"
-                animate="animate"
-              >
-                {properties.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
-              </motion.div>
-
-              {/* Bottom Pagination */}
-              {totalPages > 1 && (
-                <PaginationComponent />
-              )}
-            </>
-          )}
-        </div>
-      </section>
-
-      <Footer />
-      {/* <ChatBot /> */}
+          {/* Bottom Pagination */}
+          {totalPages > 1 && <PaginationComponent darkMode />}
+        </>
+      )}
     </div>
+  </section>
+
+  <Footer />
+</div>
+
+
   );
 }
 
@@ -436,22 +423,32 @@ export default function PropertiesPage() {
 //     </motion.div>
 //   )
 // }
-
-function PropertyCardSkeleton() {
+const PropertyCardSkeleton = () => {
   return (
-    <Card className="overflow-hidden">
-      <Skeleton className="w-full h-64" />
+    <Card className="overflow-hidden animate-pulse">
+      {/* Image Placeholder */}
+      <Skeleton className="w-full h-64 bg-slate-200" />
+
       <CardContent className="p-6">
-        <Skeleton className="h-6 w-3/4 mb-2" />
-        <Skeleton className="h-8 w-1/2 mb-3" />
+        {/* Title & Subtitle */}
+        <Skeleton className="h-6 w-3/4 mb-2 bg-slate-300" />
+        <Skeleton className="h-8 w-1/2 mb-3 bg-slate-300" />
+
+        {/* Property Meta */}
         <div className="flex gap-4 mb-4">
-          <Skeleton className="h-4 w-12" />
-          <Skeleton className="h-4 w-12" />
-          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-12 bg-slate-200" />
+          <Skeleton className="h-4 w-12 bg-slate-200" />
+          <Skeleton className="h-4 w-16 bg-slate-200" />
         </div>
-        <Skeleton className="h-4 w-2/3 mb-4" />
-        <Skeleton className="h-10 w-full" />
+
+        {/* Short Description */}
+        <Skeleton className="h-4 w-2/3 mb-4 bg-slate-200" />
+
+        {/* Button Placeholder */}
+        <Skeleton className="h-10 w-full bg-slate-300 rounded-md" />
       </CardContent>
     </Card>
   );
-}
+};
+
+

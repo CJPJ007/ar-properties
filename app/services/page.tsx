@@ -112,82 +112,83 @@ export default function ServicesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
-      <Header />
+  <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950 pb-16 md:pb-0">
+  <Header />
 
-      {/* Hero Section */}
-      <Slider className="w-full h-[300px]" showSearch={false} page="Services"/>
+  {/* Hero Section */}
+  <Slider className="w-full h-[300px]" showSearch={false} page="Services" />
 
-      {/* Services Grid */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div className="text-center mb-16" {...fadeInUp}>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Our Services</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              From buying and selling to investment and management, we provide comprehensive real estate solutions
-              tailored to your needs
-            </p>
-          </motion.div>
+  {/* Services Grid */}
+  <section className="py-20 px-4">
+    <div className="max-w-7xl mx-auto">
+      <motion.div className="text-center mb-16" {...fadeInUp}>
+        <h2 className="text-4xl md:text-5xl font-bold text-slate-800 dark:text-slate-100 mb-4">Our Services</h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
+        <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+          From buying and selling to investment and management, we provide comprehensive real estate solutions
+          tailored to your needs
+        </p>
+      </motion.div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <ServiceCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : (
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={staggerContainer}
-              initial="initial"
-              whileInView="animate"
-              viewport={{ once: true }}
-            >
-              {services.map((service, index) => (
-                <ServiceCard key={service.id} service={service} index={index} />
-              ))}
-            </motion.div>
-          )}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[...Array(6)].map((_, i) => (
+            <ServiceCardSkeleton key={i} />
+          ))}
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-slate-900 to-blue-900 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div {...fadeInUp}>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Contact us today to discuss your real estate needs and discover how our expert team can help you achieve
-              your goals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <InquiryModal
-                buttonText="Schedule Consultation"
-                buttonSize="lg"
-                buttonClassName="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
-                modalTitle="Schedule a Consultation"
-                modalDescription="Tell us about your real estate needs and we'll schedule a personalized consultation."
-                showAppointmentDate={true}
-                className="text-black"
-              />
-              <Link href={"/properties"} passHref>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg font-semibold transition-all duration-300 bg-transparent"
-                >
-                View Properties
-              </Button>
-                </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <Footer />
-      {/* <ChatBot /> */}
+      ) : (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+        >
+          {services.map((service, index) => (
+            <ServiceCard key={service.id} service={service} index={index} />
+          ))}
+        </motion.div>
+      )}
     </div>
+  </section>
+
+  {/* CTA Section */}
+  <section className="py-20 bg-gradient-to-r from-slate-900 to-blue-900 text-white dark:from-slate-800 dark:to-blue-950">
+    <div className="max-w-4xl mx-auto px-4 text-center">
+      <motion.div {...fadeInUp}>
+        <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
+        <p className="text-xl text-blue-100 dark:text-blue-200 mb-8 max-w-2xl mx-auto">
+          Contact us today to discuss your real estate needs and discover how our expert team can help you achieve
+          your goals.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <InquiryModal
+            buttonText="Schedule Consultation"
+            buttonSize="lg"
+            buttonClassName="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+            modalTitle="Schedule a Consultation"
+            modalDescription="Tell us about your real estate needs and we'll schedule a personalized consultation."
+            showAppointmentDate={true}
+            className="text-black dark:text-slate-100"
+          />
+          <Link href={"/properties"} passHref>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white/30 text-white dark:text-slate-200 hover:bg-white/10 dark:hover:bg-slate-700/30 px-8 py-4 text-lg font-semibold transition-all duration-300 bg-transparent"
+            >
+              View Properties
+            </Button>
+          </Link>
+        </div>
+      </motion.div>
+    </div>
+  </section>
+
+  <Footer />
+  {/* <ChatBot /> */}
+</div>
+
   )
 }
 
@@ -200,85 +201,87 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
   return (
     <motion.div
-      variants={fadeInUp}
-      transition={{ delay: index * 0.1 }}
-      whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
-      className="group h-full"
-    >
-      <Card className="h-full overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
-        <div className="relative overflow-hidden">
-          <img
-            src={`/images/${service.imageUrl}` || "/placeholder.svg?height=300&width=400"}
-            alt={service.title}
-            className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement
-              target.src = "/placeholder.svg?height=300&width=400"
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="absolute top-4 left-4 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <Icon className="w-6 h-6 text-blue-600" />
-          </div>
+  variants={fadeInUp}
+  transition={{ delay: index * 0.1 }}
+  whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
+  className="group h-full"
+>
+  <Card className="h-full overflow-hidden bg-white dark:bg-slate-800 shadow-lg dark:shadow-gray-900 hover:shadow-2xl dark:hover:shadow-gray-700 transition-all duration-500 transform-gpu perspective-1000">
+    <div className="relative overflow-hidden">
+      <img
+        src={`/images/${service.imageUrl}` || "/placeholder.svg?height=300&width=400"}
+        alt={service.title}
+        className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
+        onError={(e) => {
+          const target = e.target as HTMLImageElement
+          target.src = "/placeholder.svg?height=300&width=400"
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-4 left-4 w-12 h-12 bg-white/90 dark:bg-slate-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+      </div>
+    </div>
+
+    <CardContent className="flex-grow p-6 flex flex-col">
+      <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        {service.title}
+      </h3>
+      <p className="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">{service.shortDescription || service.description}</p>
+
+      {features.length > 0 && (
+        <div className="mb-6 flex-grow">
+          <h4 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">Key Features:</h4>
+          <ul className="space-y-1">
+            {features.slice(0, 4).map((feature: string, idx: number) => (
+              <li key={idx} className="text-sm text-slate-600 dark:text-slate-300 flex items-center">
+                <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2 flex-shrink-0" />
+                <span className="line-clamp-1">{feature}</span>
+              </li>
+            ))}
+          </ul>
         </div>
+      )}
 
-        <CardContent className="flex-grow p-6 flex flex-col">
-          <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">
-            {service.title}
-          </h3>
-          <p className="text-slate-600 mb-4 leading-relaxed">{service.shortDescription || service.description}</p>
+      <div className="mt-auto">
+        <InquiryModal
+          buttonText="Learn More"
+          buttonSize="lg"
+          buttonClassName="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white dark:text-white transition-all duration-300 transform hover:scale-105"
+          modalTitle={`Inquiry about ${service.title}`}
+          modalDescription={service.description}
+          showAppointmentDate={true}
+          className="text-black dark:text-slate-100"
+        />
+      </div>
+    </CardContent>
+  </Card>
+</motion.div>
 
-          {features.length > 0 && (
-            <div className="mb-6 flex-grow">
-              <h4 className="font-semibold text-slate-800 mb-2">Key Features:</h4>
-              <ul className="space-y-1">
-                {features.slice(0, 4).map((feature: string, idx: number) => (
-                  <li key={idx} className="text-sm text-slate-600 flex items-center">
-                    <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2 flex-shrink-0" />
-                    <span className="line-clamp-1">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="mt-auto">
-            <InquiryModal
-              buttonText="Learn More"
-              buttonSize="lg"
-              buttonClassName="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-300 transform hover:scale-105"
-              modalTitle={`Inquiry about ${service.title}`}
-              modalDescription={service.description}
-              showAppointmentDate={true}
-              className="text-black"
-            />
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
   )
 }
 
 function ServiceCardSkeleton() {
   return (
-    <Card className="h-full overflow-hidden">
-      <Skeleton className="w-full h-48" />
-      <CardContent className="p-6">
-        <Skeleton className="h-6 w-3/4 mb-3" />
-        <Skeleton className="h-4 w-full mb-2" />
-        <Skeleton className="h-4 w-2/3 mb-4" />
+    <Card className="h-full overflow-hidden bg-white dark:bg-slate-800 shadow-lg dark:shadow-gray-900 animate-pulse">
+  <Skeleton className="w-full h-48 bg-slate-200 dark:bg-slate-700" />
+  <CardContent className="p-6">
+    <Skeleton className="h-6 w-3/4 mb-3 bg-slate-300 dark:bg-slate-600" />
+    <Skeleton className="h-4 w-full mb-2 bg-slate-300 dark:bg-slate-600" />
+    <Skeleton className="h-4 w-2/3 mb-4 bg-slate-300 dark:bg-slate-600" />
 
-        <div className="mb-6">
-          <Skeleton className="h-5 w-1/3 mb-2" />
-          <div className="space-y-1">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-4 w-full" />
-            ))}
-          </div>
-        </div>
+    <div className="mb-6">
+      <Skeleton className="h-5 w-1/3 mb-2 bg-slate-300 dark:bg-slate-600" />
+      <div className="space-y-1">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} className="h-4 w-full bg-slate-300 dark:bg-slate-600" />
+        ))}
+      </div>
+    </div>
 
-        <Skeleton className="h-10 w-full" />
-      </CardContent>
-    </Card>
+    <Skeleton className="h-10 w-full bg-blue-300 dark:bg-blue-600" />
+  </CardContent>
+</Card>
+
   )
 }

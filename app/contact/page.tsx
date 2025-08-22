@@ -57,90 +57,65 @@ const handleCall = (number: string
   }
 }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
-      <Header />
+    <div className="min-h-screen 
+                bg-gradient-to-br from-gray-50 to-blue-50 
+                dark:from-slate-900 dark:to-blue-950 
+                pb-16 md:pb-0 transition-colors duration-300">
+  <Header />
 
-      {/* Hero Section */}
-      {/* <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16">
-        <div className="absolute inset-0 z-0"> */}
-          <Slider className="w-full h-[300px]" showSearch={false} page="Contact"/>
-        {/* </div>
+  {/* Hero Section */}
+  <Slider className="w-full h-[300px]" showSearch={false} page="Contact"/>
 
-        <motion.div
-          className="relative z-10 text-center text-white px-4"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Contact Ananta Realty</h1>
-          <p className="text-xl md:text-2xl text-blue-100">
-            We're here to help you find your dream home. Get in touch today!
-          </p>
-        </motion.div>
-      </section> */}
-
-      {/* Contact Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Information */}
-            <motion.div {...fadeInUp} className="space-y-8">
-              <div>
-                <h2 className="text-3xl font-bold text-slate-800 mb-6">Get in Touch</h2>
-                <p className="text-lg text-slate-600 mb-8">
-                  Our team is ready to assist you with all your real estate needs. Contact us today to start your
-                  journey to finding the perfect property.
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <ContactInfo icon={MapPin} title="Address" content={company?.streetAddress}/>
-                <ContactInfo icon={Phone} title="Phone" content={company?.primaryPhone} href={`tel:${company?.primaryPhone}`} />
-                <ContactInfo
-                  icon={Mail}
-                  title="Email"
-                  content={company?.email}
-                  href="mailto:info@anantarealty.com"
-                />
-                <ContactInfo icon={Clock} title="Office Hours" content={company?.businessHoursWeekday} />
-              </div>
-
-              {/* Map */}
-              {/* <motion.div
-                className="rounded-lg overflow-hidden shadow-lg"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-              >
-                <iframe
-                  src={company?.googleMapsUrl}
-                  width="100%"
-                  height="300"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </motion.div> */}
-            </motion.div>
-
-            {/* Contact Form */}
-            <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
-              <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-slate-800">Send Us a Message</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <InquiryForm />
-                </CardContent>
-              </Card>
-            </motion.div>
+  {/* Contact Section */}
+  <section className="py-20 px-4">
+    <div className="max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        
+        {/* Contact Information */}
+        <motion.div {...fadeInUp} className="space-y-8 text-gray-800 dark:text-gray-100">
+          <div>
+            <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
+            <p className="text-lg mb-8 text-gray-600 dark:text-gray-300">
+              Our team is ready to assist you with all your real estate needs. Contact us today to start your
+              journey to finding the perfect property.
+            </p>
           </div>
-        </div>
-      </section>
 
-      <Footer />
-      {/* <ChatBot /> */}
+          <div className="space-y-6">
+            <ContactInfo icon={MapPin} title="Address" content={company?.streetAddress}/>
+            <ContactInfo icon={Phone} title="Phone" content={company?.primaryPhone} href={`tel:${company?.primaryPhone}`} />
+            <ContactInfo
+              icon={Mail}
+              title="Email"
+              content={company?.email}
+              href={`mailto:${company?.primaryEmail || "info@anantarealty.com"}`}
+            />
+            <ContactInfo icon={Clock} title="Office Hours" content={company?.businessHoursWeekday} />
+          </div>
+        </motion.div>
+
+        {/* Contact Form */}
+        <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
+          <Card className="shadow-xl border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm transition-colors duration-300">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+                Send Us a Message
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <InquiryForm />
+            </CardContent>
+          </Card>
+        </motion.div>
+
+      </div>
     </div>
+  </section>
+
+  <Footer />
+  {/* <ChatBot /> */}
+</div>
+
   )
 }
 

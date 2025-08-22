@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster"
 import MobileNavigation from "@/components/mobile-navigation"
 import AuthSessionProvider from "@/components/providers/session-provider"
 import NotificationProvider from "@/components/providers/notifications-provider"
+import { ThemeProvider } from "@/components/theme-provider"
+import GoogleAnalytics from "@/components/GAConfigClient"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,6 +30,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <GoogleAnalytics userId={1} />
+        <ThemeProvider>
         <AuthSessionProvider>
           <NotificationProvider>
           {children}
@@ -35,6 +39,7 @@ export default function RootLayout({
           <Toaster />
           </NotificationProvider>
         </AuthSessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

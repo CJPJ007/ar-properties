@@ -77,215 +77,223 @@ export default function GalleryPage() {
 
     const PaginationComponent = () => (
       <div className="flex items-center justify-center gap-2 mt-8">
+  <Button
+    variant="outline"
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="flex items-center gap-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+  >
+    ← Previous
+  </Button>
+
+  {/* Page Numbers */}
+  {/* 
+  <div className="flex items-center gap-1">
+    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+      let pageNum;
+      if (totalPages <= 5) {
+        pageNum = i + 1;
+      } else if (currentPage <= 3) {
+        pageNum = i + 1;
+      } else if (currentPage >= totalPages - 2) {
+        pageNum = totalPages - 4 + i;
+      } else {
+        pageNum = currentPage - 2 + i;
+      }
+
+      return (
         <Button
-          variant="outline"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="flex items-center gap-2"
+          key={pageNum}
+          variant={currentPage === pageNum ? "default" : "outline"}
+          onClick={() => handlePageChange(pageNum)}
+          className={`w-10 h-10 border-slate-300 dark:border-slate-600 ${
+            currentPage === pageNum
+              ? "bg-blue-600 text-white dark:bg-blue-500"
+              : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+          } transition-colors`}
         >
-          ← Previous
+          {pageNum}
         </Button>
-        
-        {/* <div className="flex items-center gap-1">
-          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-            let pageNum;
-            if (totalPages <= 5) {
-              pageNum = i + 1;
-            } else if (currentPage <= 3) {
-              pageNum = i + 1;
-            } else if (currentPage >= totalPages - 2) {
-              pageNum = totalPages - 4 + i;
-            } else {
-              pageNum = currentPage - 2 + i;
-            }
-            
-            return (
-              <Button
-                key={pageNum}
-                variant={currentPage === pageNum ? "default" : "outline"}
-                onClick={() => handlePageChange(pageNum)}
-                className="w-10 h-10"
-              >
-                {pageNum}
-              </Button>
-            );
-          })}
-        </div>
-         */}
-        <Button
-          variant="outline"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="flex items-center gap-2"
-        >
-          Next →
-        </Button>
-      </div>
+      );
+    })}
+  </div>
+  */}
+
+  <Button
+    variant="outline"
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className="flex items-center gap-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+  >
+    Next →
+  </Button>
+</div>
+
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
-      <Header />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950 pb-16 md:pb-0">
+  <Header />
 
-      {/* Hero Section */}
-      {/* <section className="relative h-96 flex items-center justify-center overflow-hidden mt-0 md:mt-16"> */}
-        {/* <div className="absolute inset-0 z-0"> */}
-          <Slider className="w-full h-[300px]" showSearch={false} page="Gallery"/>
-        {/* </div> */}
-{/* 
-        <motion.div
-          className="relative z-10 text-center text-white px-4"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Explore Our Stunning Properties</h1>
-          <p className="text-xl md:text-2xl text-blue-100">
-            Discover the beauty and luxury of Ananta Realty's exclusive homes
-          </p>
-        </motion.div>
-      </section> */}
+  {/* Hero Section */}
+  <Slider className="w-full h-[300px]" showSearch={false} page="Gallery" />
 
-      {/* Filter Buttons */}
-      <section className="py-8 bg-white/80 backdrop-blur-sm border-b">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-center gap-4 flex-wrap">
-            {["Images", "Videos"].map((category) => (
-              <Button
-                key={category}
-                onClick={() => setFilter(category)}
-                variant={filter === category ? "default" : "outline"}
-                className={`transition-all duration-300 ${
-                  filter === category ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : "hover:bg-blue-50"
-                }`}
-              >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery Grid */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div className="text-center mb-12" {...fadeInUp}>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Property Gallery</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto" />
-          </motion.div>
-          <div className="mb-8">
-              <PaginationComponent />
-            </div>
-            {loading ? (
-                <div className="flex justify-center items-center h-32"><Loader2 className="animate-spin w-8 h-8 text-blue-400" /></div>
-              ):
-          (filter === "Images" ?
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
+  {/* Filter Buttons */}
+  <section className="py-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b dark:border-b-slate-700">
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="flex justify-center gap-4 flex-wrap">
+        {["Images", "Videos"].map((category) => (
+          <Button
+            key={category}
+            onClick={() => setFilter(category)}
+            variant={filter === category ? "default" : "outline"}
+            className={`transition-all duration-300 ${
+              filter === category
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                : "hover:bg-blue-50 dark:hover:bg-slate-700 dark:text-slate-200 text-slate-800"
+            }`}
           >
-            <AnimatePresence>
-              {galleryItems.map((item, index) => (
-                <GalleryCard key={index} item={item.filePath+item.filename} onClick={() => openLightbox(item.filePath+item.filename)} />
-              ))}
-            </AnimatePresence>
-          </motion.div>
-        :
-          <motion.div
-                      className="grid grid-cols-1 md:grid-cols-3 gap-8"
-                      variants={staggerContainer}
-                      initial="initial"
-                      whileInView="animate"
-                      viewport={{ once: true }}
-                    >
-                      {galleryItems.map((galleryItem, index) => {
-                        if (!galleryItem) return null
-                        return <VideoCard key={index} videoLink={galleryItem.youtubeUrl} onPlay={() => openVideoModal(galleryItem.youtubeUrl)} />
-                      })}
-                    </motion.div>)
-                    }
-          <PaginationComponent />
-
-        </div>
-      </section>
-
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeLightbox}
-          >
-            <motion.div
-              className="relative max-w-4xl w-full bg-white rounded-lg overflow-hidden"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Button
-                onClick={closeLightbox}
-                variant="ghost"
-                size="sm"
-                className="absolute top-4 right-4 z-10 bg-black/20 text-white hover:bg-black/40"
-              >
-                <X className="w-6 h-6" />
-              </Button>
-
-              <img
-                src={`/images/${selectedImage}` || "/placeholder.svg"}
-                alt={selectedImage}
-                className="w-full h-96 object-cover"
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-       {/* Video Modal */}
-      <AnimatePresence>
-        {videoModalOpen && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeVideoModal}
-          >
-            <motion.div
-              className="relative w-full max-w-4xl mx-4 aspect-video bg-black rounded-lg overflow-hidden"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Button
-                onClick={closeVideoModal}
-                variant="ghost"
-                size="sm"
-                className="absolute top-4 right-4 z-10 text-white hover:bg-white/20"
-              >
-                <X className="w-6 h-6" />
-              </Button>
-              <iframe
-                src={currentVideo}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <Footer />
-      {/* <ChatBot /> */}
+            {category.charAt(0).toUpperCase() + category.slice(1)}
+          </Button>
+        ))}
+      </div>
     </div>
+  </section>
+
+  {/* Gallery Grid */}
+  <section className="py-16 px-4">
+    <div className="max-w-7xl mx-auto">
+      <motion.div className="text-center mb-12" {...fadeInUp}>
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-4">Property Gallery</h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto" />
+      </motion.div>
+
+      <div className="mb-8">
+        <PaginationComponent />
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-32">
+          <Loader2 className="animate-spin w-8 h-8 text-blue-400 dark:text-blue-500" />
+        </div>
+      ) : filter === "Images" ? (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          <AnimatePresence>
+            {galleryItems.map((item, index) => (
+              <GalleryCard
+                key={index}
+                item={item.filePath + item.filename}
+                onClick={() => openLightbox(item.filePath + item.filename)}
+              />
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      ) : (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+        >
+          {galleryItems.map((galleryItem, index) => {
+            if (!galleryItem) return null
+            return (
+              <VideoCard
+                key={index}
+                videoLink={galleryItem.youtubeUrl}
+                onPlay={() => openVideoModal(galleryItem.youtubeUrl)}
+              />
+            )
+          })}
+        </motion.div>
+      )}
+
+      <PaginationComponent />
+    </div>
+  </section>
+
+  {/* Lightbox Modal */}
+  <AnimatePresence>
+    {selectedImage && (
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 dark:bg-black/95 backdrop-blur-sm p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={closeLightbox}
+      >
+        <motion.div
+          className="relative max-w-4xl w-full bg-white dark:bg-slate-900 rounded-lg overflow-hidden"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Button
+            onClick={closeLightbox}
+            variant="ghost"
+            size="sm"
+            className="absolute top-4 right-4 z-10 bg-black/20 text-white hover:bg-black/40"
+          >
+            <X className="w-6 h-6" />
+          </Button>
+
+          <img
+            src={`/images/${selectedImage}` || "/placeholder.svg"}
+            alt={selectedImage}
+            className="w-full h-96 object-cover"
+          />
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+
+  {/* Video Modal */}
+  <AnimatePresence>
+    {videoModalOpen && (
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 dark:bg-black/95 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={closeVideoModal}
+      >
+        <motion.div
+          className="relative w-full max-w-4xl mx-4 aspect-video bg-black dark:bg-slate-900 rounded-lg overflow-hidden"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Button
+            onClick={closeVideoModal}
+            variant="ghost"
+            size="sm"
+            className="absolute top-4 right-4 z-10 text-white hover:bg-white/20"
+          >
+            <X className="w-6 h-6" />
+          </Button>
+          <iframe
+            src={currentVideo}
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+
+  <Footer />
+  {/* <ChatBot /> */}
+</div>
+
   )
 }
 

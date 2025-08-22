@@ -555,718 +555,735 @@ export default function ProfilePage() {
   }, [activeTab, handleSearch])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
-      <Header />
+<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900 pb-16 md:pb-0">
+  <Header />
 
-      {/* Back Button */}
-      <div className="pt-20 md:pt-24 px-4">
-        <div className="max-w-4xl mx-auto">
-          <Link href="/">
-            <Button variant="outline" className="mb-6 bg-transparent">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-        </div>
-      </div>
+  {/* Back Button */}
+  <div className="pt-20 md:pt-24 px-4">
+    <div className="max-w-4xl mx-auto">
+      <Link href="/">
+        <Button variant="outline" className="mb-6 bg-transparent dark:border-gray-600 dark:text-white">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Button>
+      </Link>
+    </div>
+  </div>
 
-      {/* Profile Header */}
-      <section className="px-4 mb-8">
-        <div className="max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Card className="bg-gradient-to-r from-blue-600 to-blue-700 text-white border-0">
-              <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                  <div className="relative">
-                    {session?.user?.image ? (
-                      <Avatar className="w-24 h-24 border-4 border-white/20">
-                        <AvatarImage src={session.user.image || "/placeholder.svg"} />
-                        <AvatarFallback className="text-2xl bg-white/20 text-white">
-                          {session.user.name?.charAt(0) || "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                    ) : (
-                      <Avatar className="w-24 h-24 border-4 border-white/20 bg-white/20">
-                        <AvatarFallback className="text-2xl text-white">
-                          {session?.user?.name?.charAt(0) || "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                  </div>
+  {/* Profile Header */}
+  <section className="px-4 mb-8">
+    <div className="max-w-4xl mx-auto">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+        <Card className="bg-gradient-to-r from-blue-600 to-blue-700 text-white border-0 dark:from-blue-800 dark:to-blue-900">
+          <CardContent className="p-8">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <div className="relative">
+                {session?.user?.image ? (
+                  <Avatar className="w-24 h-24 border-4 border-white/20 dark:border-gray-700">
+                    <AvatarImage src={session.user.image || "/placeholder.svg"} />
+                    <AvatarFallback className="text-2xl bg-white/20 text-white dark:text-gray-200">
+                      {session.user.name?.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <Avatar className="w-24 h-24 border-4 border-white/20 bg-white/20 dark:bg-gray-800 dark:border-gray-700">
+                    <AvatarFallback className="text-2xl text-white dark:text-gray-200">
+                      {session?.user?.name?.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
 
-                  <div className="flex-1 text-center md:text-left">
-                    <div className="flex items-center justify-between mb-2">
-                      <h1 className="text-3xl font-bold">{session?.user?.name || "User"}</h1>
-                      {!isEditing && (
-                        <Button
-                          onClick={() => setIsEditing(true)}
-                          variant="ghost"
-                          size="sm"
-                          className="text-white hover:bg-white/20"
-                        >
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit Profile
-                        </Button>
-                      )}
+              <div className="flex-1 text-center md:text-left">
+                <div className="flex items-center justify-between mb-2">
+                  <h1 className="text-3xl font-bold dark:text-white">{session?.user?.name || "User"}</h1>
+                  {!isEditing && (
+                    <Button
+                      onClick={() => setIsEditing(true)}
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:bg-white/20 dark:text-gray-200 dark:hover:bg-gray-700"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                  )}
+                </div>
+                <p className="text-blue-100 text-lg mb-4 dark:text-blue-200">{session?.user?.email}</p>
+
+                <div className="flex flex-col md:flex-row gap-4 text-sm dark:text-gray-300">
+                  {session?.user?.mobile && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      <span>{session.user.mobile}</span>
                     </div>
-                    <p className="text-blue-100 text-lg mb-4">{session?.user?.email}</p>
-
-                    <div className="flex flex-col md:flex-row gap-4 text-sm">
-                      {session?.user?.mobile && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          <span>{session.user.mobile}</span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        <span>{session?.user?.email}</span>
-                      </div>
-                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    <span>{session?.user?.email}</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* Edit Profile Form */}
-            {isEditing && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Edit className="w-5 h-5" />
-                      Edit Profile Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          <User className="w-4 h-4 inline mr-2" />
-                          Full Name
-                        </label>
-                        <Input
-                          type="text"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Enter your full name"
-                          className="w-full"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          <Mail className="w-4 h-4 inline mr-2" />
-                          Email Address
-                        </label>
-                        <Input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="Enter your email"
-                          className="w-full"
-                          disabled
-                        />
-                        <p className="text-xs text-slate-500 mt-1">Email cannot be changed</p>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          <Phone className="w-4 h-4 inline mr-2" />
-                          Mobile Number
-                        </label>
-                        <Input
-                          type="tel"
-                          value={formData.mobile}
-                          onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                          placeholder="Enter your mobile number"
-                          className="w-full"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Profile Picture URL</label>
-                        <Input
-                          type="url"
-                          value={formData.avatar}
-                          onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
-                          placeholder="Enter profile picture URL"
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3 pt-4">
-                      <Button onClick={handleSave} disabled={isLoading} className="flex items-center gap-2">
-                        <Save className="w-4 h-4" />
-                        {isLoading ? "Saving..." : "Save Changes"}
-                      </Button>
-                      <Button
-                        onClick={handleCancel}
-                        variant="outline"
-                        className="flex items-center gap-2 bg-transparent"
-                      >
-                        <X className="w-4 h-4" />
-                        Cancel
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Tabs Section */}
-      <section className="px-4 mb-8">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Card>
+        {/* Edit Profile Form */}
+        {isEditing && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+            <Card className="mt-6 dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <CardTitle className="text-2xl">My Activity</CardTitle>
-
-                  {/* Search */}
-                  <div className="relative max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <CardTitle className="flex items-center gap-2 dark:text-white">
+                  <Edit className="w-5 h-5" />
+                  Edit Profile Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Full Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                      <User className="w-4 h-4 inline mr-2" />
+                      Full Name
+                    </label>
                     <Input
                       type="text"
-                      placeholder={activeTab === "referrals" ? "Search referrals..." : "Search properties..."}
-                      value={searchQuery}
-                      onChange={(e) => {
-                        handleSearch(e.target.value)
-                        setSearchQuery(e.target.value)
-                      }}
-                      className="pl-10"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Enter your full name"
+                      className="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                      <Mail className="w-4 h-4 inline mr-2" />
+                      Email Address
+                    </label>
+                    <Input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="Enter your email"
+                      className="w-full dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
+                      disabled
+                    />
+                    <p className="text-xs text-slate-500 mt-1 dark:text-gray-400">Email cannot be changed</p>
+                  </div>
+
+                  {/* Mobile */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                      <Phone className="w-4 h-4 inline mr-2" />
+                      Mobile Number
+                    </label>
+                    <Input
+                      type="tel"
+                      value={formData.mobile}
+                      onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                      placeholder="Enter your mobile number"
+                      className="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    />
+                  </div>
+
+                  {/* Avatar URL */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">
+                      Profile Picture URL
+                    </label>
+                    <Input
+                      type="url"
+                      value={formData.avatar}
+                      onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
+                      placeholder="Enter profile picture URL"
+                      className="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
                     />
                   </div>
                 </div>
-              </CardHeader>
 
-              <CardContent>
-                <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="inquiries" className="flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4" />
-                      Inquiries ({inquiriesData?.totalRecords || 0})
-                    </TabsTrigger>
-                    <TabsTrigger value="site-visits" className="flex items-center gap-2">
-                      <Eye className="w-4 h-4" />
-                      Site Visits ({siteVisitsData?.totalRecords || 0})
-                    </TabsTrigger>
-                    <TabsTrigger value="wishlist" className="flex items-center gap-2">
-                      <Heart className="w-4 h-4" />
-                      Wishlist ({wishlistData?.totalRecords || 0})
-                    </TabsTrigger>
-                    <TabsTrigger value="referrals" className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      Referrals ({referralsData?.totalRecords || 0})
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="inquiries" className="mt-6">
-                    <div className="space-y-4">
-                      {isLoadingInquiries ? (
-                        <div className="text-center py-8">
-                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                          <p className="text-slate-500">Loading inquiries...</p>
-                        </div>
-                      ) : !inquiriesData?.data || inquiriesData.data.length === 0 ? (
-                        <div className="text-center py-8">
-                          <MessageSquare className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                          <h3 className="text-lg font-semibold text-slate-600 mb-2">No Inquiries Found</h3>
-                          <p className="text-slate-500">Start exploring properties to make inquiries</p>
-                          <Link href="/properties">
-                            <Button className="mt-4">Browse Properties</Button>
-                          </Link>
-                        </div>
-                      ) : (
-                        <>
-                          {inquiriesData.data.map((inquiry) => (
-                            <Card key={inquiry.id} className="hover:shadow-md transition-shadow">
-                              <CardContent className="p-6">
-                                <div className="flex flex-col md:flex-row gap-4">
-                                  <div className="flex-1">
-                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
-                                      <h3 className="font-semibold text-slate-800">
-                                        {inquiry.property || "General Inquiry"}
-                                      </h3>
-                                      <Badge className={getStatusColor(inquiry.status)}>{inquiry.status}</Badge>
-                                    </div>
-
-                                    <p className="text-slate-600 text-sm mb-3 line-clamp-2">{inquiry.message}</p>
-
-                                    <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500">
-                                      <div className="flex items-center gap-1">
-                                        <Clock className="w-3 h-3" />
-                                        <span>Inquired: {formatDate(inquiry.createdAt)}</span>
-                                      </div>
-                                      <div className="flex items-center gap-1">
-                                        <span>By: {inquiry.name}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-
-                          {/* Pagination */}
-                          {inquiriesData.totalPages > 1 && (
-                            <div className="flex items-center justify-center gap-2 mt-8">
-                              <Button
-                                variant="outline"
-                                onClick={() => handleInquiriesPageChange(inquiriesPage - 1)}
-                                disabled={inquiriesPage === 1}
-                                className="flex items-center gap-2"
-                              >
-                                ← Previous
-                              </Button>
-
-                              <div className="flex items-center gap-1">
-                                {Array.from({ length: Math.min(5, inquiriesData.totalPages) }, (_, i) => {
-                                  let pageNum
-                                  if (inquiriesData.totalPages <= 5) {
-                                    pageNum = i + 1
-                                  } else if (inquiriesPage <= 3) {
-                                    pageNum = i + 1
-                                  } else if (inquiriesPage >= inquiriesData.totalPages - 2) {
-                                    pageNum = inquiriesData.totalPages - 4 + i
-                                  } else {
-                                    pageNum = inquiriesPage - 2 + i
-                                  }
-
-                                  return (
-                                    <Button
-                                      key={pageNum}
-                                      variant={inquiriesPage === pageNum ? "default" : "outline"}
-                                      onClick={() => handleInquiriesPageChange(pageNum)}
-                                      className="w-10 h-10"
-                                    >
-                                      {pageNum}
-                                    </Button>
-                                  )
-                                })}
-                              </div>
-
-                              <Button
-                                variant="outline"
-                                onClick={() => handleInquiriesPageChange(inquiriesPage + 1)}
-                                disabled={inquiriesPage === inquiriesData.totalPages}
-                                className="flex items-center gap-2"
-                              >
-                                Next →
-                              </Button>
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="site-visits" className="mt-6">
-                    <div className="space-y-4">
-                      {isLoadingSiteVisits ? (
-                        <div className="text-center py-8">
-                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                          <p className="text-slate-500">Loading site visits...</p>
-                        </div>
-                      ) : !siteVisitsData?.data || siteVisitsData.data.length === 0 ? (
-                        <div className="text-center py-8">
-                          <Eye className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                          <h3 className="text-lg font-semibold text-slate-600 mb-2">No Site Visits Found</h3>
-                          <p className="text-slate-500">Schedule site visits for properties you're interested in</p>
-                          <Link href="/properties">
-                            <Button className="mt-4">Browse Properties</Button>
-                          </Link>
-                        </div>
-                      ) : (
-                        <>
-                          {siteVisitsData.data.map((visit) => (
-                            <Card key={visit.id} className="hover:shadow-md transition-shadow">
-                              <CardContent className="p-6">
-                                <div className="flex flex-col md:flex-row gap-4">
-                                  <div className="flex-1">
-                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
-                                      <h3 className="font-semibold text-slate-800">
-                                        {visit.property || "General Site Visit"}
-                                      </h3>
-                                      <Badge className={getStatusColor(visit.status)}>{visit.status}</Badge>
-                                    </div>
-
-                                    <p className="text-slate-600 text-sm mb-3 line-clamp-2">{visit.message}</p>
-
-                                    <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500">
-                                      <div className="flex items-center gap-1">
-                                        <Calendar className="w-3 h-3" />
-                                        <span>
-                                          Scheduled:{" "}
-                                          {visit.appointmentDate ? formatDate(visit.appointmentDate) : "Not scheduled"}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center gap-1">
-                                        <Clock className="w-3 h-3" />
-                                        <span>Created: {formatDate(visit.createdAt)}</span>
-                                      </div>
-                                      <div className="flex items-center gap-1">
-                                        <span>By: {visit.name}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-
-                          {/* Pagination */}
-                          {siteVisitsData.totalPages > 1 && (
-                            <div className="flex items-center justify-center gap-2 mt-8">
-                              <Button
-                                variant="outline"
-                                onClick={() => handleSiteVisitsPageChange(siteVisitsPage - 1)}
-                                disabled={siteVisitsPage === 1}
-                                className="flex items-center gap-2"
-                              >
-                                ← Previous
-                              </Button>
-
-                              <div className="flex items-center gap-1">
-                                {Array.from({ length: Math.min(5, siteVisitsData.totalPages) }, (_, i) => {
-                                  let pageNum
-                                  if (siteVisitsData.totalPages <= 5) {
-                                    pageNum = i + 1
-                                  } else if (siteVisitsPage <= 3) {
-                                    pageNum = i + 1
-                                  } else if (siteVisitsPage >= siteVisitsData.totalPages - 2) {
-                                    pageNum = siteVisitsData.totalPages - 4 + i
-                                  } else {
-                                    pageNum = siteVisitsPage - 2 + i
-                                  }
-
-                                  return (
-                                    <Button
-                                      key={pageNum}
-                                      variant={siteVisitsPage === pageNum ? "default" : "outline"}
-                                      onClick={() => handleSiteVisitsPageChange(pageNum)}
-                                      className="w-10 h-10"
-                                    >
-                                      {pageNum}
-                                    </Button>
-                                  )
-                                })}
-                              </div>
-
-                              <Button
-                                variant="outline"
-                                onClick={() => handleSiteVisitsPageChange(siteVisitsPage + 1)}
-                                disabled={siteVisitsPage === siteVisitsData.totalPages}
-                                className="flex items-center gap-2"
-                              >
-                                Next →
-                              </Button>
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="wishlist" className="mt-6">
-                    <div className="space-y-4">
-                      {isLoadingWishlist ? (
-                        <div className="text-center py-8">
-                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                          <p className="text-slate-500">Loading wishlist...</p>
-                        </div>
-                      ) : !wishlistData?.data || wishlistData.data.length === 0 ? (
-                        <div className="text-center py-8">
-                          <Heart className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                          <h3 className="text-lg font-semibold text-slate-600 mb-2">Your Wishlist is Empty</h3>
-                          <p className="text-slate-500">Start exploring properties and save your favorites</p>
-                          <Link href="/properties">
-                            <Button className="mt-4">Browse Properties</Button>
-                          </Link>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {wishlistData.data.map((wishlist) => (
-                              <WishlistCard
-                                key={wishlist.property.id}
-                                property={wishlist.property}
-                                onRemove={() => handleRemoveFromWishlist(wishlist.property.id, wishlist.property.title)}
-                                onShare={() => shareProperty(wishlist.property)}
-                              />
-                            ))}
-                          </div>
-
-                          {/* Pagination */}
-                          {wishlistData.totalPages > 1 && (
-                            <div className="flex items-center justify-center gap-2 mt-8">
-                              <Button
-                                variant="outline"
-                                onClick={() => handleWishlistPageChange(wishlistPage - 1)}
-                                disabled={wishlistPage === 1}
-                                className="flex items-center gap-2"
-                              >
-                                ← Previous
-                              </Button>
-
-                              <div className="flex items-center gap-1">
-                                {Array.from({ length: Math.min(5, wishlistData.totalPages) }, (_, i) => {
-                                  let pageNum
-                                  if (wishlistData.totalPages <= 5) {
-                                    pageNum = i + 1
-                                  } else if (wishlistPage <= 3) {
-                                    pageNum = i + 1
-                                  } else if (wishlistPage >= wishlistData.totalPages - 2) {
-                                    pageNum = wishlistData.totalPages - 4 + i
-                                  } else {
-                                    pageNum = wishlistPage - 2 + i
-                                  }
-
-                                  return (
-                                    <Button
-                                      key={pageNum}
-                                      variant={wishlistPage === pageNum ? "default" : "outline"}
-                                      onClick={() => handleWishlistPageChange(pageNum)}
-                                      className="w-10 h-10"
-                                    >
-                                      {pageNum}
-                                    </Button>
-                                  )
-                                })}
-                              </div>
-
-                              <Button
-                                variant="outline"
-                                onClick={() => handleWishlistPageChange(wishlistPage + 1)}
-                                disabled={wishlistPage === wishlistData.totalPages}
-                                className="flex items-center gap-2"
-                              >
-                                Next →
-                              </Button>
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="referrals" className="mt-6">
-                    <div className="space-y-6">
-                      {/* Referral Stats */}
-                      {referralStats && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="text-blue-100 text-sm">Total Referrals</p>
-                                  <p className="text-2xl font-bold">{referralStats.totalReferrals}</p>
-                                </div>
-                                <Users className="w-8 h-8 text-blue-200" />
-                              </div>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="text-green-100 text-sm">Completed</p>
-                                  <p className="text-2xl font-bold">{referralStats.completedReferrals}</p>
-                                </div>
-                                <UserPlus className="w-8 h-8 text-green-200" />
-                              </div>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="text-amber-100 text-sm">Total Earnings</p>
-                                  <p className="text-2xl font-bold">{formatPrice(referralStats.totalEarnings)}</p>
-                                </div>
-                                <DollarSign className="w-8 h-8 text-amber-200" />
-                              </div>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="text-purple-100 text-sm">Pending Earnings</p>
-                                  <p className="text-2xl font-bold">{formatPrice(referralStats.pendingEarnings)}</p>
-                                </div>
-                                <TrendingUp className="w-8 h-8 text-purple-200" />
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      )}
-
-                      {/* Referral Link Section */}
-                      <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
-                        <CardContent className="p-6">
-                          <div className="flex items-center gap-3 mb-4">
-                            <Gift className="w-6 h-6 text-indigo-600" />
-                            <h3 className="text-lg font-semibold text-indigo-900">
-                              Earn {formatPrice(Number.parseInt(companyDetails?.referralAmount || '0') || 0)} per referral!
-                            </h3>
-                          </div>
-                          <p className="text-indigo-700 mb-4">
-                            Share your referral link with friends and earn rewards when they sign up and make their
-                            first purchase.
-                          </p>
-
-                          <div className="flex flex-col md:flex-row gap-3">
-                            <div className="flex-1">
-                              <Input value={referralLink} readOnly className="bg-white border-indigo-200" />
-                            </div>
-                            <div className="flex gap-2">
-                              <Button
-                                onClick={copyReferralLink}
-                                variant="outline"
-                                className="flex items-center gap-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 bg-transparent"
-                              >
-                                <Copy className="w-4 h-4" />
-                                Copy
-                              </Button>
-                              <Button
-                                onClick={shareReferralLink}
-                                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700"
-                              >
-                                <Share2 className="w-4 h-4" />
-                                Share
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Referrals List */}
-                      <div className="space-y-4">
-                        {isLoadingReferrals ? (
-                          <div className="text-center py-8">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                            <p className="text-slate-500">Loading referrals...</p>
-                          </div>
-                        ) : !referralsData?.data || referralsData.data.length === 0 ? (
-                          <div className="text-center py-8">
-                            <Users className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                            <h3 className="text-lg font-semibold text-slate-600 mb-2">No Referrals Yet</h3>
-                            <p className="text-slate-500">Start sharing your referral link to earn rewards</p>
-                            <Button onClick={shareReferralLink} className="mt-4">
-                              Share Referral Link
-                            </Button>
-                          </div>
-                        ) : (
-                          <>
-                            {referralsData.data.map((referral) => (
-                              <Card key={referral.id} className="hover:shadow-md transition-shadow">
-                                <CardContent className="p-6">
-                                  <div className="flex flex-col md:flex-row gap-4">
-                                    <div className="flex-1">
-                                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
-                                        <div>
-                                          <h3 className="font-semibold text-slate-800">{referral.referredName}</h3>
-                                          <p className="text-slate-600 text-sm">{referral.referredEmail}</p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                          <Badge className={getStatusColor(referral.status)}>{referral.status}</Badge>
-                                          <span className="font-semibold text-green-600">
-                                            {formatPrice(referral.referralAmount)}
-                                          </span>
-                                        </div>
-                                      </div>
-
-                                      <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500">
-                                        <div className="flex items-center gap-1">
-                                          <Clock className="w-3 h-3" />
-                                          <span>Referred: {formatDate(referral.createdAt)}</span>
-                                        </div>
-                                        {referral.completedAt && (
-                                          <div className="flex items-center gap-1">
-                                            <span>Completed: {formatDate(referral.completedAt)}</span>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            ))}
-
-                            {/* Pagination */}
-                            {referralsData.totalPages > 1 && (
-                              <div className="flex items-center justify-center gap-2 mt-8">
-                                <Button
-                                  variant="outline"
-                                  onClick={() => handleReferralsPageChange(referralsPage - 1)}
-                                  disabled={referralsPage === 1}
-                                  className="flex items-center gap-2"
-                                >
-                                  ← Previous
-                                </Button>
-
-                                <div className="flex items-center gap-1">
-                                  {Array.from({ length: Math.min(5, referralsData.totalPages) }, (_, i) => {
-                                    let pageNum
-                                    if (referralsData.totalPages <= 5) {
-                                      pageNum = i + 1
-                                    } else if (referralsPage <= 3) {
-                                      pageNum = i + 1
-                                    } else if (referralsPage >= referralsData.totalPages - 2) {
-                                      pageNum = referralsData.totalPages - 4 + i
-                                    } else {
-                                      pageNum = referralsPage - 2 + i
-                                    }
-
-                                    return (
-                                      <Button
-                                        key={pageNum}
-                                        variant={referralsPage === pageNum ? "default" : "outline"}
-                                        onClick={() => handleReferralsPageChange(pageNum)}
-                                        className="w-10 h-10"
-                                      >
-                                        {pageNum}
-                                      </Button>
-                                    )
-                                  })}
-                                </div>
-
-                                <Button
-                                  variant="outline"
-                                  onClick={() => handleReferralsPageChange(referralsPage + 1)}
-                                  disabled={referralsPage === referralsData.totalPages}
-                                  className="flex items-center gap-2"
-                                >
-                                  Next →
-                                </Button>
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                <div className="flex gap-3 pt-4">
+                  <Button onClick={handleSave} disabled={isLoading} className="flex items-center gap-2">
+                    <Save className="w-4 h-4" />
+                    {isLoading ? "Saving..." : "Save Changes"}
+                  </Button>
+                  <Button
+                    onClick={handleCancel}
+                    variant="outline"
+                    className="flex items-center gap-2 bg-transparent dark:text-gray-200 dark:border-gray-600"
+                  >
+                    <X className="w-4 h-4" />
+                    Cancel
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
-        </div>
-      </section>
-
-      <Footer />
+        )}
+      </motion.div>
     </div>
+  </section>
+
+  {/* Tabs Section */}
+  <section className="px-4 mb-8">
+    <div className="max-w-4xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <Card className="dark:bg-gray-800 dark:border-gray-700">
+          <CardHeader>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <CardTitle className="text-2xl dark:text-white">My Activity</CardTitle>
+
+              {/* Search */}
+              <div className="relative max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-gray-400 w-4 h-4" />
+                <Input
+                  type="text"
+                  placeholder={activeTab === "referrals" ? "Search referrals..." : "Search properties..."}
+                  value={searchQuery}
+                  onChange={(e) => {
+                    handleSearch(e.target.value)
+                    setSearchQuery(e.target.value)
+                  }}
+                  className="pl-10 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                />
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="inquiries" className="flex items-center gap-2 dark:text-white">
+                  <MessageSquare className="w-4 h-4" />
+                  Inquiries ({inquiriesData?.totalRecords || 0})
+                </TabsTrigger>
+                <TabsTrigger value="site-visits" className="flex items-center gap-2 dark:text-white">
+                  <Eye className="w-4 h-4" />
+                  Site Visits ({siteVisitsData?.totalRecords || 0})
+                </TabsTrigger>
+                <TabsTrigger value="wishlist" className="flex items-center gap-2 dark:text-white">
+                  <Heart className="w-4 h-4" />
+                  Wishlist ({wishlistData?.totalRecords || 0})
+                </TabsTrigger>
+                <TabsTrigger value="referrals" className="flex items-center gap-2 dark:text-white">
+                  <Users className="w-4 h-4" />
+                  Referrals ({referralsData?.totalRecords || 0})
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Tabs Content */}
+              <TabsContent value="inquiries" className="mt-6">
+  <div className="space-y-4">
+    {isLoadingInquiries ? (
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4 dark:border-blue-400"></div>
+        <p className="text-slate-500 dark:text-slate-400">Loading inquiries...</p>
+      </div>
+    ) : !inquiriesData?.data || inquiriesData.data.length === 0 ? (
+      <div className="text-center py-8">
+        <MessageSquare className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-200 mb-2">No Inquiries Found</h3>
+        <p className="text-slate-500 dark:text-slate-400">Start exploring properties to make inquiries</p>
+        <Link href="/properties">
+          <Button className="mt-4">Browse Properties</Button>
+        </Link>
+      </div>
+    ) : (
+      <>
+        {inquiriesData.data.map((inquiry) => (
+          <Card
+            key={inquiry.id}
+            className="hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border dark:border-gray-700"
+          >
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">
+                      {inquiry.property || "General Inquiry"}
+                    </h3>
+                    <Badge className={getStatusColor(inquiry.status)}>{inquiry.status}</Badge>
+                  </div>
+
+                  <p className="text-slate-600 dark:text-slate-300 text-sm mb-3 line-clamp-2">
+                    {inquiry.message}
+                  </p>
+
+                  <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      <span>Inquired: {formatDate(inquiry.createdAt)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>By: {inquiry.name}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+
+        {/* Pagination */}
+        {inquiriesData.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <Button
+              variant="outline"
+              onClick={() => handleInquiriesPageChange(inquiriesPage - 1)}
+              disabled={inquiriesPage === 1}
+              className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+            >
+              ← Previous
+            </Button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, inquiriesData.totalPages) }, (_, i) => {
+                let pageNum
+                if (inquiriesData.totalPages <= 5) {
+                  pageNum = i + 1
+                } else if (inquiriesPage <= 3) {
+                  pageNum = i + 1
+                } else if (inquiriesPage >= inquiriesData.totalPages - 2) {
+                  pageNum = inquiriesData.totalPages - 4 + i
+                } else {
+                  pageNum = inquiriesPage - 2 + i
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={inquiriesPage === pageNum ? "default" : "outline"}
+                    onClick={() => handleInquiriesPageChange(pageNum)}
+                    className="w-10 h-10 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+                  >
+                    {pageNum}
+                  </Button>
+                )
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={() => handleInquiriesPageChange(inquiriesPage + 1)}
+              disabled={inquiriesPage === inquiriesData.totalPages}
+              className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+            >
+              Next →
+            </Button>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+</TabsContent>
+
+
+           <TabsContent value="site-visits" className="mt-6">
+  <div className="space-y-4">
+    {isLoadingSiteVisits ? (
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4 dark:border-blue-400"></div>
+        <p className="text-slate-500 dark:text-slate-400">Loading site visits...</p>
+      </div>
+    ) : !siteVisitsData?.data || siteVisitsData.data.length === 0 ? (
+      <div className="text-center py-8">
+        <Eye className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-200 mb-2">No Site Visits Found</h3>
+        <p className="text-slate-500 dark:text-slate-400">Schedule site visits for properties you're interested in</p>
+        <Link href="/properties">
+          <Button className="mt-4">Browse Properties</Button>
+        </Link>
+      </div>
+    ) : (
+      <>
+        {siteVisitsData.data.map((visit) => (
+          <Card
+            key={visit.id}
+            className="hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border dark:border-gray-700"
+          >
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">
+                      {visit.property || "General Site Visit"}
+                    </h3>
+                    <Badge className={getStatusColor(visit.status)}>{visit.status}</Badge>
+                  </div>
+
+                  <p className="text-slate-600 dark:text-slate-300 text-sm mb-3 line-clamp-2">{visit.message}</p>
+
+                  <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      <span>
+                        Scheduled:{" "}
+                        {visit.appointmentDate ? formatDate(visit.appointmentDate) : "Not scheduled"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      <span>Created: {formatDate(visit.createdAt)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>By: {visit.name}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+
+        {/* Pagination */}
+        {siteVisitsData.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <Button
+              variant="outline"
+              onClick={() => handleSiteVisitsPageChange(siteVisitsPage - 1)}
+              disabled={siteVisitsPage === 1}
+              className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+            >
+              ← Previous
+            </Button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, siteVisitsData.totalPages) }, (_, i) => {
+                let pageNum
+                if (siteVisitsData.totalPages <= 5) {
+                  pageNum = i + 1
+                } else if (siteVisitsPage <= 3) {
+                  pageNum = i + 1
+                } else if (siteVisitsPage >= siteVisitsData.totalPages - 2) {
+                  pageNum = siteVisitsData.totalPages - 4 + i
+                } else {
+                  pageNum = siteVisitsPage - 2 + i
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={siteVisitsPage === pageNum ? "default" : "outline"}
+                    onClick={() => handleSiteVisitsPageChange(pageNum)}
+                    className="w-10 h-10 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+                  >
+                    {pageNum}
+                  </Button>
+                )
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={() => handleSiteVisitsPageChange(siteVisitsPage + 1)}
+              disabled={siteVisitsPage === siteVisitsData.totalPages}
+              className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+            >
+              Next →
+            </Button>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+</TabsContent>
+
+             <TabsContent value="wishlist" className="mt-6">
+  <div className="space-y-4">
+    {isLoadingWishlist ? (
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4 dark:border-blue-400"></div>
+        <p className="text-slate-500 dark:text-slate-400">Loading wishlist...</p>
+      </div>
+    ) : !wishlistData?.data || wishlistData.data.length === 0 ? (
+      <div className="text-center py-8">
+        <Heart className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-200 mb-2">Your Wishlist is Empty</h3>
+        <p className="text-slate-500 dark:text-slate-400">Start exploring properties and save your favorites</p>
+        <Link href="/properties">
+          <Button className="mt-4">Browse Properties</Button>
+        </Link>
+      </div>
+    ) : (
+      <>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {wishlistData.data.map((wishlist) => (
+            <WishlistCard
+              key={wishlist.property.id}
+              property={wishlist.property}
+              onRemove={() => handleRemoveFromWishlist(wishlist.property.id, wishlist.property.title)}
+              onShare={() => shareProperty(wishlist.property)}
+            />
+          ))}
+        </div>
+
+        {/* Pagination */}
+        {wishlistData.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <Button
+              variant="outline"
+              onClick={() => handleWishlistPageChange(wishlistPage - 1)}
+              disabled={wishlistPage === 1}
+              className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+            >
+              ← Previous
+            </Button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, wishlistData.totalPages) }, (_, i) => {
+                let pageNum
+                if (wishlistData.totalPages <= 5) {
+                  pageNum = i + 1
+                } else if (wishlistPage <= 3) {
+                  pageNum = i + 1
+                } else if (wishlistPage >= wishlistData.totalPages - 2) {
+                  pageNum = wishlistData.totalPages - 4 + i
+                } else {
+                  pageNum = wishlistPage - 2 + i
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={wishlistPage === pageNum ? "default" : "outline"}
+                    onClick={() => handleWishlistPageChange(pageNum)}
+                    className="w-10 h-10 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+                  >
+                    {pageNum}
+                  </Button>
+                )
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={() => handleWishlistPageChange(wishlistPage + 1)}
+              disabled={wishlistPage === wishlistData.totalPages}
+              className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+            >
+              Next →
+            </Button>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+</TabsContent>
+
+             <TabsContent value="referrals" className="mt-6">
+  <div className="space-y-6">
+    {/* Referral Stats */}
+    {referralStats && (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-blue-100 text-sm">Total Referrals</p>
+                <p className="text-2xl font-bold">{referralStats.totalReferrals}</p>
+              </div>
+              <Users className="w-8 h-8 text-blue-200" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-100 text-sm">Completed</p>
+                <p className="text-2xl font-bold">{referralStats.completedReferrals}</p>
+              </div>
+              <UserPlus className="w-8 h-8 text-green-200" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-amber-100 text-sm">Total Earnings</p>
+                <p className="text-2xl font-bold">{formatPrice(referralStats.totalEarnings)}</p>
+              </div>
+              <DollarSign className="w-8 h-8 text-amber-200" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm">Pending Earnings</p>
+                <p className="text-2xl font-bold">{formatPrice(referralStats.pendingEarnings)}</p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-purple-200" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )}
+
+    {/* Referral Link Section */}
+    <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200 dark:from-indigo-900 dark:to-purple-900 dark:border-indigo-700">
+      <CardContent className="p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <Gift className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+          <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-200">
+            Earn {formatPrice(Number.parseInt(companyDetails?.referralAmount || '0') || 0)} per referral!
+          </h3>
+        </div>
+        <p className="text-indigo-700 dark:text-indigo-300 mb-4">
+          Share your referral link with friends and earn rewards when they sign up and make their first purchase.
+        </p>
+
+        <div className="flex flex-col md:flex-row gap-3">
+          <div className="flex-1">
+            <Input value={referralLink} readOnly className="bg-white dark:bg-slate-800 border-indigo-200 dark:border-indigo-700 text-slate-900 dark:text-slate-100" />
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={copyReferralLink}
+              variant="outline"
+              className="flex items-center gap-2 border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-800 bg-transparent"
+            >
+              <Copy className="w-4 h-4" />
+              Copy
+            </Button>
+            <Button
+              onClick={shareReferralLink}
+              className="flex items-center gap-2 bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-800"
+            >
+              <Share2 className="w-4 h-4" />
+              Share
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    {/* Referrals List */}
+    <div className="space-y-4">
+      {isLoadingReferrals ? (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-4"></div>
+          <p className="text-slate-500 dark:text-slate-400">Loading referrals...</p>
+        </div>
+      ) : !referralsData?.data || referralsData.data.length === 0 ? (
+        <div className="text-center py-8">
+          <Users className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-200 mb-2">No Referrals Yet</h3>
+          <p className="text-slate-500 dark:text-slate-400">Start sharing your referral link to earn rewards</p>
+          <Button onClick={shareReferralLink} className="mt-4">
+            Share Referral Link
+          </Button>
+        </div>
+      ) : (
+        <>
+          {referralsData.data.map((referral) => (
+            <Card key={referral.id} className="hover:shadow-md transition-shadow dark:bg-slate-800">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
+                      <div>
+                        <h3 className="font-semibold text-slate-800 dark:text-slate-100">{referral.referredName}</h3>
+                        <p className="text-slate-600 dark:text-slate-300 text-sm">{referral.referredEmail}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getStatusColor(referral.status)}>{referral.status}</Badge>
+                        <span className="font-semibold text-green-600 dark:text-green-400">
+                          {formatPrice(referral.referralAmount)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row md:items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>Referred: {formatDate(referral.createdAt)}</span>
+                      </div>
+                      {referral.completedAt && (
+                        <div className="flex items-center gap-1">
+                          <span>Completed: {formatDate(referral.completedAt)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          {/* Pagination */}
+          {referralsData.totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-8">
+              <Button
+                variant="outline"
+                onClick={() => handleReferralsPageChange(referralsPage - 1)}
+                disabled={referralsPage === 1}
+                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+              >
+                ← Previous
+              </Button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, referralsData.totalPages) }, (_, i) => {
+                  let pageNum
+                  if (referralsData.totalPages <= 5) {
+                    pageNum = i + 1
+                  } else if (referralsPage <= 3) {
+                    pageNum = i + 1
+                  } else if (referralsPage >= referralsData.totalPages - 2) {
+                    pageNum = referralsData.totalPages - 4 + i
+                  } else {
+                    pageNum = referralsPage - 2 + i
+                  }
+
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={referralsPage === pageNum ? "default" : "outline"}
+                      onClick={() => handleReferralsPageChange(pageNum)}
+                      className="w-10 h-10 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+                    >
+                      {pageNum}
+                    </Button>
+                  )
+                })}
+              </div>
+
+              <Button
+                variant="outline"
+                onClick={() => handleReferralsPageChange(referralsPage + 1)}
+                disabled={referralsPage === referralsData.totalPages}
+                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
+              >
+                Next →
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  </div>
+</TabsContent>
+
+            </Tabs>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  </section>
+
+  <Footer />
+</div>
+
   )
 
   function WishlistCard({

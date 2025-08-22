@@ -50,6 +50,7 @@ export interface SliderProps {
   subtitle: string
   linkUrl: string
   imageUrl: string
+  mobileImageUrl: string
   altText: string
 }
 

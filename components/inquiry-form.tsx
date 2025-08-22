@@ -73,124 +73,124 @@ export default function InquiryForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`space-y-6 ${className}`}>
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
-          Name *
-        </label>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          required
-          value={formData.name}
-          onChange={handleInputChange}
-          className="h-12 border-slate-200 focus:border-blue-500"
-          placeholder="Your full name"
-        />
-      </div>
+   <form onSubmit={handleSubmit} className={`space-y-6 ${className}`}>
+  <div>
+    <label
+      htmlFor="name"
+      className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+    >
+      Name *
+    </label>
+    <Input
+      id="name"
+      name="name"
+      type="text"
+      required
+      value={formData.name}
+      onChange={handleInputChange}
+      placeholder="Your full name"
+      className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+    />
+  </div>
 
-      {/* <div>
-        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
-          Email *
-        </label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          required
-          value={formData.email}
-          onChange={handleInputChange}
-          className="h-12 border-slate-200 focus:border-blue-500"
-          placeholder="your.email@example.com"
-        />
-      </div> */}
+  <div>
+    <label
+      htmlFor="mobile"
+      className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+    >
+      Phone *
+    </label>
+    <Input
+      id="mobile"
+      name="mobile"
+      type="tel"
+      value={formData.mobile}
+      onChange={handleInputChange}
+      placeholder="(123) 456-7890"
+      required
+      className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+    />
+  </div>
 
-      <div>
-        <label htmlFor="mobile" className="block text-sm font-medium text-slate-700 mb-2">
-          Phone *
-        </label>
-        <Input
-          id="mobile"
-          name="mobile"
-          type="tel"
-          value={formData.mobile}
-          onChange={handleInputChange}
-          className="h-12 border-slate-200 focus:border-blue-500"
-          placeholder="(123) 456-7890"
-          required
-        />
-      </div>
-
-      {property && (
-        <div>
-          <label htmlFor="property" className="block text-sm font-medium text-slate-700 mb-2">
-            Property
-          </label>
-          <Input
-            id="property"
-            name="property"
-            type="text"
-            value={formData.property}
-            disabled
-            className="h-12 border-slate-200 bg-slate-50 cursor-not-allowed"
-            placeholder={property}
-          />
-        </div>
-      )}
-
-      {showAppointmentDate && (
-        <div>
-          <label htmlFor="appointmentDate" className="block text-sm font-medium text-slate-700 mb-2">
-            Preferred Appointment Date
-          </label>
-          <Input
-            id="appointmentDate"
-            name="appointmentDate"
-            type="datetime-local"
-            value={formData.appointmentDate}
-            onChange={handleInputChange}
-            className="h-12 border-slate-200 focus:border-blue-500"
-          />
-        </div>
-      )}
-
-      <div>
-        <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
-          Message
-        </label>
-        <Textarea
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleInputChange}
-          rows={5}
-          className="border-slate-200 focus:border-blue-500"
-          placeholder={
-            property
-              ? `Tell us about your interest in ${property}...`
-              : "Tell us about your real estate needs..."
-          }
-        />
-      </div>
-
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+  {property && (
+    <div>
+      <label
+        htmlFor="property"
+        className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
       >
-        {isSubmitting ? (
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Sending...
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Send className="w-4 h-4" />
-            Send Message
-          </div>
-        )}
-      </Button>
-    </form>
+        Property
+      </label>
+      <Input
+        id="property"
+        name="property"
+        type="text"
+        value={formData.property}
+        disabled
+        placeholder={property}
+        className="h-12 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-not-allowed placeholder-gray-500 dark:placeholder-gray-400"
+      />
+    </div>
+  )}
+
+  {showAppointmentDate && (
+    <div>
+      <label
+        htmlFor="appointmentDate"
+        className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+      >
+        Preferred Appointment Date
+      </label>
+      <Input
+        id="appointmentDate"
+        name="appointmentDate"
+        type="datetime-local"
+        value={formData.appointmentDate}
+        onChange={handleInputChange}
+        className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+      />
+    </div>
+  )}
+
+  <div>
+    <label
+      htmlFor="message"
+      className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+    >
+      Message
+    </label>
+    <Textarea
+      id="message"
+      name="message"
+      value={formData.message}
+      onChange={handleInputChange}
+      rows={5}
+      placeholder={
+        property
+          ? `Tell us about your interest in ${property}...`
+          : "Tell us about your real estate needs..."
+      }
+      className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+    />
+  </div>
+
+  <Button
+    type="submit"
+    disabled={isSubmitting}
+    className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    {isSubmitting ? (
+      <div className="flex items-center gap-2">
+        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        Sending...
+      </div>
+    ) : (
+      <div className="flex items-center gap-2">
+        <Send className="w-4 h-4" />
+        Send Message
+      </div>
+    )}
+  </Button>
+</form>
+
   )
 } 

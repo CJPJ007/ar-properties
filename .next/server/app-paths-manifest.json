@@ -1,10 +1,13 @@
 {
-  "/api/notifications/route": "app/api/notifications/route.js",
-  "/contact/page": "app/contact/page.js",
-  "/about/page": "app/about/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
-  "/api/company-details/route": "app/api/company-details/route.js",
-  "/properties/page": "app/properties/page.js",
-  "/blogs/page": "app/blogs/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
+  "/properties/[id]/page": "app/properties/[id]/page.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/api/notifications/route": "app/api/notifications/route.js",
+  "/profile/page": "app/profile/page.js",
+  "/about/page": "app/about/page.js",
+  "/api/sliders/route": "app/api/sliders/route.js",
+  "/api/ga-config/route": "app/api/ga-config/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/company-details/route": "app/api/company-details/route.js"
 }
