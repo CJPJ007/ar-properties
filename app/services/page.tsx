@@ -116,7 +116,7 @@ export default function ServicesPage() {
       <Header />
 
       {/* Hero Section */}
-      <Slider className="w-full h-[650px]" showSearch={false} page="Services"/>
+      <Slider className="w-full h-[300px]" showSearch={false} page="Services"/>
 
       {/* Services Grid */}
       <section className="py-20 px-4">
