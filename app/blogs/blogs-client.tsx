@@ -67,7 +67,7 @@ export default function BlogsClient({ blogsData, currentPage }: BlogsClientProps
 
       {/* Hero Section */}
       {/* <section className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden mt-0 md:mt-16"> */}
-        <Slider className="w-full h-[400px]" showSearch={false} page="Blog" />
+        <Slider className="w-full h-[500px]" showSearch={false} page="Blog" />
         {/* 
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-90"></div> */}
         {/* <motion.div
