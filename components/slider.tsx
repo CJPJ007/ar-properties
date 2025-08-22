@@ -105,7 +105,7 @@ export const Slider = ({
 
   return (
     <section
-      className={`relative ${className ? className : "w-full h-96 bg-gradient-to-r from-blue-600 to-yellow-400"} flex items-center justify-center overflow-hidden mt-16`}
+      className={`relative ${className ? className : "w-full h-96 bg-gradient-to-r from-blue-600 to-yellow-400"} flex items-center justify-center overflow-hidden mt-[6.5rem]`}
     >
       <div className="absolute inset-0 z-0">
         <div className={`relative w-full h-full`}>
