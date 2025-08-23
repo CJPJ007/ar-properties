@@ -8,16 +8,16 @@ import AuthSessionProvider from "@/components/providers/session-provider";
 import NotificationProvider from "@/components/providers/notifications-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import GoogleAnalytics from "@/components/GAConfigClient";
-import { NextIntlClientProvider } from "next-intl";
-import messagesEn from "@/messages/en.json";
-import messagesHi from "@/messages/hi.json";
-import messagesTe from "@/messages/te.json";
+// import { NextIntlClientProvider } from "next-intl";
+// import messagesEn from "@/messages/en.json";
+// import messagesHi from "@/messages/hi.json";
+// import messagesTe from "@/messages/te.json";
 
-const messagesMap: Record<string, any> = {
-  en: messagesEn,
-  hi: messagesHi,
-  te: messagesTe,
-};
+// const messagesMap: Record<string, any> = {
+//   en: messagesEn,
+//   hi: messagesHi,
+//   te: messagesTe,
+// };
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,12 +38,12 @@ export default function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const messages = messagesMap[locale] || messagesMap.en;
+  // const messages = messagesMap[locale] || messagesMap.en;
   return (
     <html lang={locale}>
       <body className={inter.className}>
         <GoogleAnalytics userId={1} />
-        <NextIntlClientProvider messages={messages} locale={locale}>
+        {/* <NextIntlClientProvider messages={messages} locale={locale}> */}
           <ThemeProvider>
             <AuthSessionProvider>
               <NotificationProvider>
@@ -53,7 +53,7 @@ export default function RootLayout({
               </NotificationProvider>
             </AuthSessionProvider>
           </ThemeProvider>
-        </NextIntlClientProvider>
+        {/* </NextIntlClientProvider> */}
       </body>
     </html>
   );
