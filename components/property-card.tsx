@@ -157,7 +157,7 @@ const {data:session} = useSession();
       </h3>
       <p className="text-2xl font-bold text-amber-600 mb-3">
         {property.type === "Plot"
-          ? `${property.cents} Cents = ${formatPrice(property.price)}`
+          ? `${property.cents} Cent = ${formatPrice(property.price)}`
           : formatPrice(property.price)}
       </p>
 

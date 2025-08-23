@@ -492,7 +492,7 @@ function SpotlightCard({ property }: { property: Property }) {
   whileHover={{ scale: 1.03, rotateX: 2, rotateY: 2 }}
   className="group perspective-1000"
 >
-  <Card className="bg-gray-900/20 backdrop-blur-md border border-gray-700 text-white overflow-hidden hover:bg-gray-900/30 transition-all duration-500">
+  <Card className="dark:bg-gray-900/20 bg-white shadow-lg hover:shadow-2xl border border-gray-700 text-white overflow-hidden hover:bg-gray-900/30 transition-all duration-500">
     {/* Image Section */}
     <div className="relative overflow-hidden">
       <img
@@ -506,13 +506,13 @@ function SpotlightCard({ property }: { property: Property }) {
 
     {/* Card Content */}
     <CardContent className="p-8">
-      <h3 className="text-2xl font-bold mb-2 text-white">{property.title}</h3>
-      <p className="text-3xl font-extrabold text-amber-400 mb-4">
+      <h3 className="text-2xl font-bold mb-2 dark:text-white text-black">{property.title}</h3>
+      <p className="text-3xl font-extrabold text-amber-600 mb-4">
         {property.price} INR
       </p>
 
       {/* Key Features */}
-      <div className="flex items-center gap-6 text-blue-200 mb-6">
+      <div className="flex items-center gap-6 dark:text-blue-200 text-black mb-6">
         <div className="flex items-center gap-2">
           <Bed className="w-5 h-5" />
           <span>{property.bedrooms} Beds</span>

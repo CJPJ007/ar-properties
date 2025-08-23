@@ -226,7 +226,7 @@ export default function PropertyDetailClient({ property }: { property: Property 
               <div className="text-right">
                 <p className="text-3xl md:text-4xl font-bold text-amber-600">
                   {property.type === "Plot"
-                    ? `${property.cents} Cents = ${formatPrice(property.price)}`
+                    ? `${property.cents} Cent = ${formatPrice(property.price)}`
                     : formatPrice(property.price)}
                 </p>
                 {property.featured && (

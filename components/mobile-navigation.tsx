@@ -127,7 +127,7 @@ const handleCall = (number: string
     
   </div>
 {/* 🔥 Live Scrolling Banner */}
-  <div className="w-full relative top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
+  <div className="md:hidden w-full relative top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
     <motion.div
       className="whitespace-nowrap text-sm md:text-base font-medium"
       animate={{ x: ["100%", "-100%"] }}
