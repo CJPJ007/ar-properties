@@ -124,8 +124,22 @@ const handleCall = (number: string
       )}
     </button>
     <span className="text-lg font-bold text-slate-800 dark:text-white">Ananta Realty</span>
+    
   </div>
-
+{/* 🔥 Live Scrolling Banner */}
+  <div className="w-full relative top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
+    <motion.div
+      className="whitespace-nowrap text-sm md:text-base font-medium"
+      animate={{ x: ["100%", "-100%"] }}
+      transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+    >
+      {[...Array(10)].map((_, i) => (
+        <span key={i} className="mx-6">
+          {company?.tagline || "Ananta Realty is your way to property"} |
+        </span>
+      ))}
+    </motion.div>
+  </div>
   {/* Floating Action Buttons */}
   <motion.button
     onClick={() => handleCall(company?.primaryPhone || '+1234567890')}
@@ -329,6 +343,7 @@ const handleCall = (number: string
           >
             <X className="w-6 h-6 text-slate-600 dark:text-gray-200" />
           </button>
+           
         </div>
 
         {/* User Profile */}

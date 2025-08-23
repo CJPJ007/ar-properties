@@ -15,6 +15,7 @@ import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const Slider = ({
   className,
@@ -30,6 +31,7 @@ export const Slider = ({
   const [current, setCurrent] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Property[]>([]);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // ✅ Create ONE Autoplay instance and keep it stable
   const autoplayRef = useRef(
@@ -118,7 +120,7 @@ export const Slider = ({
   
   return (
     <section
-      className={`relative ${className ? className : "w-full h-96 bg-gradient-to-r from-blue-600 to-yellow-400"} flex items-center justify-center overflow-hidden mt-[6.5rem]`}
+      className={`relative ${className ? className : "w-full h-96 bg-gradient-to-r from-blue-600 to-yellow-400"} flex items-center justify-center overflow-hidden mt-14 md:mt-[6.5rem]`}
     >
       <div className="absolute inset-0 z-0">
         <div className={`relative w-full h-full`}>
@@ -131,17 +133,34 @@ export const Slider = ({
             <CarouselContent className="w-full h-full">
               {sliders.map((slider, index) => (
                 <CarouselItem className="relative w-full h-full bg-gradient-to-r from-blue-600 to-yellow-400">
-                  <Image
-                    src={
-                      typeof window !== "undefined" && window.innerWidth < 768 && slider.mobileImageUrl
-                        ? `/images/${slider.mobileImageUrl}`
-                        : `/images/${slider.imageUrl}`
-                    }
-                    alt={slider.altText || `Slide ${index + 1}`}
-                    fill
-                    className="object-cover h-full w-full bg-black"
-                    priority={index === 0}
-                  />
+                  <div className="relative w-full h-full">
+  {/* Background blurred layer */}
+  <Image
+    src={
+      isMobile && slider.mobileImageUrl
+        ? `/images/${slider.mobileImageUrl}`
+        : `/images/${slider.imageUrl}`
+    }
+    alt=""
+    fill
+    className="object-cover blur-2xl scale-110 opacity-40"
+    aria-hidden="true"
+  />
+
+  {/* Main image */}
+  <Image
+    src={
+      isMobile && slider.mobileImageUrl
+        ? `/images/${slider.mobileImageUrl}`
+        : `/images/${slider.imageUrl}`
+    }
+    alt={slider.altText || ""}
+    fill
+    className="object-contain relative z-10"
+    sizes="(max-width: 768px) 100vw, 100vw"
+  />
+</div>
+
                 </CarouselItem>
 
               ))}
