@@ -1,0 +1,297 @@
+{
+  "Contact": {
+    "form": { "title": "हमें संदेश भेजें" },
+    "hero": { "page": "संपर्क" },
+    "contact": {
+      "email": "ईमेल",
+      "phone": "फ़ोन",
+      "title": "संपर्क करें",
+      "address": "पता",
+      "description": "हमारी टीम आपकी सभी रियल एस्टेट आवश्यकताओं में मदद करने के लिए तैयार है। आज ही संपर्क करें और अपनी परफेक्ट प्रॉपर्टी खोजने की यात्रा शुरू करें।",
+      "officeHours": "कार्यालय समय"
+    }
+  },
+  "InquiryForm": {
+    "name": "नाम",
+    "phone": "फ़ोन",
+    "message": "संदेश",
+    "sending": "भेजा जा रहा है...",
+    "property": "संपत्ति",
+    "sendMessage": "संदेश भेजें",
+    "placeholders": {
+      "name": "आपका पूरा नाम",
+      "phone": "(123) 456-7890",
+      "messageGeneral": "हमें अपनी रियल एस्टेट ज़रूरतों के बारे में बताएं...",
+      "messageProperty": "{property} में आपकी रुचि के बारे में हमें बताएं..."
+    },
+    "appointmentDate": "पसंदीदा अपॉइंटमेंट तिथि"
+  },
+  "About": {
+    "hero": {
+      "page": "परिचय"
+    },
+    "story": {
+      "title": "हमारी कहानी",
+      "noStory": "कोई कहानी उपलब्ध नहीं है।",
+      "imageAlt": "हमारी कहानी"
+    },
+    "mdLink": "हमारे एमडी के बारे में कहानी पढ़ें",
+    "team": {
+      "title": "हमारी टीम से मिलें",
+      "noMembers": "कोई टीम सदस्य नहीं मिला।"
+    },
+    "values": {
+      "title": "हमारे मूल्य",
+      "noValues": "कोई मूल्य नहीं मिला।"
+    },
+    "contact": {
+      "title": "संपर्क करें"
+    }
+  },
+  "Gallery": {
+    "hero": {
+      "page": "गैलरी"
+    },
+    "filters": {
+      "images": "चित्र",
+      "videos": "वीडियो"
+    },
+    "grid": {
+      "title": "प्रॉपर्टी गैलरी",
+      "loading": "लोड हो रहा है..."
+    },
+    "lightbox": {
+      "close": "बंद करें"
+    },
+    "videoModal": {
+      "close": "वीडियो बंद करें"
+    },
+    "pagination": {
+      "prev": "पिछला",
+      "next": "अगला"
+    }
+  },
+  "Services": {
+    "hero": {
+      "page": "सेवाएँ"
+    },
+    "section": {
+      "title": "हमारी सेवाएँ",
+      "description": "खरीदने और बेचने से लेकर निवेश और प्रबंधन तक, हम आपकी आवश्यकताओं के अनुसार व्यापक रियल एस्टेट समाधान प्रदान करते हैं"
+    },
+    "cta": {
+      "title": "शुरू करने के लिए तैयार?",
+      "description": "आज ही हमसे संपर्क करें ताकि अपनी रियल एस्टेट आवश्यकताओं पर चर्चा कर सकें और जान सकें कि हमारी विशेषज्ञ टीम आपके लक्ष्य कैसे हासिल कर सकती है।",
+      "scheduleButton": "परामर्श अनुसूचित करें",
+      "modalTitle": "परामर्श अनुसूचित करें",
+      "modalDescription": "हमें अपनी रियल एस्टेट आवश्यकताओं के बारे में बताएं और हम व्यक्तिगत परामर्श अनुसूचित करेंगे",
+      "viewProperties": "संपत्तियाँ देखें"
+    },
+    "grid": {
+      "loading": "लोड हो रहा है..."
+    }
+  },
+  "Blog": {
+    "hero": { "page": "ब्लॉग" },
+    "search": {
+      "placeholder": "ब्लॉग खोजें...",
+      "results": "{count} लेख पाए गए"
+    },
+    "noBlogs": {
+      "title": "कोई ब्लॉग नहीं मिला",
+      "trySearch": "कृपया अपनी खोज शर्तें समायोजित करें",
+      "checkBack": "नए लेखों के लिए बाद में देखें",
+      "clearSearch": "खोज साफ करें"
+    },
+    "pagination": {
+      "prev": "पिछला",
+      "next": "अगला"
+    }
+  },
+  "Properties": {
+    "hero": { "page": "संपत्तियाँ" },
+    "search": { "placeholder": "संपत्तियाँ खोजें..." },
+    "filters": {
+      "propertyType": "संपत्ति प्रकार",
+      "sortBy": "क्रमबद्ध करें"
+    },
+    "sort": {
+      "featured": "मुख्य",
+      "priceLow": "कीमत: कम से ज्यादा",
+      "priceHigh": "कीमत: ज्यादा से कम",
+      "beds": "सबसे ज्यादा बेडरूम"
+    },
+    "availableProperties": "उपलब्ध संपत्तियाँ",
+    "results": "संपत्तियाँ मिलीं",
+    "page": "पृष्ठ",
+    "of": "में से",
+    "noProperties": "कोई संपत्ति नहीं मिली",
+    "tryAdjusting": "कृपया अपने खोज मानदंड या फ़िल्टर समायोजित करें",
+    "clearFilters": "फ़िल्टर साफ़ करें"
+  },
+  "PropertyCard": {
+    "featured": "मुख्य",
+    "sold": "बिक गया",
+    "viewDetails": "विवरण देखें"
+  },
+  "Home": {
+    "searchPlaceholder": "शहर या पिन कोड द्वारा संपत्तियों की खोज करें",
+    "searchButton": "खोजें",
+    "clearButton": "साफ़ करें",
+    "title": "शीर्षक",
+    "location": "स्थान",
+    "pincode": "पिनकोड",
+    "type": "प्रकार",
+    "viewDetails": "विवरण देखें",
+    "exploreProperties": "संपत्तियों का अन्वेषण करें",
+    "featuredProperties": "विशेष संपत्तियां",
+    "spotlightProperties": "महीने की संपत्ति",
+    "virtualTours": "360° वर्चुअल प्रॉपर्टी टूर",
+    "clientStories": "ग्राहक सफलता की कहानियां",
+    "featuredDescription": "हमारी हाथ से चुनी गई प्रीमियम संपत्तियों का अन्वेषण करें",
+    "virtualToursDescription": "अपने घर की सुविधा से हमारी विशेष संपत्तियों के immersive वर्चुअल टूर लें",
+    "testimonialsDescription": "हमारी सेवाओं के साथ अपने अनुभवों और सफलताओं के बारे में सीधे हमारे ग्राहकों से सुनें"
+
+  },
+  "Header": {
+    "companyName": "अनंता रियल्टी",
+    "nav": {
+      "Home": "होम",
+      "Properties": "संपत्तियाँ",
+      "Blog": "ब्लॉग",
+      "About": "हमारे बारे में",
+      "Services": "सेवाएँ",
+      "Gallery": "गैलरी",
+      "Contact": "संपर्क करें"
+    },
+    "signIn": "साइन इन",
+    "signOut": "साइन आउट",
+    "defaultTagline": "अनंता रियल्टी आपकी प्रॉपर्टी की राह है"
+  },
+
+  "PropertyDetail":{
+  "backToProperties": "संपत्ति पर वापस जाएं",
+  "image": "छवि",
+  "thumbnail": "थंबनेल",
+  "virtualTour": "वर्चुअल टूर",
+  "featured": "विशेष",
+  "bedrooms": "शयनकक्ष",
+  "bathrooms": "बाथरूम",
+  "squareFeet": "वर्ग फीट",
+  "description": "विवरण",
+  "propertyDetails": "संपत्ति विवरण",
+  "propertyType": "संपत्ति प्रकार",
+  "price": "मूल्य",
+  "status": "स्थिति",
+  "interested": "क्या आप इस संपत्ति में रुचि रखते हैं?",
+  "contactMessage": "इस संपत्ति के बारे में अधिक जानने या देखने का समय निर्धारित करने के लिए हमसे संपर्क करें।",
+  "contact": "संपर्क करें",
+  "propertyInquiry": "संपत्ति पूछताछ",
+  "tellInterest": "हमें बताएं कि आप {title} में किसमें रुचि रखते हैं"
+},
+"BlogDetail":{
+  "backToBlogs": "ब्लॉग्स पर वापस जाएं",
+  "shareOnFacebook": "फेसबुक पर साझा करें",
+  "shareOnTwitter": "ट्विटर पर साझा करें",
+  "shareOnLinkedIn": "लिंक्डइन पर साझा करें",
+  "copyLink": "लिंक कॉपी करें",
+  "featured": "फीचर्ड",
+  "minRead": "मिनट पढ़ें",
+  "by": "द्वारा",
+  "aboutAuthor": "लेखक के बारे में",
+  "articleInfo": "लेख जानकारी",
+  "published": "प्रकाशित",
+  "readingTime": "पढ़ने का समय",
+  "status": "स्थिति",
+  "min": "मिनट"
+}
+,"Footer":{
+  "companyDescription": "हमारी विशेषज्ञ टीम के साथ अपने सपनों का घर खोजें, जो आपकी विशिष्ट आवश्यकताओं और प्राथमिकताओं के अनुसार उत्कृष्ट रियल एस्टेट सेवाएं प्रदान करने के लिए समर्पित है।",
+  "defaultAddress": "123 एस्टेट लेन, शहर, राज्य 12345",
+  "quickLinks": "त्वरित लिंक",
+  "connectWithUs": "हमसे जुड़ें",
+  "allRightsReserved": "सर्वाधिकार सुरक्षित।",
+  "privacyPolicy": "गोपनीयता नीति",
+  "termsOfService": "सेवा की शर्तें",
+    "quickLinksNav": {
+        "Home": "होम",
+        "Properties": "संपत्तियाँ",
+        "Blog": "ब्लॉग",
+        "About": "हमारे बारे में",
+        "Services": "सेवाएँ",
+        "Gallery": "गैलरी",
+        "Contact": "संपर्क करें"
+    }
+}
+,"Login":{
+  "back": "वापस",
+  "hello": "नमस्ते",
+  "welcomeMessage": "Ananta Realty में आपका स्वागत है\nजारी रखने के लिए साइन इन करें",
+  "referredBy": "के द्वारा संदर्भित: {email}",
+  "referralNote": "अपना रेफ़रल बोनस सक्रिय करने के लिए पंजीकरण पूरा करें!",
+  "mobileNumber": "मोबाइल नंबर",
+  "sendOtp": "ओटीपी भेजें",
+  "resendOtp": "ओटीपी फिर से भेजें",
+  "otpPlaceholder": "6-अंकों का ओटीपी दर्ज करें",
+  "fullName": "पूरा नाम",
+  "email": "ईमेल",
+  "uploadAvatar": "प्रोफ़ाइल चित्र (वैकल्पिक)",
+  "signIn": "साइन इन करें",
+  "googleLogin": "Google के साथ जारी रखें",
+  "terms": "सेवा की शर्तें",
+  "privacy": "गोपनीयता नीति"
+},
+"Profile":{
+"backToHome": "होम पर वापस जाएँ",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "editProfileInfo": "प्रोफ़ाइल जानकारी संपादित करें",
+    "fullName": "पूरा नाम",
+    "emailAddress": "ईमेल पता",
+    "emailNote": "ईमेल बदला नहीं जा सकता",
+    "mobileNumber": "मोबाइल नंबर",
+    "profilePicture": "प्रोफ़ाइल चित्र URL",
+    "saveChanges": "परिवर्तन सहेजें",
+    "saving": "सहेजा जा रहा है...",
+    "cancel": "रद्द करें",
+    "myActivity": "मेरी गतिविधि",
+    "searchReferrals": "रेफ़रल खोजें...",
+    "searchProperties": "संपत्तियाँ खोजें...",
+    "inquiries": "पूछताछ",
+    "siteVisits": "साइट यात्राएँ",
+    "wishlist": "विवाह सूची",
+    "referrals": "रेफ़रल्स",
+    "loadingInquiries": "पूछताछ लोड हो रही है...",
+    "noInquiries": "कोई पूछताछ नहीं मिली",
+    "inquiryPrompt": "पूछताछ करने के लिए संपत्तियों का पता लगाएँ",
+    "browseProperties": "संपत्तियों को ब्राउज़ करें",
+    "loadingSiteVisits": "साइट यात्राएँ लोड हो रही हैं...",
+    "noSiteVisits": "कोई साइट यात्रा नहीं मिली",
+    "siteVisitPrompt": "उन संपत्तियों के लिए साइट यात्राएँ निर्धारित करें जिनमें आप रुचि रखते हैं",
+    "loadingWishlist": "विवाह सूची लोड हो रही है...",
+    "emptyWishlist": "आपकी विवाह सूची खाली है",
+    "wishlistPrompt": "संपत्तियों का पता लगाएँ और अपने पसंदीदा जोड़ें",
+    "loadingReferrals": "रेफ़रल्स लोड हो रहे हैं...",
+    "noReferrals": "कोई रेफ़रल नहीं है",
+    "referralPrompt": "त्वरित पुरस्कार कमाने के लिए अपना रेफ़रल लिंक साझा करें",
+    "earnPerReferral": "प्रत्येक रेफ़रल पर कमाएँ",
+    "shareReferral": "रेफ़रल साझा करें",
+    "copy": "कॉपी करें",
+    "referred": "रेफ़र्ड:",
+    "completed": "पूर्ण:",
+    "by": "द्वारा:",
+    "scheduled": "निर्धारित:",
+    "created": "निर्मित:",
+    "inquired": "पूछताछ की गई:",
+    "totalReferrals": "कुल रेफ़रल्स",
+    "completedReferrals": "पूर्ण रेफ़रल्स",
+    "totalEarnings": "कुल कमाई",
+    "pendingEarnings": "लंबित कमाई",
+    "noData": "कोई डेटा नहीं"
+}
+
+
+
+
+
+
+}

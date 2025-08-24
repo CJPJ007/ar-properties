@@ -1,0 +1,302 @@
+{
+  "Contact": {
+    "form": { "title": "Send Us a Message" },
+    "hero": { "page": "Contact" },
+    "contact": {
+      "email": "Email",
+      "phone": "Phone",
+      "title": "Get in Touch",
+      "address": "Address",
+      "description": "Our team is ready to assist you with all your real estate needs. Contact us today to start your journey to finding the perfect property.",
+      "officeHours": "Office Hours"
+    }
+  },
+  "InquiryForm": {
+    "name": "Name",
+    "phone": "Phone",
+    "message": "Message",
+    "sending": "Sending...",
+    "property": "Property",
+    "sendMessage": "Send Message",
+    "placeholders": {
+      "name": "Your full name",
+      "phone": "(123) 456-7890",
+      "messageGeneral": "Tell us about your real estate needs...",
+      "messageProperty": "Tell us about your interest in {property}..."
+    },
+    "appointmentDate": "Preferred Appointment Date"
+  },
+  "About": {
+    "hero": {
+      "page": "About"
+    },
+    "story": {
+      "title": "Our Story",
+      "noStory": "No story available.",
+      "imageAlt": "Our Story"
+    },
+    "mdLink": "Read story about our MD",
+    "team": {
+      "title": "Meet Our Team",
+      "noMembers": "No team members found."
+    },
+    "values": {
+      "title": "Our Values",
+      "noValues": "No values found."
+    },
+    "contact": {
+      "title": "Get in Touch"
+    }
+  },
+  "Gallery": {
+    "hero": {
+      "page": "Gallery"
+    },
+    "filters": {
+      "images": "Images",
+      "videos": "Videos"
+    },
+    "grid": {
+      "title": "Property Gallery",
+      "loading": "Loading..."
+    },
+    "lightbox": {
+      "close": "Close"
+    },
+    "videoModal": {
+      "close": "Close Video"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    }
+  },
+  "Services": {
+    "hero": {
+      "page": "Services"
+    },
+    "section": {
+      "title": "Our Services",
+      "description": "From buying and selling to investment and management, we provide comprehensive real estate solutions tailored to your needs"
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "description": "Contact us today to discuss your real estate needs and discover how our expert team can help you achieve your goals.",
+      "scheduleButton": "Schedule Consultation",
+      "modalTitle": "Schedule a Consultation",
+      "modalDescription": "Tell us about your real estate needs and we'll schedule a personalized consultation.",
+      "viewProperties": "View Properties"
+    },
+    "grid": {
+      "loading": "Loading..."
+    }
+  },
+   "Blog": {
+    "hero": { "page": "Blog" },
+    "search": {
+      "placeholder": "Search blogs...",
+      "results": "{count} articles found"
+    },
+    "noBlogs": {
+      "title": "No Blogs Found",
+      "trySearch": "Try adjusting your search criteria",
+      "checkBack": "Check back soon for new articles",
+      "clearSearch": "Clear Search"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    }
+  },
+  "Properties": {
+    "hero": { "page": "Properties" },
+    "search": { "placeholder": "Search properties..." },
+    "filters": {
+      "propertyType": "Property Type",
+      "sortBy": "Sort By"
+    },
+    "sort": {
+      "featured": "Featured",
+      "priceLow": "Price: Low to High",
+      "priceHigh": "Price: High to Low",
+      "beds": "Most Bedrooms"
+    },
+    "availableProperties": "Available Properties",
+    "results": "properties found",
+    "page": "Page",
+    "of": "of",
+    "noProperties": "No Properties Found",
+    "tryAdjusting": "Try adjusting your search criteria or filters",
+    "clearFilters": "Clear Filters"
+  },
+  "PropertyCard": {
+    "featured": "Featured",
+    "sold": "Sold",
+    "viewDetails": "View Details"
+  
+},
+  "Home": {
+    "searchPlaceholder": "Search properties by city or zip code",
+    "searchButton": "Search",
+    "clearButton": "Clear",
+    "title": "Title",
+    "location": "Location",
+    "pincode": "Pincode",
+    "type": "Type",
+    "viewDetails": "View Details",
+    "exploreProperties": "Explore Properties",
+    "featuredProperties": "Featured Properties",
+    "spotlightProperties": "Property of the Month",
+    "virtualTours": "360° Virtual Property Tours",
+    "clientStories": "Client Success Stories",
+     "featuredDescription": "Discover our handpicked selection of premium properties",
+    "virtualToursDescription": "Take immersive virtual tours of our featured properties from the comfort of your home",
+    "testimonialsDescription": "Hear directly from our clients about their experiences and successes with our services"
+  },
+  "Header": {
+    "companyName": "Ananta Realty",
+    "nav": {
+      "Home": "Home",
+      "Properties": "Properties",
+      "Blog": "Blog",
+      "About": "About Us",
+      "Services": "Services",
+      "Gallery": "Gallery",
+      "Contact": "Contact"
+    },
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "defaultTagline": "Ananta Realty is your way to property"
+  },
+  "PropertyDetail":{
+  "backToProperties": "Back to Properties",
+  "image": "Image",
+  "thumbnail": "Thumbnail",
+  "virtualTour": "Virtual Tour",
+  "featured": "Featured",
+  "bedrooms": "Bedrooms",
+  "bathrooms": "Bathrooms",
+  "squareFeet": "Square Feet",
+  "description": "Description",
+  "propertyDetails": "Property Details",
+  "propertyType": "Property Type",
+  "price": "Price",
+  "status": "Status",
+  "interested": "Interested in this property?",
+  "contactMessage": "Get in touch with us to learn more about this property or schedule a viewing.",
+  "contact": "Contact",
+  "propertyInquiry": "Property Inquiry",
+  "tellInterest": "Tell us about your interest in {title}"
+},
+"BlogDetail":{
+  "backToBlogs": "Back to Blogs",
+  "shareOnFacebook": "Share on Facebook",
+  "shareOnTwitter": "Share on Twitter",
+  "shareOnLinkedIn": "Share on LinkedIn",
+  "copyLink": "Copy Link",
+  "featured": "Featured",
+  "minRead": "min read",
+  "by": "By",
+  "aboutAuthor": "About the Author",
+  "articleInfo": "Article Info",
+  "published": "Published",
+  "readingTime": "Reading Time",
+  "status": "Status",
+  "min": "min"
+},
+"Footer":{
+  "companyDescription": "Discover your dream home with our expert team, dedicated to providing exceptional real estate services tailored to your unique needs and preferences.",
+  "defaultAddress": "123 Estate Lane, City, ST 12345",
+  "quickLinks": "Quick Links",
+  "connectWithUs": "Connect With Us",
+  "allRightsReserved": "All rights reserved.",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+  "quickLinksNav": {
+      "Home": "Home",
+      "Properties": "Properties",
+      "Blog": "Blog",
+      "About": "About Us",
+      "Services": "Services",
+      "Gallery": "Gallery",
+      "Contact": "Contact"
+}
+},
+"Login":{
+  "back": "Back",
+  "hello": "HELLO",
+  "welcomeMessage": "Welcome to Ananta Realty\nSign in to continue your journey",
+  "referredBy": "Referred by: {email}",
+  "referralNote": "Complete registration to activate your referral bonus!",
+  "mobileNumber": "Mobile Number",
+  "sendOtp": "Send OTP",
+  "resendOtp": "Resend OTP",
+  "otpPlaceholder": "Enter 6-digit OTP",
+  "fullName": "Full Name",
+  "email": "Email",
+  "uploadAvatar": "Profile Picture (Optional)",
+  "signIn": "Sign In",
+  "googleLogin": "Continue with Google",
+  "terms": "Terms of Service",
+  "privacy": "Privacy Policy"
+},
+"Profile":{
+  "backToHome": "Back to Home",
+    "editProfile": "Edit Profile",
+    "editProfileInfo": "Edit Profile Information",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "emailNote": "Email cannot be changed",
+    "mobileNumber": "Mobile Number",
+    "profilePicture": "Profile Picture URL",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "myActivity": "My Activity",
+    "searchReferrals": "Search referrals...",
+    "searchProperties": "Search properties...",
+    "inquiries": "Inquiries",
+    "siteVisits": "Site Visits",
+    "wishlist": "Wishlist",
+    "referrals": "Referrals",
+    "loadingInquiries": "Loading inquiries...",
+    "noInquiries": "No Inquiries Found",
+    "inquiryPrompt": "Start exploring properties to make inquiries",
+    "browseProperties": "Browse Properties",
+    "loadingSiteVisits": "Loading site visits...",
+    "noSiteVisits": "No Site Visits Found",
+    "siteVisitPrompt": "Schedule site visits for properties you're interested in",
+    "loadingWishlist": "Loading wishlist...",
+    "emptyWishlist": "Your Wishlist is Empty",
+    "wishlistPrompt": "Start exploring properties and save your favorites",
+    "loadingReferrals": "Loading referrals...",
+    "noReferrals": "No Referrals Yet",
+    "referralPrompt": "Share your referral link to earn instant rewards",
+    "earnPerReferral": "Earn per referral",
+    "shareReferral": "Share Referral",
+    "copy": "Copy",
+    "referred": "Referred:",
+    "completed": "Completed:",
+    "by": "By:",
+    "scheduled": "Scheduled:",
+    "created": "Created:",
+    "inquired": "Inquired:",
+    "totalReferrals": "Total Referrals",
+    "completedReferrals": "Completed Referrals",
+    "totalEarnings": "Total Earnings",
+    "pendingEarnings": "Pending Earnings",
+    "noData": "No Data"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+}
