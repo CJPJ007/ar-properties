@@ -5,9 +5,12 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useSession, signIn, signOut } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 import { Moon, Sun } from "lucide-react"
+import LanguageSwitcher from "./LanguageSwitcher"
+import { useLocale, useTranslations } from "next-intl"
+import { useLocalePath } from "@/hooks/use-local-path"
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -59,7 +62,8 @@ export default function Header() {
   const { company } = useCompanyDetails()
   const { theme, setTheme } = useTheme()
 
-
+  const currentLocale = useLocale();
+  const getPath = useLocalePath(currentLocale);
   const handleGoogleLogin = () => {
     if (session) {
       signOut({ callbackUrl: '/' })
@@ -88,8 +92,9 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  const t = useTranslations();
   return (
-    <motion.header
+<motion.header
   className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 
     bg-white/95 text-black dark:bg-gray-900/90 dark:text-gray-100 
     backdrop-blur-md shadow-lg`}
@@ -99,7 +104,7 @@ export default function Header() {
 >
   <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="flex justify-between items-center h-16">
-      
+
       {/* Logo */}
       <motion.div 
         className="flex-shrink-0" 
@@ -110,7 +115,7 @@ export default function Header() {
           href="/"
           className="text-2xl font-bold transition-colors duration-300 text-slate-800 dark:text-white"
         >
-          {company ? company.companyName : "Ananta Realty"}
+          {company ? company.companyName : t("Header.companyName")}
         </Link>
       </motion.div>
 
@@ -125,37 +130,32 @@ export default function Header() {
                   text-slate-700 dark:text-gray-200 
                   hover:text-amber-500 dark:hover:text-amber-400"
               >
-                {item.name}
+                {t(`Header.nav.${item.name}`)}
               </Link>
             </motion.div>
           ))}
 
           {/* Dark Mode Toggle + Auth */}
-          <motion.div 
-            whileHover={{ y: -2 }} 
-            whileTap={{ y: 0 }} 
-            className="flex items-center gap-3"
-          >
+          <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} className="flex items-center gap-3">
             {/* Dark Mode Toggle */}
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleDarkMode}
-              className="text-gray-600 dark:text-gray-200 
-                hover:bg-gray-100 dark:hover:bg-gray-700 
-                transition-colors duration-300"
+              className="text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
             >
               {theme === "dark" ? <Sun /> : <Moon />}
             </Button>
 
-            {/* Authenticated User */}
+            {/* Language Switcher */}
+            <LanguageSwitcher currentLocale={currentLocale} />
+
+            {/* Auth */}
             {session ? (
               <div className="flex items-center gap-3">
                 <Link
                   href="/profile"
-                  className="text-sm text-slate-600 dark:text-gray-200 
-                    hover:text-blue-600 dark:hover:text-blue-400 
-                    transition-colors"
+                  className="text-sm text-slate-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   <img 
                     src={session.user?.image || "/default-avatar.png"}
@@ -169,11 +169,10 @@ export default function Header() {
                   onClick={handleGoogleLogin}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2 border-red-300 
-                    hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/40"
+                  className="flex items-center gap-2 border-red-300 hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/40"
                 >
                   <span className="text-sm font-medium text-red-600 dark:text-red-400">
-                    Sign Out
+                    {t("Header.signOut")}
                   </span>
                 </Button>
               </div>
@@ -182,11 +181,10 @@ export default function Header() {
                 onClick={handleSignIn}
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 border-slate-300 dark:border-gray-600 
-                  hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800"
+                className="flex items-center gap-2 border-slate-300 dark:border-gray-600 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800"
               >
                 <span className="text-sm font-medium text-black dark:text-white">
-                  Sign In
+                  {t("Header.signIn")}
                 </span>
               </Button>
             )}
@@ -205,13 +203,12 @@ export default function Header() {
     >
       {[...Array(10)].map((_, i) => (
         <span key={i} className="mx-6">
-          {company?.tagline || "Ananta Realty is your way to property"} |
+          {company?.tagline || t("Header.defaultTagline")} |
         </span>
       ))}
     </motion.div>
   </div>
 </motion.header>
-
 
   )
 }

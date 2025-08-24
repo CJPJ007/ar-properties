@@ -5,6 +5,7 @@ import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Youtube, LucideYoutu
 import Link from "next/link"
 import { Home, Building, Users, Briefcase, Camera } from "lucide-react"
 import { useCompanyDetails } from "@/hooks/use-company-details"
+import { useTranslations } from "next-intl"
 
 type CompanyDetails = {
   id: number;
@@ -59,9 +60,11 @@ export default function Footer() {
     { name: "WhatsApp", icon:MessageCircleIcon, href:`https://wa.me/${company?.whatsappNumber?.replace(/\D/g, '') || '1234567890'}?text=Hello, I'm interested in your real estate services`},
     { name: "LinkedIn", icon: LinkedinIcon, href: company?.linkedinUrl || "#" },
   ]
+    const t = useTranslations("Footer");
+
 
   return (
-    <footer className="hidden md:block bg-gradient-to-r from-slate-900 to-blue-900 text-white pb-16 md:pb-0">
+       <footer className="hidden md:block bg-gradient-to-r from-slate-900 to-blue-900 text-white pb-16 md:pb-0">
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -76,17 +79,20 @@ export default function Footer() {
               {company ? company.companyName : "Ananta Realty"}
             </h3>
             <p className="text-blue-100 mb-6 leading-relaxed">
-              {company ? (company.aboutDescription || "") : "Discover your dream home with our expert team, dedicated to providing exceptional real estate services tailored to your unique needs and preferences."}
+              {company ? (company.aboutDescription || "") : t("companyDescription")}
             </p>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-amber-400" />
                 <span className="text-blue-100">
-                  <a href={company?.googleMapsUrl || "#"} className="text-blue-100 hover:text-amber-400 transition-colors">
-                  {company
-                    ? `${company.streetAddress}, ${company.city}, ${company.state} ${company.postalCode}`
-                    : "123 Estate Lane, City, ST 12345"}
-                    </a>
+                  <a
+                    href={company?.googleMapsUrl || "#"}
+                    className="text-blue-100 hover:text-amber-400 transition-colors"
+                  >
+                    {company
+                      ? `${company.streetAddress}, ${company.city}, ${company.state} ${company.postalCode}`
+                      : t("defaultAddress")}
+                  </a>
                 </span>
               </div>
               <div className="flex items-center gap-3">
@@ -117,7 +123,7 @@ export default function Footer() {
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-xl font-bold mb-6 text-amber-400">Quick Links</h3>
+            <h3 className="text-xl font-bold mb-6 text-amber-400">{t("quickLinks")}</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -125,7 +131,7 @@ export default function Footer() {
                     href={link.href}
                     className="text-blue-100 hover:text-amber-400 transition-colors duration-300 hover:translate-x-1 inline-block"
                   >
-                    {link.name}
+                    {t(`quickLinksNav.${link.name}`)}
                   </Link>
                 </li>
               ))}
@@ -139,11 +145,11 @@ export default function Footer() {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-xl font-bold mb-6 text-amber-400">Connect With Us</h3>
+            <h3 className="text-xl font-bold mb-6 text-amber-400">{t("connectWithUs")}</h3>
             <div className="flex gap-4">
               {socialLinks.map((social) => {
-                if (!social.href || social.href === "#") return null
-                const Icon = social.icon
+                if (!social.href || social.href === "#") return null;
+                const Icon = social.icon;
                 return (
                   <motion.a
                     key={social.name}
@@ -156,7 +162,7 @@ export default function Footer() {
                   >
                     <Icon className="w-5 h-5" />
                   </motion.a>
-                )
+                );
               })}
             </div>
           </motion.div>
@@ -171,18 +177,18 @@ export default function Footer() {
           viewport={{ once: true }}
         >
           <p className="text-blue-200">
-            © 2025 {company ? company.companyName : "Ananta Realty"}. All rights reserved. |{" "}
+            © 2025 {company ? company.companyName : "Ananta Realty"}. {t("allRightsReserved")} |{" "}
             <Link href="/privacy" className="text-amber-400 hover:text-amber-300 transition-colors">
-              Privacy Policy
+              {t("privacyPolicy")}
             </Link>{" "}
             |{" "}
             <Link href="/terms" className="text-amber-400 hover:text-amber-300 transition-colors">
-              Terms of Service
+              {t("termsOfService")}
             </Link>
           </p>
         </motion.div>
       </div>
-
     </footer>
-  )
+
+  );
 }

@@ -4,10 +4,13 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Building, Users, Briefcase, Camera, Phone, MessageCircle, X, FileText, Shield, LogIn, ChevronRight, BookOpen, User, User2Icon, Facebook, Twitter, Instagram, LucideYoutube, MessageCircleIcon, LinkedinIcon } from 'lucide-react'
+import { Home, Building, Users, Briefcase, Camera, Phone, MessageCircle, X, FileText, Shield, LogIn, ChevronRight, BookOpen, User, User2Icon, Facebook, Twitter, Instagram, LucideYoutube, MessageCircleIcon, LinkedinIcon, Search } from 'lucide-react'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useCompanyDetails } from "@/hooks/use-company-details"
 import { Whatsapp } from "./icons/whatsapp-icon"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { Property } from "@/lib/interfaces"
 
 const mainNavigation = [
   { name: "Home", href: "/", icon: Home },
@@ -26,6 +29,9 @@ const sidebarNavigation = [
 
 export default function MobileNavigation() {
   const pathname = usePathname()
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchResults, setSearchResults] = useState<Property[]>([])
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   if(pathname==="/auth/login")
     return null;
@@ -91,6 +97,25 @@ const handleCall = (number: string
     }
   }
 
+   const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setSearchResults([])
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/properties/search?q=${encodeURIComponent(searchQuery)}`)
+      const data = await response.json()
+      setSearchResults(data.data)
+    } catch (error) {
+      console.error("Error searching properties:", error)
+    }
+  }
+
+  const clearSearch = () => {
+    setSearchQuery("")
+    setSearchResults([])
+  }
   const { company } = useCompanyDetails()
 
   const socialLinks = [
@@ -108,7 +133,10 @@ const handleCall = (number: string
   return (
     <>
   {/* Mobile Top Header */}
-  <div className="md:hidden fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-slate-200 dark:border-gray-700 z-50 flex items-center h-14 px-4">
+ <>
+  {/* Mobile Top Header */}
+  <div className="md:hidden fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-slate-200 dark:border-gray-700 z-50 flex items-center justify-between h-14 px-4">
+    {/* Left - Sidebar Toggle / User */}
     <button
       onClick={() => setIsSidebarOpen(true)}
       className="mr-3 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
@@ -123,9 +151,121 @@ const handleCall = (number: string
         <User2Icon className="w-6 h-6 text-slate-700 dark:text-gray-200 border-2 rounded-full p-1" />
       )}
     </button>
+
+    {/* Center - Brand */}
     <span className="text-lg font-bold text-slate-800 dark:text-white">Ananta Realty</span>
-    
+
+    {/* Right - Search Button */}
+    <button
+      onClick={() => setIsSearchOpen(true)}
+      className="ml-3 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
+    >
+      <Search className="w-6 h-6 text-slate-700 dark:text-gray-200" />
+    </button>
   </div>
+
+  {/* 🔍 Mobile Search Modal */}
+  <AnimatePresence>
+    {isSearchOpen && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center"
+      >
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ type: "spring", stiffness: 200, damping: 25 }}
+          className="w-full h-full bg-white dark:bg-gray-900 p-4 overflow-y-auto"
+        >
+          {/* Header inside search modal */}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Search Properties</h2>
+            <button
+              onClick={() => setIsSearchOpen(false)}
+              className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              <X className="w-6 h-6 text-slate-600 dark:text-gray-200" />
+            </button>
+          </div>
+
+          {/* Reuse your search component here */}
+          <div>
+            {/* Search Input + Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300 w-5 h-5" />
+                <Input
+                  type="text"
+                  placeholder="Search properties by city or zip code"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  className="pl-10 h-12 border-0 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-gray-300 bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm"
+                />
+              </div>
+              <Button
+                onClick={handleSearch}
+                className="h-12 px-8 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold"
+              >
+                Search
+              </Button>
+              {searchQuery && (
+                <Button
+                  onClick={clearSearch}
+                  variant="outline"
+                  className="h-12 px-6 bg-white/20 dark:bg-gray-700/50 backdrop-blur-sm border border-white/30 dark:border-gray-500 text-slate-900 dark:text-white hover:bg-white/30 dark:hover:bg-gray-600/60"
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+
+            {/* Results */}
+            {searchResults.length > 0 ? (
+              <div className="max-h-[70vh] overflow-y-auto border rounded-lg bg-white/80 dark:bg-gray-800/80 shadow p-4 flex flex-col gap-4">
+                {searchResults.map((property) => (
+                  <div
+                    key={property.id}
+                    className="flex items-center justify-between gap-4 border-b last:border-b-0 py-2 border-gray-300 dark:border-gray-700"
+                  >
+                    <div className="flex flex-col text-sm text-slate-900 dark:text-gray-200">
+                      <span className="font-medium">Title: {property.title}</span>
+                      <span className="font-medium">Location: {property.location}</span>
+                      <span className="font-medium">Pincode: {property.pinCode}</span>
+                      <span className="font-medium">Type: {property.type}</span>
+                      <span className="text-amber-600 dark:text-amber-400 font-semibold">{property.price} INR</span>
+                    </div>
+                    <Link href={`/properties/${property.slug}`}>
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                        View
+                      </Button>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center mt-10">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 font-semibold"
+                  onClick={() =>
+                    document.getElementById("properties")?.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  Explore Properties
+                </Button>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</>
+
 {/* 🔥 Live Scrolling Banner */}
   <div className="md:hidden w-full relative top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
     <motion.div
@@ -141,7 +281,7 @@ const handleCall = (number: string
     </motion.div>
   </div>
   {/* Floating Action Buttons */}
-  <motion.button
+  <button
     onClick={() => handleCall(company?.primaryPhone || '+1234567890')}
     className="md:hidden fixed bottom-32 ml-5 w-14 h-14 z-40 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
     whileHover={{ scale: 1.1 }}
@@ -151,9 +291,9 @@ const handleCall = (number: string
     transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 20 }}
   >
     <Phone className="w-6 h-6 text-white" />
-  </motion.button>
+  </button>
 
-  <motion.button
+  <button
     onClick={() => handleWhatsApp(company?.whatsappNumber || '1234567890')}
     rel="noopener noreferrer"
     className="md:hidden fixed bottom-32 right-5 w-14 h-14 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
@@ -164,7 +304,7 @@ const handleCall = (number: string
     transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 20 }}
   >
     <Whatsapp className="rounded-full" />
-  </motion.button>
+  </button>
 
   {/* Bottom Navigation Tabs */}
   <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-slate-200 dark:border-gray-700 z-40">
@@ -182,20 +322,20 @@ const handleCall = (number: string
           >
             {!isActive ? (
               <>
-                <motion.div 
+                <div 
                   className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors duration-200"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Icon className="w-5 h-5 text-slate-600 dark:text-gray-300 hover:text-purple-600 transition-colors duration-200" />
-                </motion.div>
+                </div>
                 <span className="text-xs font-medium text-slate-600 dark:text-gray-300 hover:text-purple-600 transition-colors duration-200 mt-1">
                   {item.name}
                 </span>
               </>
             ) : (
               <>
-                <motion.div
+                <div
                   key={activeIndex}
                   className="absolute top-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full shadow-xl flex items-center justify-center"
                   initial={{ y: -24 }}
@@ -213,7 +353,7 @@ const handleCall = (number: string
                 return null;
               })
                   )}
-                </motion.div>
+                </div>
                 <div className="h-16 flex flex-col items-center justify-end pb-2">
                   <div className="h-12" />
                   <span className="text-xs font-medium text-purple-600 text-center">{item.name}</span>

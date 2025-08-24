@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Search, MapPin, Bed, Bath, Square, Star, ChevronLeft, ChevronRight, Play, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Slider } from "@/components/slider"
 import PropertyCard from "@/components/property-card"
+import { useTranslations } from "next-intl"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -123,79 +124,68 @@ export default function HomePage() {
   const featuredProperties = properties.filter((p) => p.featured).slice(0, 4)
   const spotlightProperties = properties.filter((p) => p.type === "Luxury").slice(0, 2)
 
+  const t = useTranslations();
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16 md:pb-0">
       <Header />
-      <Slider className="w-full h-[522px]" showSearch page="Home"/>
+      <Slider className="w-full h-[522px]" showSearch page="Home" />
 
-        <motion.div
-  className="absolute inset-0 text-center px-4 max-w-4xl mx-auto text-slate-900 dark:text-white"
-  initial={{ opacity: 0, y: 50 }}
-  animate={{ opacity: 1, y: 450 }}
-  transition={{ duration: 1, delay: 0.2 }}
->
-  {/* Search Bar */}
-  <motion.div
-    className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8"
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, delay: 0.8 }}
-  >
-    <div className="relative flex-1">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300 w-5 h-5" />
-      <Input
-        type="text"
-        placeholder="Search properties by city or zip code"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-        className="pl-10 h-12 border-0 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-gray-300 bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm"
-      />
-    </div>
-    <Button
-      onClick={handleSearch}
-      className="h-12 px-8 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold transition-all duration-300 transform hover:scale-105"
-    >
-      Search
-    </Button>
-    {searchQuery && (
-      <Button
-        onClick={clearSearch}
-        variant="outline"
-        className="h-12 px-6 bg-white/20 dark:bg-gray-700/50 backdrop-blur-sm border border-white/30 dark:border-gray-500 text-slate-900 dark:text-white hover:bg-white/30 dark:hover:bg-gray-600/60"
-      >
-        Clear
-      </Button>
-    )}
-  </motion.div>
-
-  {/* Search Results */}
-  <AnimatePresence>
-    {searchResults.length > 0 && (
+      {/* Search Section */}
       <motion.div
-        className="grid relative grid-cols-1 gap-6 max-w-6xl mx-auto my-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.5 }}
+        className="absolute inset-0 text-center px-4 max-w-4xl mx-auto text-slate-900 dark:text-white"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 450 }}
+        transition={{ duration: 1, delay: 0.2 }}
       >
-        <div className="max-h-[400px] overflow-y-auto border rounded-lg bg-white/80 dark:bg-gray-800/80 shadow p-4 flex flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-900">
-          {searchResults.map((property) => {
-            const regex = new RegExp(`(${searchQuery})`, "ig");
-            const parts = property.title.split(regex);
-            const locationParts = property.location.split(regex);
-            const pinCodeParts = property.pinCode.toString().split(regex);
-            const typeParts = property.type.split(regex);
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300 w-5 h-5" />
+            <Input
+              type="text"
+              placeholder={t("Home.searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="pl-10 h-12 border-0 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-gray-300 bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm"
+            />
+          </div>
+          <Button
+            onClick={handleSearch}
+            className="h-12 px-8 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+          >
+            {t("Home.searchButton")}
+          </Button>
+          {searchQuery && (
+            <Button
+              onClick={clearSearch}
+              variant="outline"
+              className="h-12 px-6 bg-white/20 dark:bg-gray-700/50 backdrop-blur-sm border border-white/30 dark:border-gray-500 text-slate-900 dark:text-white hover:bg-white/30 dark:hover:bg-gray-600/60"
+            >
+              {t("Home.clearButton")}
+            </Button>
+          )}
+        </motion.div>
 
-            return (
-              <div
-                key={property.id}
-                className="flex items-center justify-between gap-4 border-b last:border-b-0 py-2 border-gray-300 dark:border-gray-700"
-              >
-                <div className="flex gap-2 min-w-0 text-sm text-slate-900 dark:text-gray-200">
-                  <span className="font-medium truncate">
-                    Title:{" "}
-                    {parts.map((part, i) =>
+        {/* Search Results */}
+        <AnimatePresence>
+          {searchResults.length > 0 && (
+            <motion.div
+              className="grid relative grid-cols-1 gap-6 max-w-6xl mx-auto my-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="max-h-[400px] overflow-y-auto border rounded-lg bg-white/80 dark:bg-gray-800/80 shadow p-4 flex flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-900">
+                {searchResults.map((property) => {
+                  const regex = new RegExp(`(${searchQuery})`, "ig");
+                  const highlight = (text) =>
+                    text.split(regex).map((part, i) =>
                       regex.test(part) ? (
                         <mark key={i} className="bg-yellow-300 dark:bg-yellow-500 text-gray-900 dark:text-gray-900 rounded px-1">
                           {part}
@@ -203,76 +193,48 @@ export default function HomePage() {
                       ) : (
                         <span key={i}>{part}</span>
                       )
-                    )}
-                  </span>
-                  <span className="font-medium truncate">
-                    Location:{" "}
-                    {locationParts.map((part, i) =>
-                      regex.test(part) ? (
-                        <mark key={i} className="bg-yellow-300 dark:bg-yellow-500 text-gray-900 dark:text-gray-900 rounded px-1">
-                          {part}
-                        </mark>
-                      ) : (
-                        <span key={i}>{part}</span>
-                      )
-                    )}
-                  </span>
-                  <span className="font-medium truncate">
-                    Pincode:{" "}
-                    {pinCodeParts.map((part, i) =>
-                      regex.test(part) ? (
-                        <mark key={i} className="bg-yellow-300 dark:bg-yellow-500 text-gray-900 dark:text-gray-900 rounded px-1">
-                          {part}
-                        </mark>
-                      ) : (
-                        <span key={i}>{part}</span>
-                      )
-                    )}
-                  </span>
-                  <span className="font-medium truncate">
-                    Type:{" "}
-                    {typeParts.map((part, i) =>
-                      regex.test(part) ? (
-                        <mark key={i} className="bg-yellow-300 dark:bg-yellow-500 text-gray-900 dark:text-gray-900 rounded px-1">
-                          {part}
-                        </mark>
-                      ) : (
-                        <span key={i}>{part}</span>
-                      )
-                    )}
-                  </span>
-                  <span className="text-amber-600 dark:text-amber-400 font-semibold">{property.price} INR</span>
-                </div>
-                <Link href={`/properties/${property.slug}`}>
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-                    View Details
-                  </Button>
-                </Link>
+                    );
+
+                  return (
+                    <div
+                      key={property.id}
+                      className="flex items-center justify-between gap-4 border-b last:border-b-0 py-2 border-gray-300 dark:border-gray-700"
+                    >
+                      <div className="flex gap-2 min-w-0 text-sm text-slate-900 dark:text-gray-200">
+                        <span className="font-medium truncate">{t("Home.title")}: {highlight(property.title)}</span>
+                        <span className="font-medium truncate">{t("Home.location")}: {highlight(property.location)}</span>
+                        <span className="font-medium truncate">{t("Home.pincode")}: {highlight(property.pinCode.toString())}</span>
+                        <span className="font-medium truncate">{t("Home.type")}: {highlight(property.type)}</span>
+                        <span className="text-amber-600 dark:text-amber-400 font-semibold">{property.price} INR</span>
+                      </div>
+                      <Link href={`/properties/${property.slug}`}>
+                        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                          {t("Home.viewDetails")}
+                        </Button>
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Explore Properties */}
+        {searchResults.length === 0 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}>
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+              onClick={() => document.getElementById("properties")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              {t("Home.exploreProperties")}
+            </Button>
+          </motion.div>
+        )}
       </motion.div>
-    )}
-  </AnimatePresence>
 
-  {/* Explore Properties Button */}
-  {searchResults.length === 0 && (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}>
-      <Button
-        size="lg"
-        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-        onClick={() =>
-          document.getElementById("properties")?.scrollIntoView({ behavior: "smooth" })
-        }
-      >
-        Explore Properties
-      </Button>
-    </motion.div>
-  )}
-</motion.div>
-
-
+      
       {/* Featured Properties */}
       <section
   id="properties"
@@ -280,10 +242,10 @@ export default function HomePage() {
 >
   <div className="max-w-7xl mx-auto">
     <motion.div className="text-center mb-16" {...fadeInUp}>
-      <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Properties</h2>
+      <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("Home.featuredProperties")}</h2>
       <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
       <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-        Discover our handpicked selection of premium properties
+  {t("Home.featuredDescription")}
       </p>
     </motion.div>
 
@@ -302,7 +264,7 @@ export default function HomePage() {
         viewport={{ once: true }}
       >
         {featuredProperties.map((property) => (
-          <PropertyCard key={property.id} property={property} dark />
+          <PropertyCard key={property.id} property={property} />
         ))}
       </motion.div>
     )}
@@ -315,7 +277,7 @@ export default function HomePage() {
       <section className="py-20 bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:to-blue-900 text-gray-900 dark:text-white">
   <div className="max-w-7xl mx-auto px-4">
     <motion.div className="text-center mb-16" {...fadeInUp}>
-      <h2 className="text-4xl md:text-5xl font-bold mb-4">Property of the Month</h2>
+      <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("Home.spotlightProperties")}</h2>
       <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
     </motion.div>
 
@@ -339,11 +301,11 @@ export default function HomePage() {
   <div className="max-w-7xl mx-auto">
     <motion.div className="text-center mb-16" {...fadeInUp}>
       <h2 className="text-4xl md:text-5xl font-bold mb-4">
-        360° Virtual Property Tours
+        {t("Home.virtualTours")}
       </h2>
       <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
       <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-        Take immersive virtual tours of our featured properties from the comfort of your home.
+  {t("Home.virtualToursDescription")}
       </p>
     </motion.div>
 
@@ -376,10 +338,10 @@ export default function HomePage() {
     <section className="py-20 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
   <div className="max-w-4xl mx-auto px-4">
     <motion.div className="text-center mb-16" {...fadeInUp}>
-      <h2 className="text-4xl md:text-5xl font-bold mb-4">Client Success Stories</h2>
+      <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("Home.clientStories")}</h2>
       <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
       <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-        Hear directly from our clients about their experiences and successes with our services.
+  {t("Home.testimonialsDescription")}
       </p>
     </motion.div>
 
@@ -461,8 +423,8 @@ export default function HomePage() {
       </AnimatePresence>
 
       <Footer />
-      {/* <ChatBot /> */}
     </div>
+
   )
 }
 

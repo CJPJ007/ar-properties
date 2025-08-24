@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const nextIntlPlugin = createNextIntlPlugin('./lib/i18n.ts');
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -23,4 +27,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default nextIntlPlugin(nextConfig);

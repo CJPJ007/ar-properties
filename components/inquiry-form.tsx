@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { InquiryFormProps, InquiryFormData } from "@/lib/interfaces"
+import { useTranslations } from "next-intl"
 
 export default function InquiryForm({
   property,
@@ -72,125 +73,134 @@ export default function InquiryForm({
     }
   }
 
+    const t = useTranslations("InquiryForm");
+
   return (
-   <form onSubmit={handleSubmit} className={`space-y-6 ${className}`}>
-  <div>
-    <label
-      htmlFor="name"
-      className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
-    >
-      Name *
-    </label>
-    <Input
-      id="name"
-      name="name"
-      type="text"
-      required
-      value={formData.name}
-      onChange={handleInputChange}
-      placeholder="Your full name"
-      className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
-    />
-  </div>
 
-  <div>
-    <label
-      htmlFor="mobile"
-      className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
-    >
-      Phone *
-    </label>
-    <Input
-      id="mobile"
-      name="mobile"
-      type="tel"
-      value={formData.mobile}
-      onChange={handleInputChange}
-      placeholder="(123) 456-7890"
-      required
-      className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
-    />
-  </div>
-
-  {property && (
-    <div>
-      <label
-        htmlFor="property"
-        className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
-      >
-        Property
-      </label>
-      <Input
-        id="property"
-        name="property"
-        type="text"
-        value={formData.property}
-        disabled
-        placeholder={property}
-        className="h-12 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-not-allowed placeholder-gray-500 dark:placeholder-gray-400"
-      />
-    </div>
-  )}
-
-  {showAppointmentDate && (
-    <div>
-      <label
-        htmlFor="appointmentDate"
-        className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
-      >
-        Preferred Appointment Date
-      </label>
-      <Input
-        id="appointmentDate"
-        name="appointmentDate"
-        type="datetime-local"
-        value={formData.appointmentDate}
-        onChange={handleInputChange}
-        className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
-      />
-    </div>
-  )}
-
-  <div>
-    <label
-      htmlFor="message"
-      className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
-    >
-      Message
-    </label>
-    <Textarea
-      id="message"
-      name="message"
-      value={formData.message}
-      onChange={handleInputChange}
-      rows={5}
-      placeholder={
-        property
-          ? `Tell us about your interest in ${property}...`
-          : "Tell us about your real estate needs..."
-      }
-      className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
-    />
-  </div>
-
-  <Button
-    type="submit"
-    disabled={isSubmitting}
-    className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    {isSubmitting ? (
-      <div className="flex items-center gap-2">
-        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-        Sending...
+    <form onSubmit={handleSubmit} className={`space-y-6 ${className}`}>
+      {/* Name */}
+      <div>
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+        >
+          {t("name")} *
+        </label>
+        <Input
+          id="name"
+          name="name"
+          type="text"
+          required
+          value={formData.name}
+          onChange={handleInputChange}
+          placeholder={t("placeholders.name")}
+          className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+        />
       </div>
-    ) : (
-      <div className="flex items-center gap-2">
-        <Send className="w-4 h-4" />
-        Send Message
+
+      {/* Phone */}
+      <div>
+        <label
+          htmlFor="mobile"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+        >
+          {t("phone")} *
+        </label>
+        <Input
+          id="mobile"
+          name="mobile"
+          type="tel"
+          value={formData.mobile}
+          onChange={handleInputChange}
+          placeholder={t("placeholders.phone")}
+          required
+          className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+        />
       </div>
-    )}
-  </Button>
-</form>
+
+      {/* Property (if available) */}
+      {property && (
+        <div>
+          <label
+            htmlFor="property"
+            className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+          >
+            {t("property")}
+          </label>
+          <Input
+            id="property"
+            name="property"
+            type="text"
+            value={formData.property}
+            disabled
+            placeholder={property}
+            className="h-12 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-not-allowed placeholder-gray-500 dark:placeholder-gray-400"
+          />
+        </div>
+      )}
+
+      {/* Appointment Date (optional) */}
+      {showAppointmentDate && (
+        <div>
+          <label
+            htmlFor="appointmentDate"
+            className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+          >
+            {t("appointmentDate")}
+          </label>
+          <Input
+            id="appointmentDate"
+            name="appointmentDate"
+            type="datetime-local"
+            value={formData.appointmentDate}
+            onChange={handleInputChange}
+            className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+          />
+        </div>
+      )}
+
+      {/* Message */}
+      <div>
+        <label
+          htmlFor="message"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+        >
+          {t("message")}
+        </label>
+        <Textarea
+          id="message"
+          name="message"
+          value={formData.message}
+          onChange={handleInputChange}
+          rows={5}
+          placeholder={
+            property
+              ? t("placeholders.messageProperty", { property })
+              : t("placeholders.messageGeneral")
+          }
+          className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
+        />
+      </div>
+
+      {/* Submit Button */}
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isSubmitting ? (
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            {t("sending")}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Send className="w-4 h-4" />
+            {t("sendMessage")}
+          </div>
+        )}
+      </Button>
+    </form>
 
   )
 } 
