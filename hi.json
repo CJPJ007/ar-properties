@@ -286,7 +286,11 @@
     "completedReferrals": "पूर्ण रेफ़रल्स",
     "totalEarnings": "कुल कमाई",
     "pendingEarnings": "लंबित कमाई",
-    "noData": "कोई डेटा नहीं"
+    "noData": "कोई डेटा नहीं",
+    "featured": "विशेष",
+    "sold": "बिक गया",
+    "viewDetails": "विवरण देखें",
+    "available": "उपलब्ध"
 }
 
 

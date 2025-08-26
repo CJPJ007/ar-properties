@@ -15,6 +15,8 @@ import { Loader2 } from "lucide-react"
 import InquiryModal from "@/components/inquiry-modal"
 import InquiryForm from "@/components/inquiry-form"
 import { useTranslations } from "next-intl"
+import { set } from "date-fns"
+import Link from "next/link"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -42,12 +44,17 @@ export default function AboutPage() {
   const [teamLoading, setTeamLoading] = useState(true)
   const [values, setValues] = useState<any[]>([])
   const [valuesLoading, setValuesLoading] = useState(true)
-
+  const [mdStory, setMdStory] = useState<string | null>(null);
   useEffect(() => {
     fetch('/api/public/company-details/about-us')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) setStory(data[0].content)
+        if (Array.isArray(data) && data.length > 0) {
+        const storySection = data.find((c) => c.section === "our_story");
+        const mdStorySection = data.find((c) => c.section === "md_story");
+        setStory(storySection?.content)
+        setMdStory(mdStorySection?.content || null);
+        }
       })
       .finally(() => setStoryLoading(false))
     fetch('/api/public/company-details/team-members')
@@ -108,13 +115,13 @@ export default function AboutPage() {
 
       {/* About Us Markdown Link */}
       <section className="flex justify-center py-4">
-        <a
+        <Link
           href="/md"
           rel="noopener noreferrer"
           className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-lg shadow hover:from-amber-600 hover:to-orange-600 transition-all duration-300"
         >
           {t("mdLink")}
-        </a>
+        </Link>
       </section>
 
       {/* Our Team */}

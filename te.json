@@ -287,7 +287,11 @@
     "completedReferrals": "పూర్తయిన రిఫరల్స్",
     "totalEarnings": "మొత్తం ఆదాయం",
     "pendingEarnings": "పెండింగ్ ఆదాయం",
-    "noData": "డేటా లేదు"
+    "noData": "డేటా లేదు",
+    "featured": "ఫీచర్ చేసినది",
+    "sold": "అమ్మబడింది",
+    "viewDetails": "వివరాలు చూడండి",
+    "available": "అందుబాటులో ఉంది"
 }
 
 }

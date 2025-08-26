@@ -1,16 +1,45 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Home, Building, Users, Briefcase, Camera, Phone, MessageCircle, X, FileText, Shield, LogIn, ChevronRight, BookOpen, User, User2Icon, Facebook, Twitter, Instagram, LucideYoutube, MessageCircleIcon, LinkedinIcon, Search } from 'lucide-react'
-import { useSession, signIn, signOut } from "next-auth/react"
-import { useCompanyDetails } from "@/hooks/use-company-details"
-import { Whatsapp } from "./icons/whatsapp-icon"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { Property } from "@/lib/interfaces"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Home,
+  Building,
+  Users,
+  Briefcase,
+  Camera,
+  Phone,
+  MessageCircle,
+  X,
+  FileText,
+  Shield,
+  LogIn,
+  ChevronRight,
+  BookOpen,
+  User,
+  User2Icon,
+  Facebook,
+  Twitter,
+  Instagram,
+  LucideYoutube,
+  MessageCircleIcon,
+  LinkedinIcon,
+  Search,
+  Sun,
+  Moon,
+} from "lucide-react";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useCompanyDetails } from "@/hooks/use-company-details";
+import { Whatsapp } from "./icons/whatsapp-icon";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Property } from "@/lib/interfaces";
+import { useLocale } from "next-intl";
+import { useTheme } from "next-themes";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useLocalePath } from "@/hooks/use-local-path";
 
 const mainNavigation = [
   { name: "Home", href: "/", icon: Home },
@@ -18,356 +47,411 @@ const mainNavigation = [
   { name: "Gallery", href: "/gallery", icon: Camera },
   { name: "Blog", href: "/blogs", icon: BookOpen },
   { name: "About", href: "/about", icon: Users },
-]
+];
 
 const sidebarNavigation = [
   { name: "Services", href: "/services", icon: Briefcase },
   { name: "Contact", href: "/contact", icon: Phone },
   { name: "Terms of Service", href: "/terms", icon: FileText },
   { name: "Privacy Policy", href: "/privacy", icon: Shield },
-]
+];
 
 export default function MobileNavigation() {
-  const pathname = usePathname()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<Property[]>([])
+  const pathname = usePathname();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Property[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  if(pathname==="/auth/login")
-    return null;
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(0)
-  const { data: session } = useSession()
-  
+  const { theme, setTheme } = useTheme();
+  const currentLocale = useLocale();
+  if (pathname === "/auth/login") return null;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const { data: session } = useSession();
 
   // Add this helper inside your component
-const isInWebView = () => {
-  const ua = navigator.userAgent || navigator.vendor || window.opera
-  return (
-    ua.includes("wv") || ua.includes("WebView") || (ua.includes("Version/") && /; wv/.test(ua))
-  )
-}
+  const isInWebView = () => {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    return (
+      ua.includes("wv") ||
+      ua.includes("WebView") ||
+      (ua.includes("Version/") && /; wv/.test(ua))
+    );
+  };
 
-const handleWhatsApp = (number: string) => {
-  const formatted = number.replace(/\D/g, "")
-  if (isInWebView()) {
-    // Force open WhatsApp via Android intent
-    window.location.href = `intent://send/${formatted}#Intent;scheme=smsto;package=com.whatsapp;end`
-  } else {
-    // Browser normal
-    window.open(
-      `https://wa.me/${formatted}?text=Hello, I'm interested in your real estate services`,
-      "_blank"
-    )
-  }
-}
+  const handleWhatsApp = (number: string) => {
+    const formatted = number.replace(/\D/g, "");
+    if (isInWebView()) {
+      // Force open WhatsApp via Android intent
+      window.location.href = `intent://send/${formatted}#Intent;scheme=smsto;package=com.whatsapp;end`;
+    } else {
+      // Browser normal
+      window.open(
+        `https://wa.me/${formatted}?text=Hello, I'm interested in your real estate services`,
+        "_blank"
+      );
+    }
+  };
 
-const handleCall = (number: string
-) => {
-  const formatted = number.replace(/\D/g, "")
-  if (isInWebView()) {
-    // Force open dialer via intent
-    window.location.href = `intent://${formatted}#Intent;scheme=tel;end`
-  } else {
-    window.location.href = `tel:${formatted}`
-  }
-}
+  const handleCall = (number: string) => {
+    const formatted = number.replace(/\D/g, "");
+    if (isInWebView()) {
+      // Force open dialer via intent
+      window.location.href = `intent://${formatted}#Intent;scheme=tel;end`;
+    } else {
+      window.location.href = `tel:${formatted}`;
+    }
+  };
 
   // Update active index based on current path
   useEffect(() => {
-    const currentIndex = mainNavigation.findIndex((item) => item.href === pathname)
+    const currentIndex = mainNavigation.findIndex(
+      (item) => item.href === pathname
+    );
     if (currentIndex !== -1) {
-      setActiveIndex(currentIndex)
+      setActiveIndex(currentIndex);
     }
-  }, [pathname])
+  }, [pathname]);
 
   const handleGoogleLogin = () => {
     if (session) {
-      signOut({ callbackUrl: "/" })
+      signOut({ callbackUrl: "/" });
     } else {
-      signIn("google", { callbackUrl: "/" })
+      signIn("google", { callbackUrl: "/" });
     }
-  }
+  };
 
   const handleSignIn = () => {
     if (session) {
-      signOut({ callbackUrl: "/" })
+      signOut({ callbackUrl: "/" });
     } else {
-      window.location.href = "/auth/login"
+      window.location.href = "/auth/login";
     }
-  }
+  };
 
-   const handleSearch = async () => {
+  const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      setSearchResults([])
-      return
+      setSearchResults([]);
+      return;
     }
 
     try {
-      const response = await fetch(`/api/properties/search?q=${encodeURIComponent(searchQuery)}`)
-      const data = await response.json()
-      setSearchResults(data.data)
+      const response = await fetch(
+        `/api/properties/search?q=${encodeURIComponent(searchQuery)}`
+      );
+      const data = await response.json();
+      setSearchResults(data.data);
     } catch (error) {
-      console.error("Error searching properties:", error)
+      console.error("Error searching properties:", error);
     }
-  }
+  };
 
   const clearSearch = () => {
-    setSearchQuery("")
-    setSearchResults([])
-  }
-  const { company } = useCompanyDetails()
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+  const { company } = useCompanyDetails();
 
   const socialLinks = [
     { name: "Facebook", icon: Facebook, href: company?.facebookUrl || "#" },
     { name: "Twitter", icon: Twitter, href: company?.twitterUrl || "#" },
     { name: "Instagram", icon: Instagram, href: company?.instagramUrl || "#" },
     { name: "YouTube", icon: LucideYoutube, href: company?.youtubeUrl || "#" },
-    { name: "WhatsApp", icon:MessageCircleIcon, href:`https://wa.me/${company?.whatsappNumber?.replace(/\D/g, '') || '1234567890'}?text=Hello, I'm interested in your real estate services`},
+    {
+      name: "WhatsApp",
+      icon: MessageCircleIcon,
+      href: `https://wa.me/${
+        company?.whatsappNumber?.replace(/\D/g, "") || "1234567890"
+      }?text=Hello, I'm interested in your real estate services`,
+    },
     { name: "LinkedIn", icon: LinkedinIcon, href: company?.linkedinUrl || "#" },
-  ]
+  ];
 
   // Only show first 5 navigation items in footer
-  const footerNavigation = mainNavigation.slice(0, 5)
+  const footerNavigation = mainNavigation.slice(0, 5);
 
+  const getPath = useLocalePath(currentLocale);
+  
+
+  const toggleDarkMode = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
   return (
     <>
-  {/* Mobile Top Header */}
- <>
-  {/* Mobile Top Header */}
-  <div className="md:hidden fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-slate-200 dark:border-gray-700 z-50 flex items-center justify-between h-14 px-4">
-    {/* Left - Sidebar Toggle / User */}
-    <button
-      onClick={() => setIsSidebarOpen(true)}
-      className="mr-3 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
-    >
-      {session?.user?.image ? (
-        <img
-          src={session.user.image || "/placeholder.svg"}
-          alt={session.user.name || "User"}
-          className="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-gray-700"
-        />
-      ) : (
-        <User2Icon className="w-6 h-6 text-slate-700 dark:text-gray-200 border-2 rounded-full p-1" />
-      )}
-    </button>
-
-    {/* Center - Brand */}
-    <span className="text-lg font-bold text-slate-800 dark:text-white">Ananta Realty</span>
-
-    {/* Right - Search Button */}
-    <button
-      onClick={() => setIsSearchOpen(true)}
-      className="ml-3 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
-    >
-      <Search className="w-6 h-6 text-slate-700 dark:text-gray-200" />
-    </button>
-  </div>
-
-  {/* 🔍 Mobile Search Modal */}
-  <AnimatePresence>
-    {isSearchOpen && (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center"
-      >
-        <motion.div
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ type: "spring", stiffness: 200, damping: 25 }}
-          className="w-full h-full bg-white dark:bg-gray-900 p-4 overflow-y-auto"
-        >
-          {/* Header inside search modal */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Search Properties</h2>
-            <button
-              onClick={() => setIsSearchOpen(false)}
-              className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              <X className="w-6 h-6 text-slate-600 dark:text-gray-200" />
-            </button>
-          </div>
-
-          {/* Reuse your search component here */}
-          <div>
-            {/* Search Input + Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-6">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300 w-5 h-5" />
-                <Input
-                  type="text"
-                  placeholder="Search properties by city or zip code"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="pl-10 h-12 border-0 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-gray-300 bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm"
-                />
-              </div>
-              <Button
-                onClick={handleSearch}
-                className="h-12 px-8 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold"
-              >
-                Search
-              </Button>
-              {searchQuery && (
-                <Button
-                  onClick={clearSearch}
-                  variant="outline"
-                  className="h-12 px-6 bg-white/20 dark:bg-gray-700/50 backdrop-blur-sm border border-white/30 dark:border-gray-500 text-slate-900 dark:text-white hover:bg-white/30 dark:hover:bg-gray-600/60"
-                >
-                  Clear
-                </Button>
-              )}
-            </div>
-
-            {/* Results */}
-            {searchResults.length > 0 ? (
-              <div className="max-h-[70vh] overflow-y-auto border rounded-lg bg-white/80 dark:bg-gray-800/80 shadow p-4 flex flex-col gap-4">
-                {searchResults.map((property) => (
-                  <div
-                    key={property.id}
-                    className="flex items-center justify-between gap-4 border-b last:border-b-0 py-2 border-gray-300 dark:border-gray-700"
-                  >
-                    <div className="flex flex-col text-sm text-slate-900 dark:text-gray-200">
-                      <span className="font-medium">Title: {property.title}</span>
-                      <span className="font-medium">Location: {property.location}</span>
-                      <span className="font-medium">Pincode: {property.pinCode}</span>
-                      <span className="font-medium">Type: {property.type}</span>
-                      <span className="text-amber-600 dark:text-amber-400 font-semibold">{property.price} INR</span>
-                    </div>
-                    <Link href={`/properties/${property.slug}`}>
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-                        View
-                      </Button>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center mt-10">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 font-semibold"
-                  onClick={() =>
-                    document.getElementById("properties")?.scrollIntoView({ behavior: "smooth" })
-                  }
-                >
-                  Explore Properties
-                </Button>
-              </div>
-            )}
-          </div>
-        </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-</>
-
-{/* 🔥 Live Scrolling Banner */}
-  <div className="md:hidden w-full relative top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
-    <motion.div
-      className="whitespace-nowrap text-sm md:text-base font-medium"
-      animate={{ x: ["100%", "-100%"] }}
-      transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-    >
-      {[...Array(10)].map((_, i) => (
-        <span key={i} className="mx-6">
-          {company?.tagline || "Ananta Realty is your way to property"} |
-        </span>
-      ))}
-    </motion.div>
-  </div>
-  {/* Floating Action Buttons */}
-  <button
-    onClick={() => handleCall(company?.primaryPhone || '+1234567890')}
-    className="md:hidden fixed bottom-32 ml-5 w-14 h-14 z-40 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.95 }}
-    initial={{ scale: 0, rotate: 180 }}
-    animate={{ scale: 1, rotate: 0 }}
-    transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 20 }}
-  >
-    <Phone className="w-6 h-6 text-white" />
-  </button>
-
-  <button
-    onClick={() => handleWhatsApp(company?.whatsappNumber || '1234567890')}
-    rel="noopener noreferrer"
-    className="md:hidden fixed bottom-32 right-5 w-14 h-14 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.95 }}
-    initial={{ scale: 0, rotate: -180 }}
-    animate={{ scale: 1, rotate: 0 }}
-    transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 20 }}
-  >
-    <Whatsapp className="rounded-full" />
-  </button>
-
-  {/* Bottom Navigation Tabs */}
-  <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-slate-200 dark:border-gray-700 z-40">
-    <div className="relative flex justify-around items-center py-2 px-4">
-      {footerNavigation.map((item, index) => {
-        const Icon = item.icon;
-        const isActive = activeIndex === index;
-
-        return (
-          <Link
-            key={item.name}
-            href={item.href}
-            onClick={() => setActiveIndex(index)}
-            className="flex flex-col items-center justify-center py-2 px-3 transition-all duration-200 relative z-10 flex-1"
+      {/* Mobile Top Header */}
+      <>
+        {/* Mobile Top Header */}
+        <div className="md:hidden fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-slate-200 dark:border-gray-700 z-50 flex items-center justify-between h-14 px-4">
+          {/* Left - Sidebar Toggle / User */}
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="mr-3 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
           >
-            {!isActive ? (
-              <>
-                <div 
-                  className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon className="w-5 h-5 text-slate-600 dark:text-gray-300 hover:text-purple-600 transition-colors duration-200" />
-                </div>
-                <span className="text-xs font-medium text-slate-600 dark:text-gray-300 hover:text-purple-600 transition-colors duration-200 mt-1">
-                  {item.name}
-                </span>
-              </>
+            {session?.user?.image ? (
+              <img
+                src={session.user.image || "/placeholder.svg"}
+                alt={session.user.name || "User"}
+                className="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-gray-700"
+              />
             ) : (
-              <>
-                <div
-                  key={activeIndex}
-                  className="absolute top-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full shadow-xl flex items-center justify-center"
-                  initial={{ y: -24 }}
-                  animate={{ y: [-24, -50, -24, -30, -24] }}
-                  transition={{
-                    y: { duration: 0.8, times: [0, 0.25, 0.5, 0.75, 1], ease: [0.25, 0.46, 0.45, 0.94] }
-                  }}
-                >
-            {footerNavigation[activeIndex] && (
-              Object.keys(footerNavigation[activeIndex]).map((key)=>{
-                if(key==='icon'){
-                const Icon = footerNavigation[activeIndex][key];
-                return <Icon className="w-6 h-6 text-white" />
-                }
-                return null;
-              })
+              <User2Icon className="w-6 h-6 text-slate-700 dark:text-gray-200 border-2 rounded-full p-1" />
+            )}
+          </button>
+
+          {/* Center - Brand */}
+          <span className="text-lg font-bold text-slate-800 dark:text-white">
+            Ananta Realty
+          </span>
+
+          {/* Right - Search Button */}
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsSearchOpen(true)}
+              className="text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+            >
+              <Search className="text-slate-700 dark:text-gray-200" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleDarkMode}
+              className="text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+            >
+              {theme === "dark" ? <Sun /> : <Moon />}
+            </Button>
+
+            {/* Language Switcher */}
+            <LanguageSwitcher currentLocale={currentLocale} />
+          </div>
+        </div>
+
+        {/* 🔍 Mobile Search Modal */}
+        <AnimatePresence>
+          {isSearchOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center"
+            >
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                className="w-full h-full bg-white dark:bg-gray-900 p-4 overflow-y-auto"
+              >
+                {/* Header inside search modal */}
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    Search Properties
+                  </h2>
+                  <button
+                    onClick={() => setIsSearchOpen(false)}
+                    className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    <X className="w-6 h-6 text-slate-600 dark:text-gray-200" />
+                  </button>
+                </div>
+
+                {/* Reuse your search component here */}
+                <div>
+                  {/* Search Input + Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-6">
+                    <div className="relative flex-1">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300 w-5 h-5" />
+                      <Input
+                        type="text"
+                        placeholder="Search properties by city or zip code"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                        className="pl-10 h-12 border-0 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-gray-300 bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm"
+                      />
+                    </div>
+                    <Button
+                      onClick={handleSearch}
+                      className="h-12 px-8 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold"
+                    >
+                      Search
+                    </Button>
+                    {searchQuery && (
+                      <Button
+                        onClick={clearSearch}
+                        variant="outline"
+                        className="h-12 px-6 bg-white/20 dark:bg-gray-700/50 backdrop-blur-sm border border-white/30 dark:border-gray-500 text-slate-900 dark:text-white hover:bg-white/30 dark:hover:bg-gray-600/60"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Results */}
+                  {searchResults.length > 0 ? (
+                    <div className="max-h-[70vh] overflow-y-auto border rounded-lg bg-white/80 dark:bg-gray-800/80 shadow p-4 flex flex-col gap-4">
+                      {searchResults.map((property) => (
+                        <div
+                          key={property.id}
+                          className="flex items-center justify-between gap-4 border-b last:border-b-0 py-2 border-gray-300 dark:border-gray-700"
+                        >
+                          <div className="flex flex-col text-sm text-slate-900 dark:text-gray-200">
+                            <span className="font-medium">
+                              Title: {property.title}
+                            </span>
+                            <span className="font-medium">
+                              Location: {property.location}
+                            </span>
+                            <span className="font-medium">
+                              Pincode: {property.pinCode}
+                            </span>
+                            <span className="font-medium">
+                              Type: {property.type}
+                            </span>
+                            <span className="text-amber-600 dark:text-amber-400 font-semibold">
+                              {property.price} INR
+                            </span>
+                          </div>
+                          <Link href={`/properties/${property.slug}`}>
+                            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                              View
+                            </Button>
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center mt-10">
+                      <Button
+                        size="lg"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 font-semibold"
+                        onClick={() =>
+                          document
+                            .getElementById("properties")
+                            ?.scrollIntoView({ behavior: "smooth" })
+                        }
+                      >
+                        Explore Properties
+                      </Button>
+                    </div>
                   )}
                 </div>
-                <div className="h-16 flex flex-col items-center justify-end pb-2">
-                  <div className="h-12" />
-                  <span className="text-xs font-medium text-purple-600 text-center">{item.name}</span>
-                </div>
-              </>
-            )}
-          </Link>
-        );
-      })}
-    </div>
-  </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
 
-  {/* Sidebar Overlay */}
-  <AnimatePresence>
+      {/* 🔥 Live Scrolling Banner */}
+      <div className="md:hidden w-full relative top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
+        <motion.div
+          className="whitespace-nowrap text-sm md:text-base font-medium"
+          animate={{ x: ["100%", "-100%"] }}
+          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+        >
+          {[...Array(10)].map((_, i) => (
+            <span key={i} className="mx-6">
+              {company?.tagline || "Ananta Realty is your way to property"} |
+            </span>
+          ))}
+        </motion.div>
+      </div>
+      {/* Floating Action Buttons */}
+      <button
+        onClick={() => handleCall(company?.primaryPhone || "+1234567890")}
+        className="md:hidden fixed bottom-32 ml-5 w-14 h-14 z-40 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ scale: 0, rotate: 180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 20 }}
+      >
+        <Phone className="w-6 h-6 text-white" />
+      </button>
+
+      <button
+        onClick={() => handleWhatsApp(company?.whatsappNumber || "1234567890")}
+        rel="noopener noreferrer"
+        className="md:hidden fixed bottom-32 right-5 w-14 h-14 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-300"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 20 }}
+      >
+        <Whatsapp className="rounded-full" />
+      </button>
+
+      {/* Bottom Navigation Tabs */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-slate-200 dark:border-gray-700 z-40">
+        <div className="relative flex justify-around items-center py-2 px-4">
+          {footerNavigation.map((item, index) => {
+            const Icon = item.icon;
+            const isActive = activeIndex === index;
+
+            return (
+              <Link
+                key={item.name}
+                href={getPath(item.href)}
+                onClick={() => setActiveIndex(index)}
+                className="flex flex-col items-center justify-center py-2 px-3 transition-all duration-200 relative z-10 flex-1"
+              >
+                {!isActive ? (
+                  <>
+                    <div
+                      className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors duration-200"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Icon className="w-5 h-5 text-slate-600 dark:text-gray-300 hover:text-purple-600 transition-colors duration-200" />
+                    </div>
+                    <span className="text-xs font-medium text-slate-600 dark:text-gray-300 hover:text-purple-600 transition-colors duration-200 mt-1">
+                      {item.name}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      key={activeIndex}
+                      className="absolute top-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full shadow-xl flex items-center justify-center"
+                      initial={{ y: -24 }}
+                      animate={{ y: [-24, -50, -24, -30, -24] }}
+                      transition={{
+                        y: {
+                          duration: 0.8,
+                          times: [0, 0.25, 0.5, 0.75, 1],
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        },
+                      }}
+                    >
+                      {footerNavigation[activeIndex] &&
+                        Object.keys(footerNavigation[activeIndex]).map(
+                          (key) => {
+                            if (key === "icon") {
+                              const Icon = footerNavigation[activeIndex][key];
+                              return <Icon className="w-6 h-6 text-white" />;
+                            }
+                            return null;
+                          }
+                        )}
+                    </div>
+                    <div className="h-16 flex flex-col items-center justify-end pb-2">
+                      <div className="h-12" />
+                      <span className="text-xs font-medium text-purple-600 text-center">
+                        {item.name}
+                      </span>
+                    </div>
+                  </>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Sidebar Overlay */}
+      {/* <AnimatePresence>
     {isSidebarOpen && (
       <motion.div
         initial={{ opacity: 0 }}
@@ -377,246 +461,177 @@ const handleCall = (number: string
         onClick={() => setIsSidebarOpen(false)}
       />
     )}
-  </AnimatePresence>
+  </AnimatePresence> */}
 
-  {/* Sidebar */}
-  <AnimatePresence>
-    {isSidebarOpen && (
-      <motion.div
-        initial={{ x: "-100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "-100%" }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="md:hidden fixed top-0 left-0 h-full w-100 max-w-[85vw] bg-white dark:bg-gray-900 shadow-xl z-50"
-      >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-gray-700">
-            <span className="text-xl font-bold text-slate-800 dark:text-white">Ananta Realty</span>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              <X className="w-6 h-6 text-slate-600 dark:text-gray-200" />
-            </button>
-          </div>
-
-          {/* User Profile Section */}
-          {session && (
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
-              <div className="flex items-center gap-4">
-                {session.user?.image ? (
-                  <img
-                    src={session.user.image || "/placeholder.svg"}
-                    alt={session.user.name || "User"}
-                    className="w-16 h-16 rounded-full border-4 border-white/20"
-                  />
-                ) : (
-                  <div className="w-16 h-16 rounded-full border-4 border-white/20 bg-white/20 flex items-center justify-center">
-                    <User className="w-8 h-8 text-white" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{session.user?.name || "User"}</h3>
-                  <p className="text-blue-100 text-sm">{session.user?.email || "user@example.com"}</p>
-                  {session.user?.mobile && <p className="text-blue-100 text-sm">{session.user.mobile}</p>}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Navigation Links */}
-          <div className="flex-1 p-6 overflow-y-auto">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-semibold text-slate-600 dark:text-gray-300 uppercase tracking-wide mb-4">More</h3>
-                <div className="space-y-2">
-                  {sidebarNavigation.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        onClick={() => setIsSidebarOpen(false)}
-                        className="flex items-center justify-between p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors group"
-                      >
-                        <div className="flex items-center gap-3">
-                          <Icon className="w-5 h-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600" />
-                          <span className="font-medium text-slate-700 dark:text-gray-200 group-hover:text-blue-600">{item.name}</span>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-slate-400 dark:text-gray-400 group-hover:text-blue-600" />
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-{/* Sidebar Overlay */}
-<AnimatePresence>
-  {isSidebarOpen && (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="md:hidden fixed inset-0 bg-black/50 dark:bg-black/70 z-50"
-      onClick={() => setIsSidebarOpen(false)}
-    />
-  )}
-</AnimatePresence>
-
-{/* Sidebar */}
-<AnimatePresence>
-  {isSidebarOpen && (
-    <motion.div
-      initial={{ x: "-100%" }}
-      animate={{ x: 0 }}
-      exit={{ x: "-100%" }}
-      transition={{ type: "spring", damping: 25, stiffness: 200 }}
-      className="md:hidden fixed top-0 left-0 h-full w-100 max-w-[85vw] bg-white dark:bg-gray-900 shadow-xl z-50"
-    >
-      <div className="flex flex-col h-full">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-gray-700">
-          <span className="text-xl font-bold text-slate-800 dark:text-white">Ananta Realty</span>
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
+      {/* Sidebar */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="md:hidden fixed top-0 left-0 h-screen w-100 max-w-[85vw] bg-white dark:bg-gray-900 shadow-xl z-50"
           >
-            <X className="w-6 h-6 text-slate-600 dark:text-gray-200" />
-          </button>
-           
-        </div>
-
-        {/* User Profile */}
-        {session && (
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
-            <div className="flex items-center gap-4">
-              {session.user?.image ? (
-                <img
-                  src={session.user.image || "/placeholder.svg"}
-                  alt={session.user.name || "User"}
-                  className="w-16 h-16 rounded-full border-4 border-white/20"
-                />
-              ) : (
-                <div className="w-16 h-16 rounded-full border-4 border-white/20 bg-white/20 flex items-center justify-center">
-                  <User className="w-8 h-8 text-white" />
-                </div>
-              )}
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">{session.user?.name || "User"}</h3>
-                <p className="text-blue-100 text-sm">{session.user?.email || "user@example.com"}</p>
-                {session.user?.mobile && <p className="text-blue-100 text-sm">{session.user.mobile}</p>}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Navigation Links */}
-        <div className="flex-1 p-6 overflow-y-auto bg-white dark:bg-gray-900">
-          <div className="space-y-6">
-            {/* More Section */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-gray-300 uppercase tracking-wide mb-4">More</h3>
-              <div className="space-y-2">
-                {sidebarNavigation.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsSidebarOpen(false)}
-                      className="flex items-center justify-between p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon className="w-5 h-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600" />
-                        <span className="font-medium text-slate-700 dark:text-gray-200 group-hover:text-blue-600">{item.name}</span>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-400 dark:text-gray-400 group-hover:text-blue-600" />
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Account Section */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-600 dark:text-gray-300 uppercase tracking-wide mb-4">Account</h3>
-              {session ? (
-                <div className="space-y-2">
-                  <Link
-                    href="/profile"
-                    onClick={() => setIsSidebarOpen(false)}
-                    className="flex items-center justify-between p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <User className="w-5 h-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600" />
-                      <span className="font-medium text-slate-700 dark:text-gray-200 group-hover:text-blue-600">Profile</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-slate-400 dark:text-gray-400 group-hover:text-blue-600" />
-                  </Link>
-                  <button
-                    onClick={handleGoogleLogin}
-                    className="w-full flex items-center justify-center gap-3 p-4 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-800 transition-colors group"
-                  >
-                    <LogIn className="w-5 h-5 text-red-600 dark:text-red-400" />
-                    <span className="font-medium text-red-700 dark:text-red-200 group-hover:text-red-800">Sign Out</span>
-                  </button>
-                </div>
-              ) : (
+            <div className="flex flex-col h-screen">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-gray-700">
+                <span className="text-xl font-bold text-slate-800 dark:text-white">
+                  Ananta Realty
+                </span>
                 <button
-                  onClick={handleSignIn}
-                  className="w-full flex items-center justify-center gap-3 p-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors group"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                  <LogIn className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium text-blue-700 dark:text-blue-200 group-hover:text-blue-800">Sign In</span>
+                  <X className="w-6 h-6 text-slate-600 dark:text-gray-200" />
                 </button>
+              </div>
+
+              {/* User Profile Section */}
+              {session && (
+                <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
+                  <div className="flex items-center gap-4">
+                    {session.user?.image ? (
+                      <img
+                        src={session.user.image || "/placeholder.svg"}
+                        alt={session.user.name || "User"}
+                        className="w-16 h-16 rounded-full border-4 border-white/20"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full border-4 border-white/20 bg-white/20 flex items-center justify-center">
+                        <User className="w-8 h-8 text-white" />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold">
+                        {session.user?.name || "User"}
+                      </h3>
+                      <p className="text-blue-100 text-sm">
+                        {session.user?.email || "user@example.com"}
+                      </p>
+                      {session.user?.mobile && (
+                        <p className="text-blue-100 text-sm">
+                          {session.user.mobile}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
+
+              {/* Navigation Links */}
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-600 dark:text-gray-300 uppercase tracking-wide mb-4">
+                      More
+                    </h3>
+                    <div className="space-y-2">
+                      {sidebarNavigation.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.name}
+                            href={getPath(item.href)}
+                            onClick={() => setIsSidebarOpen(false)}
+                            className="flex items-center justify-between p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors group"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Icon className="w-5 h-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600" />
+                              <span className="font-medium text-slate-700 dark:text-gray-200 group-hover:text-blue-600">
+                                {item.name}
+                              </span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-slate-400 dark:text-gray-400 group-hover:text-blue-600" />
+                          </Link>
+                        );
+                      })}
+
+                      {/* Account Section */}
+                      <div>
+                        <h3 className="text-sm font-semibold text-slate-600 dark:text-gray-300 uppercase tracking-wide mb-4">
+                          Account
+                        </h3>
+                        {session ? (
+                          <div className="space-y-2">
+                            <Link
+                              href="/profile"
+                              onClick={() => setIsSidebarOpen(false)}
+                              className="flex items-center justify-between p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors group"
+                            >
+                              <div className="flex items-center gap-3">
+                                <User className="w-5 h-5 text-slate-600 dark:text-gray-300 group-hover:text-blue-600" />
+                                <span className="font-medium text-slate-700 dark:text-gray-200 group-hover:text-blue-600">
+                                  Profile
+                                </span>
+                              </div>
+                              <ChevronRight className="w-4 h-4 text-slate-400 dark:text-gray-400 group-hover:text-blue-600" />
+                            </Link>
+                            <button
+                              onClick={handleGoogleLogin}
+                              className="w-full flex items-center justify-center gap-3 p-4 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-800 transition-colors group"
+                            >
+                              <LogIn className="w-5 h-5 text-red-600 dark:text-red-400" />
+                              <span className="font-medium text-red-700 dark:text-red-200 group-hover:text-red-800">
+                                Sign Out
+                              </span>
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={handleSignIn}
+                            className="w-full flex items-center justify-center gap-3 p-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors group"
+                          >
+                            <LogIn className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium text-blue-700 dark:text-blue-200 group-hover:text-blue-800">
+                              Sign In
+                            </span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Social Links */}
+                  <motion.div className="p-6">
+                    <h3 className="text-sm font-semibold text-slate-600 dark:text-gray-300 uppercase tracking-wide mb-4">
+                      Connect With Us
+                    </h3>
+                    <div className="flex gap-4">
+                      {socialLinks.map((social) => {
+                        if (!social.href || social.href === "#") return null;
+                        const Icon = social.icon;
+                        return (
+                          <motion.a
+                            key={social.name}
+                            href={social.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-10 h-10 bg-gray-700 dark:bg-white/20 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-white/30 transition-all duration-300"
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Icon className="w-5 h-5 text-white" />
+                          </motion.a>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+
+                  {/* Footer */}
+                  <div className="p-6 border-t border-slate-200 dark:border-gray-700">
+                    <div className="text-center">
+                      <p className="text-sm text-slate-500 dark:text-gray-400">
+                        © 2025 Ananta Realty
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Social Links */}
-        <motion.div className="p-6">
-          <h3 className="text-sm font-semibold text-slate-600 dark:text-gray-300 uppercase tracking-wide mb-4">Connect With Us</h3>
-          <div className="flex gap-4">
-            {socialLinks.map((social) => {
-              if (!social.href || social.href === "#") return null;
-              const Icon = social.icon;
-              return (
-                <motion.a
-                  key={social.name}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/10 dark:bg-white/20 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-white/30 transition-all duration-300"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon className="w-5 h-5 text-white" />
-                </motion.a>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        {/* Footer */}
-        <div className="p-6 border-t border-slate-200 dark:border-gray-700">
-          <div className="text-center">
-            <p className="text-sm text-slate-500 dark:text-gray-400">© 2025 Ananta Realty</p>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
-
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-</>
-
-  )
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
 }

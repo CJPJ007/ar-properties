@@ -246,7 +246,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
       <div className="mt-auto">
         <InquiryModal
-          buttonText="Learn More"
+          buttonText="Contact"
           buttonSize="lg"
           buttonClassName="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white dark:text-white transition-all duration-300 transform hover:scale-105"
           modalTitle={`Inquiry about ${service.title}`}

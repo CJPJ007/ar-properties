@@ -207,7 +207,6 @@ export default function LoginPage() {
 
     signIn("google", { callbackUrl })
   }
-  const t = useTranslations("Login");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-800 via-blue-900 to-gray-900 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-950 relative overflow-hidden">

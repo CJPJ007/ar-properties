@@ -285,7 +285,11 @@
     "completedReferrals": "Completed Referrals",
     "totalEarnings": "Total Earnings",
     "pendingEarnings": "Pending Earnings",
-    "noData": "No Data"
+    "noData": "No Data",
+    "featured": "Featured",
+    "sold": "Sold",
+    "viewDetails": "View Details",
+    "available": "Available"
 }
 
 

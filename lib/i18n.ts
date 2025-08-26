@@ -13,12 +13,12 @@ async function getSupportedLocales(): Promise<string[]> {
 
   const data = await res.json();
   // cachedLocales = data.locales;
-  console.log("Fetched locales:", data);
   return data;
 }
 
 export default async function getRequestedLocale(locale: string): Promise<{locale: string}> {
   const locales = await getSupportedLocales();
+  console.log("Supported locales:", locales, "Requested locale:", locale);
   if (locales.includes(locale)) {
     return {locale};
   }

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowLeft, ChevronLeft, ChevronRight, MapPin, Bed, Bath, Square, Play, X, Share2, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -81,6 +81,40 @@ export default function PropertyDetailClient({ property }: { property: Property 
       maximumFractionDigits: 0,
     }).format(price)
   }
+
+  useEffect(() => {
+    const logPropertyView = async () => {
+      try {
+        // get IP address (optional, backend can also extract)
+        let ipAddress = ""
+        try {
+          const ipRes = await fetch("https://api.ipify.org?format=json")
+          const ipData = await ipRes.json()
+          ipAddress = ipData.ip
+        } catch (err) {
+          console.error("Failed to fetch IP:", err)
+        }
+
+        const payload = {
+          property,
+          ipAddress,
+          userAgent: navigator.userAgent,
+        }
+
+        await fetch("/api/viewProperty", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
+      } catch (error) {
+        console.error("Error logging property view:", error)
+      }
+    }
+
+    logPropertyView()
+  }, [property])
 
     const t = useTranslations("PropertyDetail");
 

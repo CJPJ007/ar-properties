@@ -125,7 +125,7 @@ export default function Header() {
           {navigation.map((item) => (
             <motion.div key={item.name} whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
               <Link
-                href={item.href}
+                href={getPath(item.href)}
                 className="px-3 py-2 text-sm font-medium transition-colors duration-300 
                   text-slate-700 dark:text-gray-200 
                   hover:text-amber-500 dark:hover:text-amber-400"

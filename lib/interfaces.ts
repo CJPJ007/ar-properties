@@ -29,6 +29,7 @@ export interface Property {
   seoDescription: string
   virtualTourLink: string
   cents: number
+  propertyOfTheMonth: boolean
 }
 
 export interface Customer {
