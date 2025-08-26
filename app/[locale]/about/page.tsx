@@ -84,8 +84,7 @@ export default function AboutPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div>
+          
               {storyLoading ? (
                 <div className="flex justify-center items-center h-32">
                   <Loader2 className="animate-spin w-8 h-8 text-blue-400" />
@@ -100,16 +99,7 @@ export default function AboutPage() {
                   {t("story.noStory")}
                 </p>
               )}
-            </motion.div>
-
-            <motion.div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=600&q=80"
-                alt={t("story.imageAlt")}
-                className="rounded-lg shadow-2xl w-full h-80 object-cover"
-              />
-            </motion.div>
-          </div>
+            
         </div>
       </section>
 
