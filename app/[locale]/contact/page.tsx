@@ -98,7 +98,7 @@ const t  = useTranslations('Contact');
                 <ContactInfo
                   icon={Mail}
                   title={t("contact.email")}
-                  content={company?.email}
+                  content={company?.primaryEmail}
                   href={`mailto:${company?.primaryEmail || "info@anantarealty.com"}`}
                 />
                 <ContactInfo
