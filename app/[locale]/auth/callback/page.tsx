@@ -25,6 +25,7 @@ export default function AuthCallbackPage() {
             body: JSON.stringify({
               referredEmail: session.user.email,
               referredName: session.user.name || "",
+              referredMobile: session.user.mobile,
               email: referralEmail,
               status: "completed",
               referralAmount: 1000,

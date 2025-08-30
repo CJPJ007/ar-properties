@@ -555,6 +555,13 @@ export default function ProfilePage() {
   //   }
   // }, [activeTab, handleSearch])
 
+  const handleGoogleLogin = () => {
+      if (session) {
+        signOut({ callbackUrl: '/' })
+      } else {
+        signIn('google', { callbackUrl: '/' })
+      }
+    }
     const  t  = useTranslations("Profile");
 
   return (
@@ -563,13 +570,23 @@ export default function ProfilePage() {
 
   {/* Back Button */}
   <div className="pt-20 md:pt-24 px-4">
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto flex justify-between">
       <Link href="/">
         <Button variant="outline" className="mb-6 bg-transparent dark:border-gray-600 dark:text-white">
           <ArrowLeft className="w-4 h-4 mr-2" />
           {t("backToHome")}
         </Button>
       </Link>
+      <Button
+                  onClick={handleGoogleLogin}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2 border-red-300 hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/40"
+                >
+                  <span className="text-sm font-medium text-red-600 dark:text-red-400">
+                    {"SignOut"}
+                  </span>
+                </Button>
     </div>
   </div>
 

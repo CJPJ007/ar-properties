@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { motion } from "framer-motion"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, HelpCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -13,6 +13,7 @@ import InquiryForm from "@/components/inquiry-form"
 import { useCompanyDetails } from "@/hooks/use-company-details"
 import { use } from "react"
 import { useTranslations } from "next-intl"
+import FaqList from "@/components/faq-list"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -123,6 +124,27 @@ const t  = useTranslations('Contact');
               </Card>
             </motion.div>
           </div>
+
+          {/* FAQs */}
+           <div className="mt-16">
+      {/* Header with icon */}
+      <div className="flex items-center gap-2 mb-4">
+        <HelpCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+          {t("faq.title")}
+        </h2>
+      </div>
+
+      {/* Description paragraph */}
+      <p className="text-slate-600 dark:text-slate-300 mb-6">
+        {t(
+          "faq.description"
+        )}
+      </p>
+
+      {/* FAQ list component */}
+      <FaqList />
+    </div>
         </div>
       </section>
 

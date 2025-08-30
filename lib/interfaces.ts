@@ -28,7 +28,7 @@ export interface Property {
   seoTitle: string
   seoDescription: string
   virtualTourLink: string
-  cents: number
+  cents: string
   propertyOfTheMonth: boolean
 }
 
@@ -126,4 +126,10 @@ export interface NotificationPreferences {
   siteVisits: boolean
   propertyUpdates: boolean
   system: boolean
+}
+
+export interface Faq {
+  id: number
+  question: string
+  answer: string
 }

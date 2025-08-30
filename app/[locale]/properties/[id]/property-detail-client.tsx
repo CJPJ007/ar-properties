@@ -1,59 +1,83 @@
-"use client"
-import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ArrowLeft, ChevronLeft, ChevronRight, MapPin, Bed, Bath, Square, Play, X, Share2, Heart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { useToast } from "@/hooks/use-toast"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import InquiryModal from "@/components/inquiry-modal"
-import TestimonialModal from "@/components/testimonial-modal"
-import Link from "next/link"
-import { Property } from "@/lib/interfaces"
-import { useTranslations } from "next-intl"
+"use client";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  Play,
+  X,
+  Share2,
+  Heart,
+  IndianRupee,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import InquiryModal from "@/components/inquiry-modal";
+import TestimonialModal from "@/components/testimonial-modal";
+import Link from "next/link";
+import { Property } from "@/lib/interfaces";
+import { useTranslations } from "next-intl";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6, ease: "easeOut" as const },
-}
+};
 
-export default function PropertyDetailClient({ property }: { property: Property }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
-  const [showVirtualTour, setShowVirtualTour] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
-  const { toast } = useToast()
+export default function PropertyDetailClient({
+  property,
+}: {
+  property: Property;
+}) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [showVirtualTour, setShowVirtualTour] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const { toast } = useToast();
 
   // Add thumbnail image to images array if not already present
-  const allImages = property.images || []
-  if (property.thumbnailImage && !allImages.find((img) => img.imageUrl === property.thumbnailImage)) {
-    allImages.push({ imageUrl: property.thumbnailImage })
+  const allImages = property.images || [];
+  if (
+    property.thumbnailImage &&
+    !allImages.find((img) => img.imageUrl === property.thumbnailImage)
+  ) {
+    allImages.push({ imageUrl: property.thumbnailImage });
   }
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % allImages.length)
-  }
+    setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+  };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
-  }
+    setCurrentImageIndex(
+      (prev) => (prev - 1 + allImages.length) % allImages.length
+    );
+  };
 
   const nextVideo = () => {
     if (property.virtualTourLink) {
-      const videos = property.virtualTourLink.split("#VIDEO#")
-      setCurrentVideoIndex((prev) => (prev + 1) % videos.length)
+      const videos = property.virtualTourLink.split("#VIDEO#");
+      setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
     }
-  }
+  };
 
   const prevVideo = () => {
     if (property.virtualTourLink) {
-      const videos = property.virtualTourLink.split("#")
-      setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length)
+      const videos = property.virtualTourLink.split("#");
+      setCurrentVideoIndex(
+        (prev) => (prev - 1 + videos.length) % videos.length
+      );
     }
-  }
+  };
 
   const handleShare = () => {
     if (navigator.share) {
@@ -61,17 +85,15 @@ export default function PropertyDetailClient({ property }: { property: Property 
         title: property?.title,
         text: `Check out this amazing property: ${property?.title}`,
         url: window.location.href,
-      })
+      });
     } else {
-      navigator.clipboard.writeText(window.location.href)
+      navigator.clipboard.writeText(window.location.href);
       toast({
         title: "Link Copied!",
         description: "Property link copied to clipboard.",
-      })
+      });
     }
-  }
-
-
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -79,27 +101,27 @@ export default function PropertyDetailClient({ property }: { property: Property 
       currency: "INR",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(price)
-  }
+    }).format(price);
+  };
 
   useEffect(() => {
     const logPropertyView = async () => {
       try {
         // get IP address (optional, backend can also extract)
-        let ipAddress = ""
+        let ipAddress = "";
         try {
-          const ipRes = await fetch("https://api.ipify.org?format=json")
-          const ipData = await ipRes.json()
-          ipAddress = ipData.ip
+          const ipRes = await fetch("https://api.ipify.org?format=json");
+          const ipData = await ipRes.json();
+          ipAddress = ipData.ip;
         } catch (err) {
-          console.error("Failed to fetch IP:", err)
+          console.error("Failed to fetch IP:", err);
         }
 
         const payload = {
           property,
           ipAddress,
           userAgent: navigator.userAgent,
-        }
+        };
 
         await fetch("/api/viewProperty", {
           method: "POST",
@@ -107,19 +129,19 @@ export default function PropertyDetailClient({ property }: { property: Property 
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        })
+        });
       } catch (error) {
-        console.error("Error logging property view:", error)
+        console.error("Error logging property view:", error);
       }
-    }
+    };
 
-    logPropertyView()
-  }, [property])
+    logPropertyView();
+  }, [property]);
 
-    const t = useTranslations("PropertyDetail");
+  const t = useTranslations("PropertyDetail");
 
   return (
-<div className="min-h-screen bg-gradient-to-br from-slate-50 dark:from-gray-900 to-blue-50 dark:to-gray-800 pb-16 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 dark:from-gray-900 to-blue-50 dark:to-gray-800 pb-16 md:pb-0">
       <Header />
 
       {/* Back Button */}
@@ -144,8 +166,13 @@ export default function PropertyDetailClient({ property }: { property: Property 
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentImageIndex}
-                src={`/images/${allImages[currentImageIndex]?.imageUrl}` || "/placeholder.svg"}
-                alt={`${property.title} - ${t("image")} ${currentImageIndex + 1}`}
+                src={
+                  `/images/${allImages[currentImageIndex]?.imageUrl}` ||
+                  "/placeholder.svg"
+                }
+                alt={`${property.title} - ${t("image")} ${
+                  currentImageIndex + 1
+                }`}
                 className="w-full h-full object-cover"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -189,7 +216,11 @@ export default function PropertyDetailClient({ property }: { property: Property 
                 size="sm"
                 className="bg-black/20 text-white hover:bg-black/40"
               >
-                <Heart className={`w-5 h-5 ${isLiked ? "fill-red-500 text-red-500" : ""}`} />
+                <Heart
+                  className={`w-5 h-5 ${
+                    isLiked ? "fill-red-500 text-red-500" : ""
+                  }`}
+                />
               </Button>
               <Button
                 onClick={handleShare}
@@ -226,7 +257,9 @@ export default function PropertyDetailClient({ property }: { property: Property 
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
                   className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                    index === currentImageIndex ? "border-blue-500" : "border-transparent"
+                    index === currentImageIndex
+                      ? "border-blue-500"
+                      : "border-transparent"
                   }`}
                 >
                   <img
@@ -259,10 +292,14 @@ export default function PropertyDetailClient({ property }: { property: Property 
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl md:text-4xl font-bold text-amber-600">
-                      {property.type === "Plot"
-                        ? `${property.cents} Cent = ${formatPrice(property.price)}`
-                        : formatPrice(property.price)}
+                    <p
+                      className={`${
+                        property.type !== "Plot"
+                          ? "text-3xl md:text-4xl font-bold text-amber-600"
+                          : "hidden"
+                      }`}
+                    >
+                      {formatPrice(property.price)}
                     </p>
                     {property.featured && (
                       <Badge className="mt-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
@@ -271,6 +308,27 @@ export default function PropertyDetailClient({ property }: { property: Property 
                     )}
                   </div>
                 </div>
+
+                {
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                    {property.cents.split("#CENTS#").map((cent, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm"
+                        >
+                          <IndianRupee className="w-6 h-6 text-blue-600" />
+                          <div>
+                            <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                              {cent}
+                            </p>
+                          
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                }
 
                 {/* Key Features */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -282,7 +340,9 @@ export default function PropertyDetailClient({ property }: { property: Property 
                           <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
                             {property.bedrooms}
                           </p>
-                          <p className="text-sm text-slate-600 dark:text-slate-300">{t("bedrooms")}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-300">
+                            {t("bedrooms")}
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
@@ -291,7 +351,9 @@ export default function PropertyDetailClient({ property }: { property: Property 
                           <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
                             {property.bathrooms}
                           </p>
-                          <p className="text-sm text-slate-600 dark:text-slate-300">{t("bathrooms")}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-300">
+                            {t("bathrooms")}
+                          </p>
                         </div>
                       </div>
                     </>
@@ -299,8 +361,12 @@ export default function PropertyDetailClient({ property }: { property: Property 
                   <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                     <Square className="w-6 h-6 text-blue-600" />
                     <div>
-                      <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{property.areaSqft}</p>
-                      <p className="text-sm text-slate-600 dark:text-slate-300">{t("squareFeet")}</p>
+                      <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                        {property.areaSqft}
+                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300">
+                        {t("squareFeet")}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -308,7 +374,9 @@ export default function PropertyDetailClient({ property }: { property: Property 
                 {/* Description */}
                 <Card className="mb-8 dark:bg-gray-900">
                   <CardContent className="p-6">
-                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">{t("description")}</h2>
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
+                      {t("description")}
+                    </h2>
                     <div
                       className="text-slate-600 dark:text-slate-300 leading-relaxed"
                       dangerouslySetInnerHTML={{ __html: property.description }}
@@ -319,20 +387,33 @@ export default function PropertyDetailClient({ property }: { property: Property 
                 {/* Property Details */}
                 <Card className="dark:bg-gray-900">
                   <CardContent className="p-6">
-                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">{t("propertyDetails")}</h2>
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
+                      {t("propertyDetails")}
+                    </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex justify-between py-2 border-b border-slate-200 dark:border-slate-700">
-                        <span className="text-slate-600 dark:text-slate-300">{t("propertyType")}</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-100">{property.type}</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-slate-200 dark:border-slate-700">
-                        <span className="text-slate-600 dark:text-slate-300">{t("price")}</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-100">{property.price} INR</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-slate-200 dark:border-slate-700">
-                        <span className="text-slate-600 dark:text-slate-300">{t("status")}</span>
+                        <span className="text-slate-600 dark:text-slate-300">
+                          {t("propertyType")}
+                        </span>
                         <span className="font-medium text-slate-800 dark:text-slate-100">
-                          {property.status.charAt(0).toUpperCase() + property.status.slice(1)}
+                          {property.type}
+                        </span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-slate-200 dark:border-slate-700">
+                        <span className="text-slate-600 dark:text-slate-300">
+                          {t("price")}
+                        </span>
+                        <span className="font-medium text-slate-800 dark:text-slate-100">
+                          {property.price} INR
+                        </span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-slate-200 dark:border-slate-700">
+                        <span className="text-slate-600 dark:text-slate-300">
+                          {t("status")}
+                        </span>
+                        <span className="font-medium text-slate-800 dark:text-slate-100">
+                          {property.status.charAt(0).toUpperCase() +
+                            property.status.slice(1)}
                         </span>
                       </div>
                     </div>
@@ -360,7 +441,9 @@ export default function PropertyDetailClient({ property }: { property: Property 
                       buttonSize="lg"
                       buttonClassName="w-full mb-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
                       modalTitle={t("propertyInquiry")}
-                      modalDescription={t("tellInterest", { title: property?.title })}
+                      modalDescription={t("tellInterest", {
+                        title: property?.title,
+                      })}
                       property={property?.title}
                       showAppointmentDate={true}
                     />
@@ -374,5 +457,5 @@ export default function PropertyDetailClient({ property }: { property: Property 
 
       <Footer />
     </div>
-  )
+  );
 }

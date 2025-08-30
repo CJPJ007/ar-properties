@@ -11,6 +11,7 @@ import { Moon, Sun } from "lucide-react"
 import LanguageSwitcher from "./LanguageSwitcher"
 import { useLocale, useTranslations } from "next-intl"
 import { useLocalePath } from "@/hooks/use-local-path"
+import NotificationBell from "./notification-bell"
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -64,13 +65,7 @@ export default function Header() {
 
   const currentLocale = useLocale();
   const getPath = useLocalePath(currentLocale);
-  const handleGoogleLogin = () => {
-    if (session) {
-      signOut({ callbackUrl: '/' })
-    } else {
-      signIn('google', { callbackUrl: '/' })
-    }
-  }
+  
 
   const handleSignIn = () => {
     if (session) {
@@ -151,7 +146,7 @@ export default function Header() {
             <LanguageSwitcher currentLocale={currentLocale} />
 
             {/* Auth */}
-            {session ? (
+            {session && session.user ? (
               <div className="flex items-center gap-3">
                 <Link
                   href="/profile"
@@ -165,16 +160,8 @@ export default function Header() {
                     alt="user"
                   />
                 </Link>
-                <Button
-                  onClick={handleGoogleLogin}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 border-red-300 hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/40"
-                >
-                  <span className="text-sm font-medium text-red-600 dark:text-red-400">
-                    {t("Header.signOut")}
-                  </span>
-                </Button>
+                <NotificationBell />
+                
               </div>
             ) : (
               <Button

@@ -47,8 +47,16 @@ export function useNotifications(pollingInterval = 3000): UseNotificationsReturn
       }
 
       const data = await response.json()
-      setNotifications(data.notifications)
-      setUnreadCount(data.unreadCount)
+      // Sync marked-as-read notifications from localStorage
+      const markedAsRead = JSON.parse(localStorage.getItem("markedAsReadNotifications") || "[]")
+      const updatedNotifications = data.notifications.map((notification: Notification) =>
+        markedAsRead.includes(notification.id) ? { ...notification, read: true } : notification,
+      )
+      setNotifications(updatedNotifications)
+
+      // Update unread count based on updated notifications
+      const updatedUnreadCount = updatedNotifications.filter((n:Notification) => !n.read).length
+      setUnreadCount(updatedUnreadCount)
 
       // Show browser notifications for new unread notifications
       if (permissionStatus === "granted") {
@@ -74,19 +82,12 @@ export function useNotifications(pollingInterval = 3000): UseNotificationsReturn
 
   const markAsRead = useCallback(async (notificationId: string) => {
     try {
-      const response = await fetch("/api/notifications", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          notificationId,
-          markAsRead: true,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to mark notification as read")
+      
+      // Store marked as read notification in localStorage
+      const markedAsRead = JSON.parse(localStorage.getItem("markedAsReadNotifications") || "[]")
+      if (!markedAsRead.includes(notificationId)) {
+        markedAsRead.push(notificationId)
+        localStorage.setItem("markedAsReadNotifications", JSON.stringify(markedAsRead))
       }
 
       // Update local state
