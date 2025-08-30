@@ -309,7 +309,7 @@ export default function PropertyDetailClient({
                   </div>
                 </div>
 
-                {
+                { property.type==="Plot" && 
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                     {property.cents.split("#CENTS#").map((cent, index) => {
                       return (
@@ -319,7 +319,7 @@ export default function PropertyDetailClient({
                         >
                           <IndianRupee className="w-6 h-6 text-blue-600" />
                           <div>
-                            <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                            <p className="text-md text-wrap font-bold text-slate-800 dark:text-slate-100">
                               {cent}
                             </p>
                           

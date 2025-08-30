@@ -38,7 +38,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import Link from "next/link"
-import { useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
 import type { AdvancedSearchRequest, Property, WishlistItem } from "@/lib/interfaces"
 import { useWishlist } from "@/hooks/user-wishlist"
@@ -776,7 +776,7 @@ export default function ProfilePage() {
 
           <CardContent>
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
                 <TabsTrigger value="inquiries" className="flex items-center gap-2 dark:text-white">
                   <MessageSquare className="w-4 h-4" />
                   {t("inquiries")}  ({inquiriesData?.totalRecords || 0})

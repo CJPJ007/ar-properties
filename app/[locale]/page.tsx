@@ -154,7 +154,7 @@ export default function HomePage() {
 
       {/* Search Section */}
       <motion.div
-        className="absolute inset-0 text-center px-4 max-w-4xl mx-auto text-slate-900 dark:text-white"
+        className="absolute md:block hidden inset-0 text-center px-4 max-w-4xl mx-auto text-slate-900 dark:text-white"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 450 }}
         transition={{ duration: 1, delay: 0.2 }}

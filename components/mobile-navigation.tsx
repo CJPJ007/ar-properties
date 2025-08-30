@@ -175,6 +175,21 @@ export default function MobileNavigation() {
   const toggleDarkMode = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+
+  useEffect(() => {
+  if (isSidebarOpen) {
+    // Prevent background scroll
+    document.body.style.overflow = "hidden";
+  } else {
+    // Restore scroll
+    document.body.style.overflow = "";
+  }
+
+  // Cleanup on unmount
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [isSidebarOpen]);
   return (
     <>
       {/* Mobile Top Header */}
