@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import type { NextAuthOptions } from "next-auth"
+import { admin } from "@/lib/firebaseAdmin"
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -21,31 +22,17 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
-          // Verify Firebase token with your backend
-          const response = await fetch(`${process.env.BACKEND_URL}/api/auth/verify-firebase-token`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              firebaseToken: credentials.firebaseToken,
-            }),
-          })
-
-          if (!response.ok) {
-            return null
-          }
-
-          const user = await response.json()
-
-          return {
-            id: user.uid,
-            name: user.displayName || user.name,
-            email: user.email,
-            mobile: user.phoneNumber,
-            avatar: user.photoURL || user.avatar,
-            image: user.photoURL || user.avatar,
-          }
+          // Verify with Admin SDK
+      const decodedToken = await admin.auth().verifyIdToken(credentials.firebaseToken)
+      const firebaseUser = await admin.auth().getUser(decodedToken.uid)
+      console.log("firebaseUser : ", firebaseUser);
+      return {
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName || decodedToken.name,
+        email: credentials.email || firebaseUser.email || "",
+        mobile: firebaseUser.phoneNumber || "",
+        image: firebaseUser.photoURL || "",
+      }
         } catch (error) {
           console.error("Auth error:", error)
           return null

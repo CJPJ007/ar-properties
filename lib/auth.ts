@@ -108,7 +108,8 @@ export const verifyOTPAndSignIn = async (
     // Verify OTP
     const result = await window.confirmationResult.confirm(otp);
     const user = result.user;
-
+    user.email = email;
+    console.log(user, name, email, avatar);
     // Update user profile if provided
     if (name || email || avatar) {
       const updates: any = {};
@@ -126,6 +127,7 @@ export const verifyOTPAndSignIn = async (
     const signInResult = await signIn('credentials', {
       firebaseToken: token,
       redirect: false,
+      email:email
     });
 
     // Clear confirmation result

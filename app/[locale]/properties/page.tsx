@@ -255,7 +255,7 @@ export default function PropertiesPage() {
       <Header />
 
       {/* Hero Slider */}
-      <Slider className="w-full h-[220px] md:h-[300px]" showSearch={false} page="Properties"/>
+      <Slider className="w-full h-[220px] md:h-[387px]" showSearch={false} page="Properties"/>
 
       {/* Filters Section */}
       <section className="py-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-slate-200 dark:border-gray-700">

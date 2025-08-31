@@ -492,19 +492,19 @@ function SpotlightCard({ property }: { property: Property }) {
     <CardContent className="p-8">
       <h3 className="text-2xl font-bold mb-2 ">{property.title}</h3>
       <p className="text-3xl font-extrabold  text-amber-600 mb-4">
-        {property.price} INR
+        {property.type==="Plot"? property.cents?.split("#CENTS#")[0] :`${property.price} INR`}
       </p>
 
       {/* Key Features */}
       <div className="flex items-center gap-6 text-blue-600 dark:text-white mb-6">
-        <div className="flex items-center gap-2">
+        {property.type!=="Plot" && <><div className="flex items-center gap-2">
           <Bed className="w-5 h-5" />
           <span>{property.bedrooms} Beds</span>
         </div>
         <div className="flex items-center gap-2">
           <Bath className="w-5 h-5" />
           <span>{property.bathrooms || 0} Baths</span>
-        </div>
+        </div></>}
         {property.areaSqft && (
           <div className="flex items-center gap-2">
             <Square className="w-5 h-5" />

@@ -162,7 +162,7 @@ export default function PropertyDetailClient({
       {/* Image Carousel */}
       <section className="px-4 mb-8">
         <div className="max-w-7xl mx-auto">
-          <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden">
+          <div className="relative rounded-lg overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentImageIndex}
@@ -173,7 +173,7 @@ export default function PropertyDetailClient({
                 alt={`${property.title} - ${t("image")} ${
                   currentImageIndex + 1
                 }`}
-                className="w-full h-full object-cover"
+                className="w-full h-592 object-contain"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

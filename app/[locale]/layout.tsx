@@ -11,7 +11,7 @@ import GoogleAnalytics from "@/components/GAConfigClient";
 import { NextIntlClientProvider } from "next-intl";
 
 async function getMessages(locale: string) {
-  console.log("Fetching messages for locale:", locale);
+  // console.log("Fetching messages for locale:", locale);
   const res = await fetch(`${process.env.BACKEND_URL}/api/public/i18n/${locale}`, {
     cache: "no-store" // always get latest translations
   });
@@ -43,7 +43,7 @@ export default async function RootLayout({
   params: { locale: string };
 }) {
   const messages = await getMessages(locale);
-  console.log("Loaded messages for locale:", locale, messages);
+  // console.log("Loaded messages for locale:", locale, messages);
   return (
     <html lang={locale}>
       <body className={inter.className}>

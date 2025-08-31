@@ -173,7 +173,6 @@ export default function LoginPage() {
       })
       return
     }
-
     setIsLoading(true)
     try {
       const result = await verifyOTPAndSignIn(mobileForm.otp, mobileForm.name, mobileForm.email, mobileForm.avatar)
@@ -428,7 +427,7 @@ export default function LoginPage() {
                             )}
                           </div>
 
-                          {/* Avatar Upload */}
+                          {/* Avatar Upload
                           <div className="space-y-2">
                             <Label className="text-gray-200 font-medium">Profile Picture (Optional)</Label>
                             <div className="flex items-center gap-4">
@@ -455,7 +454,7 @@ export default function LoginPage() {
                                 className="hidden"
                               />
                             </div>
-                          </div>
+                          </div> */}
                         </motion.div>
                       </AnimatePresence>
                     )}
