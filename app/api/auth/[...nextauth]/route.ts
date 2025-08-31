@@ -15,6 +15,7 @@ export const authOptions: NextAuthOptions = {
         firebaseToken: { label: "Firebase Token", type: "text" },
       },
       async authorize(credentials) {
+        console.log("Credentials : {}", credentials);
         try {
           if (!credentials?.firebaseToken) {
             return null

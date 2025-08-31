@@ -405,7 +405,7 @@ export default function LoginPage() {
 
                           <div className="space-y-2">
                             <Label htmlFor="email" className="text-gray-200 font-medium">
-                              Email {referralEmail ? "(Required for referral)" : "(Optional)"}
+                              Email
                             </Label>
                             <div className="relative">
                               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -418,7 +418,7 @@ export default function LoginPage() {
                                   setMobileForm((prev) => ({ ...prev, email: e.target.value }))
                                 }
                                 className="pl-12 h-12 rounded-2xl border-gray-600 bg-gray-700 text-white focus:border-blue-500 focus:ring-blue-500"
-                                required={!!referralEmail}
+                                required
                               />
                             </div>
                             {referralEmail && (

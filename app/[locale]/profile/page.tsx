@@ -776,24 +776,25 @@ export default function ProfilePage() {
 
           <CardContent>
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-                <TabsTrigger value="inquiries" className="flex items-center gap-2 dark:text-white">
-                  <MessageSquare className="w-4 h-4" />
-                  {t("inquiries")}  ({inquiriesData?.totalRecords || 0})
-                </TabsTrigger>
-                <TabsTrigger value="site-visits" className="flex items-center gap-2 dark:text-white">
-                  <Eye className="w-4 h-4" />
-                  {t("siteVisits")} ({siteVisitsData?.totalRecords || 0})
-                </TabsTrigger>
-                <TabsTrigger value="wishlist" className="flex items-center gap-2 dark:text-white">
-                  <Heart className="w-4 h-4" />
-                  {t("wishlist")} ({wishlistData?.totalRecords || 0})
-                </TabsTrigger>
-                <TabsTrigger value="referrals" className="flex items-center gap-2 dark:text-white">
-                  <Users className="w-4 h-4" />
-                  {t("referrals")} ({referralsData?.totalRecords || 0})
-                </TabsTrigger>
-              </TabsList>
+              <TabsList className="flex w-full overflow-x-auto scroll-p-0 md:grid md:grid-cols-4 gap-2">
+  <TabsTrigger value="inquiries" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
+    <MessageSquare className="w-4 h-4" />
+    {t("inquiries")} ({inquiriesData?.totalRecords || 0})
+  </TabsTrigger>
+  <TabsTrigger value="site-visits" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
+    <Eye className="w-4 h-4" />
+    {t("siteVisits")} ({siteVisitsData?.totalRecords || 0})
+  </TabsTrigger>
+  <TabsTrigger value="wishlist" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
+    <Heart className="w-4 h-4" />
+    {t("wishlist")} ({wishlistData?.totalRecords || 0})
+  </TabsTrigger>
+  <TabsTrigger value="referrals" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
+    <Users className="w-4 h-4" />
+    {t("referrals")} ({referralsData?.totalRecords || 0})
+  </TabsTrigger>
+</TabsList>
+
 
               {/* Tabs Content */}
               <TabsContent value="inquiries" className="mt-6">

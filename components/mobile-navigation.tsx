@@ -283,7 +283,7 @@ export default function MobileNavigation() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                        className="pl-10 h-12 border-0 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-gray-300 bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm"
+                        className="pl-10 h-12 border text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-gray-300 bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm"
                       />
                     </div>
                     <Button
@@ -329,7 +329,7 @@ export default function MobileNavigation() {
                             </span>
                           </div>
                           <Link href={`/properties/${property.slug}`}>
-                            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white" onClick={()=>setIsSearchOpen(false)}>
                               View
                             </Button>
                           </Link>
@@ -622,11 +622,11 @@ export default function MobileNavigation() {
                             href={social.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-10 h-10 bg-gray-700 dark:bg-white/20 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-white/30 transition-all duration-300"
+                            className="w-10 h-10 bg-gray-700 dark:bg-white/20 rounded-full flex items-center justify-center  dark:hover:bg-white/30 transition-all duration-300"
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <Icon className="w-5 h-5 text-white" />
+                            <Icon className="w-5 h-5 text-white " />
                           </motion.a>
                         );
                       })}
