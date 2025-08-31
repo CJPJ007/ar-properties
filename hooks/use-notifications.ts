@@ -86,6 +86,9 @@ export function useNotifications(pollingInterval = 3000): UseNotificationsReturn
       // Store marked as read notification in localStorage
       const markedAsRead = JSON.parse(localStorage.getItem("markedAsReadNotifications") || "[]")
       if (!markedAsRead.includes(notificationId)) {
+        if(markedAsRead.size>=9){
+            markedAsRead.delete([...markedAsRead][0]) // Remove oldest if limit exceeded
+          }
         markedAsRead.push(notificationId)
         localStorage.setItem("markedAsReadNotifications", JSON.stringify(markedAsRead))
       }
