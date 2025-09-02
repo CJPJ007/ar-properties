@@ -122,13 +122,26 @@ export default function AboutPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex flex-wrap justify-center items-center gap-8 mb-8">
             {teamLoading ? (
               <div className="col-span-full flex justify-center items-center h-32">
                 <Loader2 className="animate-spin w-8 h-8 text-blue-400" />
               </div>
             ) : team.length > 0 ? (
-              team.map((member, index) => (
+              team.slice(0,2).map((member, index) => (
+                <TeamCard key={member.id || member.name} member={member} index={index} />
+              ))
+            ) : (
+              <p className="col-span-full text-center text-slate-500 dark:text-slate-400">{t("team.noMembers")}</p>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-10 md:p-0">
+            {teamLoading ? (
+              <div className="col-span-full flex justify-center items-center h-32">
+                <Loader2 className="animate-spin w-8 h-8 text-blue-400" />
+              </div>
+            ) : team.length > 0 ? (
+              team.slice(2).map((member, index) => (
                 <TeamCard key={member.id || member.name} member={member} index={index} />
               ))
             ) : (

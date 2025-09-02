@@ -34,12 +34,12 @@ export default function NotificationBell() {
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-xs text-white flex items-center justify-center">
-              {unreadCount > 9 ? "9+" : unreadCount}
+              {unreadCount}
             </span>
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80">
+      <DropdownMenuContent align="end" className="w-80 h-96 overflow-y-auto">
         <DropdownMenuLabel className="flex items-center justify-between">
           <span>Notifications</span>
           {unreadCount > 0 && <span className="text-xs text-muted-foreground">{unreadCount} unread</span>}
@@ -62,7 +62,7 @@ export default function NotificationBell() {
           </DropdownMenuItem>
         ) : (
           <>
-            {notifications.slice(0, 5).map((notification) => (
+            {notifications.map((notification) => (
               <DropdownMenuItem
                 key={notification.id}
                 onClick={() => handleNotificationClick(notification.id, notification.actionUrl)}
@@ -80,14 +80,14 @@ export default function NotificationBell() {
                 </div>
               </DropdownMenuItem>
             ))}
-            {notifications.length > 5 && (
+            {/* {notifications.length > 5 && (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => (window.location.href = "/profile?tab=notifications")}>
                   <span className="text-blue-600">View all notifications</span>
                 </DropdownMenuItem>
               </>
-            )}
+            )} */}
           </>
         )}
       </DropdownMenuContent>

@@ -9,20 +9,21 @@ import NotificationProvider from "@/components/providers/notifications-provider"
 import { ThemeProvider } from "@/components/theme-provider";
 import GoogleAnalytics from "@/components/GAConfigClient";
 import { NextIntlClientProvider } from "next-intl";
+import { notFound } from "next/navigation";
 
 async function getMessages(locale: string) {
-  // console.log("Fetching messages for locale:", locale);
-  const res = await fetch(`${process.env.BACKEND_URL}/api/public/i18n/${locale}`, {
-    cache: "no-store" // always get latest translations
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to load messages for ${locale}`);
+  try {
+    const res = await fetch(`${process.env.BACKEND_URL}/api/public/i18n/${locale}`, {
+      cache: "no-store"
+    });
+    if (!res.ok) throw new Error("Failed to load messages");
+    return res.json();
+  } catch (e) {
+    console.error("Translation load failed:", e);
+    notFound(); // fallback to 404 if locale invalid
   }
-  const data = await res.json();
-  console.log("Fetched messages data:", data);
-  return data;
 }
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,11 +38,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params: { locale },
+  params,
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
+  const locale = params?.locale ?? 'en'; // fallback if undefined
   const messages = await getMessages(locale);
   // console.log("Loaded messages for locale:", locale, messages);
   return (

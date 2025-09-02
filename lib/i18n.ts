@@ -19,7 +19,7 @@ async function getSupportedLocales(): Promise<string[]> {
 export default async function getRequestedLocale(locale: string): Promise<{locale: string}> {
   const locales = await getSupportedLocales();
   console.log("Supported locales:", locales, "Requested locale:", locale);
-  if (locales.includes(locale)) {
+  if (locale && locales.includes(locale)) {
     return {locale};
   }
   return {locale:'en'}; // default locale

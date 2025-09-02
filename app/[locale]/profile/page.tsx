@@ -28,6 +28,7 @@ import {
   DollarSign,
   TrendingUp,
   UserPlus,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -151,9 +152,13 @@ export default function ProfilePage() {
             key: "appointmentDate",
             operation: "isEmpty",
             value: null,
-          },
+          },{
+            key: "email",
+            operation: "equals",
+            value: session?.user.email
+          }
         ],
-        operations: [],
+        operations: ["AND"],
       }
 
       if (search) {
@@ -196,8 +201,13 @@ export default function ProfilePage() {
             key: "appointmentDate",
             operation: "isNotEmpty",
           },
+          {
+            key: "email",
+            operation: "equals",
+            value: session?.user.email
+          },
         ],
-        operations: [],
+        operations: ["AND"],
       }
 
       if (search) {
@@ -362,15 +372,6 @@ export default function ProfilePage() {
       fetchReferralStats()
     }
   }, [activeTab, inquiriesPage, siteVisitsPage, wishlistPage, referralsPage, debouncedSearchQuery])
-
-  // Redirect if not authenticated
-  if (status === "loading") {
-    return <div>Loading...</div>
-  }
-
-  if (status === "unauthenticated") {
-    redirect("/auth/login")
-  }
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -564,6 +565,14 @@ export default function ProfilePage() {
     }
     const  t  = useTranslations("Profile");
 
+    // Redirect if not authenticated
+  if (status === "loading") {
+    return <Loader2/>
+  }
+
+  if (status === "unauthenticated") {
+    redirect("/auth/login")
+  }
   return (
 <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900 pb-16 md:pb-0">
   <Header />
@@ -776,7 +785,7 @@ export default function ProfilePage() {
 
           <CardContent>
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="flex w-full overflow-x-auto scroll-p-0 md:grid md:grid-cols-4 gap-2">
+              <TabsList className="flex w-full overflow-x-auto overflow-y-hidden scroll-p-0 md:grid md:grid-cols-4 gap-2">
   <TabsTrigger value="inquiries" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
     <MessageSquare className="w-4 h-4" />
     {t("inquiries")} ({inquiriesData?.totalRecords || 0})

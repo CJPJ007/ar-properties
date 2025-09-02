@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast"
 import { sendOTP, verifyOTPAndSignIn, uploadAvatar } from "@/lib/auth"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
+import { Customer } from "@/lib/interfaces"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -29,7 +30,7 @@ export default function LoginPage() {
   const [referralEmail, setReferralEmail] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const recaptchaContainerRef = useRef<HTMLDivElement>(null)
-
+  const [customerExists, setCustomerExists] = useState<Customer>();
   // Mobile OTP form state
   const [mobileForm, setMobileForm] = useState({
     mobile: "",
@@ -50,6 +51,37 @@ export default function LoginPage() {
       })
     }
   }, [searchParams])
+
+
+  useEffect(()=>{
+    const fetchCustomer = async ()=>{
+      try {
+          const response = await fetch(
+            `/api/customer/${encodeURIComponent("+91"+mobileForm.mobile)}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          )
+          console.log("After calling customerData api")
+          if (response.ok) {
+            const customerData = await response.json()
+            console.log("Response for customer data api : ", customerData)
+            if (customerData && customerData.email) {
+              setCustomerExists(customerData);
+            }
+          } 
+        } catch (fetchError) {
+          console.error("Error fetching customer mobile in JWT callback:", fetchError)
+        }
+    }
+
+    fetchCustomer();
+  },[otpSent])
+
+
 
   // Redirect if already authenticated
   if (status === "loading") {
@@ -116,7 +148,7 @@ export default function LoginPage() {
       const containerId = recaptchaContainerRef.current?.id || "recaptcha-container"
       await sendOTP(mobileForm.mobile, containerId)
       setOtpSent(true)
-      setCountdown(60)
+      setCountdown(121)
       const timer = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
@@ -344,7 +376,7 @@ export default function LoginPage() {
                         onClick={handleSendOTP}
                         disabled={countdown > 0 || isLoading}
                         variant="outline"
-                        className="w-full h-12 rounded-2xl border-2 border-gray-600 text-white hover:border-blue-500 font-semibold"
+                        className="w-full h-12 rounded-2xl border-2 border-gray-600 dark:text-white text-gray-600 hover:border-blue-500 font-semibold"
                       >
                         {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
                       </Button>
@@ -374,7 +406,7 @@ export default function LoginPage() {
                     )}
 
                     {/* User Details */}
-                    {otpSent && (
+                    {otpSent && !customerExists && (
                       <AnimatePresence>
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
@@ -466,8 +498,8 @@ export default function LoginPage() {
                         disabled={
                           !mobileForm.otp ||
                           mobileForm.otp.length !== 6 ||
-                          !mobileForm.name ||
-                          (referralEmail && !mobileForm.email) ||
+                          (!mobileForm.name && !customerExists) ||
+                          (referralEmail && !mobileForm.email && !customerExists) ||
                           isLoading
                         }
                         className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-2xl font-semibold text-white shadow-lg"
