@@ -40,6 +40,7 @@ import { useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useLocalePath } from "@/hooks/use-local-path";
+import NotificationBell from "./notification-bell";
 
 const mainNavigation = [
   { name: "Home", href: "/", icon: Home },
@@ -239,6 +240,11 @@ export default function MobileNavigation() {
 
             {/* Language Switcher */}
             <LanguageSwitcher currentLocale={currentLocale} />
+            {
+              session && session.user.email && (
+                <NotificationBell />
+              )
+            }
           </div>
         </div>
 
