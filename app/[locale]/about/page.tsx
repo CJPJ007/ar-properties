@@ -212,15 +212,16 @@ function TeamCard({ member, index }: { member: any; index: number }) {
         className="w-full h-64 transition-transform duration-700 group-hover:scale-110"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-        <div className="text-white">
+        {/* <div className="text-white">
           <h3 className="text-lg font-bold">{member.name}</h3>
           <p className="text-blue-200">{member.position}</p>
-        </div>
+        </div> */}
       </div>
     </div>
     <CardContent className="p-6">
       <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-2">{member.name}</h3>
       <p className="text-amber-600 dark:text-amber-400 font-medium mb-3">{member.position}</p>
+      <p className="text-amber-600 dark:text-amber-400 font-medium mb-3">{member.qualification}</p>
       <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{member.description}</p>
     </CardContent>
   </Card>
