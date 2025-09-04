@@ -59,7 +59,7 @@ const sidebarNavigation = [
 
 export default function MobileNavigation() {
   const pathname = usePathname();
-  if (pathname.includes("/auth/login")) return null;
+  if (pathname.includes("/auth/login") || pathname.includes("/profile")) return null;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Property[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -106,7 +106,7 @@ export default function MobileNavigation() {
   // Update active index based on current path
   useEffect(() => {
     const currentIndex = mainNavigation.findIndex(
-      (item) => item.href === pathname
+      (item) => pathname.endsWith(item.href)
     );
     if (currentIndex !== -1) {
       setActiveIndex(currentIndex);
