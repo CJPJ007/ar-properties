@@ -11,6 +11,7 @@ import {
   User as FirebaseUser
 } from 'firebase/auth';
 import { auth } from './firebase';
+import { Customer } from "./interfaces";
 
 /**
  * Initiates Google OAuth login using NextAuth
@@ -98,7 +99,8 @@ export const verifyOTPAndSignIn = async (
   otp: string,
   name?: string,
   email?: string,
-  avatar?: string
+  avatar?: string,
+  customerExists?: Customer
 ) => {
   try {
     if (!window.confirmationResult) {
@@ -108,13 +110,13 @@ export const verifyOTPAndSignIn = async (
     // Verify OTP
     const result = await window.confirmationResult.confirm(otp);
     const user = result.user;
-    user.email = email;
+    user.email = customerExists? customerExists.email : email;
     console.log(user, name, email, avatar);
     // Update user profile if provided
     if (name || email || avatar) {
       const updates: any = {};
       if (name) updates.displayName = name;
-      if (email) updates.email = email;
+      if (email) updates.email = customerExists? customerExists.email : email;
       if (avatar) updates.photoURL = avatar;
 
       await updateProfile(user, updates);
@@ -127,7 +129,7 @@ export const verifyOTPAndSignIn = async (
     const signInResult = await signIn('credentials', {
       firebaseToken: token,
       redirect: false,
-      email:email
+      email:customerExists? customerExists.email : email
     });
 
     // Clear confirmation result

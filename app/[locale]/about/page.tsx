@@ -74,7 +74,7 @@ export default function AboutPage() {
       <Header />
 
       {/* Hero Section */}
-      <Slider className="w-full h-[220px] md:h-[300px]" showSearch={false} page="About" />
+      <Slider className="w-full h-[220px] md:h-[387px]" showSearch={false} page="About" />
 
       {/* Our Story */}
       <section className="py-20 px-4">

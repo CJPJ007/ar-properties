@@ -601,7 +601,7 @@ export default function ProfilePage() {
   }
   return (
 <div className="min-h-screen bg-gradient-to-br mt-4 from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900 pb-16 md:pb-0">
-  <Header />
+  {/* <Header /> */}
 
   {/* Back Button */}
   <div className="pt-20 md:pt-24 px-4">
@@ -1270,7 +1270,7 @@ export default function ProfilePage() {
     </div>
   </section>
 
-  <Footer />
+  {/* <Footer /> */}
 </div>
 
   )

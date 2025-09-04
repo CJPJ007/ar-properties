@@ -207,7 +207,7 @@ export default function LoginPage() {
     }
     setIsLoading(true)
     try {
-      const result = await verifyOTPAndSignIn(mobileForm.otp, mobileForm.name, mobileForm.email, mobileForm.avatar)
+      const result = await verifyOTPAndSignIn(mobileForm.otp, mobileForm.name, mobileForm.email, mobileForm.avatar, customerExists)
 
       if (result?.ok) {
         // Process referral if present

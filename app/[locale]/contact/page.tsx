@@ -70,7 +70,7 @@ const t  = useTranslations('Contact');
       <Header />
 
       {/* Hero Section */}
-      <Slider className="w-full h-[300px]" showSearch={false} page="Contact" />
+      <Slider className="w-full h-[220px] md:h-[387px]" showSearch={false} page="Contact" />
 
       {/* Contact Section */}
       <section className="py-20 px-4">

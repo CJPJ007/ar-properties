@@ -13,6 +13,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useLocalePath } from "@/hooks/use-local-path";
 import NotificationBell from "./notification-bell";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import Image from "next/image";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -109,7 +110,10 @@ export default function Header() {
               href="/"
               className="text-2xl font-bold transition-colors duration-300 text-slate-800 dark:text-white"
             >
-              {company ? company.companyName : t("Header.companyName")}
+              <div className="flex gap-2">
+              <Image src={"/header-logo.png"} width={20} height={20} className="w-8 h-auto rounded-full" alt="Ananta Realty"/>
+              <span>{company ? company.companyName : t("Header.companyName")}</span>
+              </div>
             </Link>
           </motion.div>
 

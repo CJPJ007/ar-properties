@@ -105,7 +105,7 @@ export default function GalleryPage() {
       <Header />
 
       {/* Hero Section */}
-      <Slider className="w-full h-[220px] md:h-[300px]" showSearch={false} page="Gallery" />
+      <Slider className="w-full h-[220px] md:h-[387px]" showSearch={false} page="Gallery" />
 
       {/* Filter Buttons */}
       <section className="py-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b dark:border-b-slate-700">

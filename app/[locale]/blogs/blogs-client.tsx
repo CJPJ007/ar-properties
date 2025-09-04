@@ -69,7 +69,7 @@ const router = useRouter();
   <Header />
 
   {/* Hero Section */}
-  <Slider className="w-full h-[220px] md:h-[250px]" showSearch={false} page="Blog" />
+  <Slider className="w-full h-[220px] md:h-[387px]" showSearch={false} page="Blog" />
 
   {/* Search Section */}
   <section className="py-8 bg-gray-100/70 dark:bg-gray-800/70 backdrop-blur-sm border-b border-gray-300 dark:border-gray-700">

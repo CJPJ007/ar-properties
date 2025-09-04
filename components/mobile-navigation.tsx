@@ -41,6 +41,7 @@ import { useTheme } from "next-themes";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useLocalePath } from "@/hooks/use-local-path";
 import NotificationBell from "./notification-bell";
+import Image from "next/image";
 
 const mainNavigation = [
   { name: "Home", href: "/", icon: Home },
@@ -214,9 +215,10 @@ export default function MobileNavigation() {
           </button>
 
           {/* Center - Brand */}
-          <span className="text-lg font-bold text-slate-800 dark:text-white">
-            Ananta Realty
-          </span>
+          <div className="flex gap-2 items-center justify-center">
+                        <Image src={"/header-logo.png"} width={20} height={20} className="w-8 h-auto rounded-full" alt="Ananta Realty"/>
+                        <span>Ananta Realty</span>
+                        </div>
 
           {/* Right - Search Button */}
           <div className="flex items-center gap-1">
@@ -497,9 +499,10 @@ export default function MobileNavigation() {
             <div className="flex flex-col h-screen">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-gray-700">
-                <span className="text-xl font-bold text-slate-800 dark:text-white">
-                  Ananta Realty
-                </span>
+                <div className="flex gap-2 items-center justify-center">
+                        <Image src={"/header-logo.png"} width={20} height={20} className="w-8 h-auto rounded-full" alt="Ananta Realty"/>
+                        <span>Ananta Realty</span>
+                        </div>
                 <button
                   onClick={() => setIsSidebarOpen(false)}
                   className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
