@@ -265,7 +265,7 @@ export default function LoginPage() {
 
   <div className="relative z-10 min-h-screen flex flex-col">
     {/* Header */}
-    <div className="flex items-center justify-between p-6">
+    <div className="hidden md:flex items-center justify-between p-6">
       <Link
         href="/"
         className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors"
@@ -371,15 +371,16 @@ export default function LoginPage() {
                         Send OTP
                       </Button>
                     ) : (
-                      <Button
-                        type="button"
-                        onClick={handleSendOTP}
-                        disabled={countdown > 0 || isLoading}
-                        variant="outline"
-                        className="w-full h-12 rounded-2xl border-2 border-gray-600 dark:text-white text-gray-600 hover:border-blue-500 font-semibold"
-                      >
-                        {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
-                      </Button>
+                      // <Button
+                      //   type="button"
+                      //   onClick={handleSendOTP}
+                      //   disabled={countdown > 0 || isLoading}
+                      //   variant="outline"
+                      //   className="w-full h-12 rounded-2xl border-2 border-gray-600 dark:text-white text-gray-600 hover:border-blue-500 font-semibold"
+                      // >
+                      //   {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
+                      // </Button>
+                      null
                     )}
 
                     {/* OTP Input */}
