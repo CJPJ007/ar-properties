@@ -321,14 +321,14 @@ export default function LoginPage() {
                 <TabsList className="grid w-full grid-cols-2 mb-6 bg-gray-700 rounded-2xl p-1">
                   <TabsTrigger
                     value="mobile"
-                    className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gray-900 data-[state=active]:shadow-sm"
+                    className="flex items-center gap-2 rounded-xl data-[state=active]:dark:bg-gray-900 data-[state=active]:bg-gray-100 data-[state=active]:shadow-sm"
                   >
                     <Phone className="w-4 h-4" />
                     <span className="hidden sm:inline text-white">Mobile</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="google"
-                    className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gray-900 data-[state=active]:shadow-sm"
+                    className="flex items-center gap-2 rounded-xl data-[state=active]:dark:bg-gray-900 data-[state=active]:bg-gray-100 data-[state=active]:shadow-sm"
                   >
                     <Mail className="w-4 h-4" />
                     <span className="hidden sm:inline text-white">Google</span>

@@ -331,7 +331,7 @@ export default function HomePage() {
       </p>
     </motion.div>
 
-    <motion.div
+    <div
       className="grid grid-cols-1 md:grid-cols-3 gap-8"
       variants={staggerContainer}
       initial="initial"
@@ -349,7 +349,7 @@ export default function HomePage() {
           />
         );
       })}
-    </motion.div>
+    </div>
   </div>
 </section>
 

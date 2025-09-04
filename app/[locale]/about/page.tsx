@@ -122,20 +122,31 @@ export default function AboutPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
           </motion.div>
 
-          <div className="flex flex-wrap justify-center items-center gap-8 mb-8">
-            {teamLoading ? (
-              <div className="col-span-full flex justify-center items-center h-32">
-                <Loader2 className="animate-spin w-8 h-8 text-blue-400" />
-              </div>
-            ) : team.length > 0 ? (
-              team.slice(0,2).map((member, index) => (
-                <TeamCard key={member.id || member.name} member={member} index={index} />
-              ))
-            ) : (
-              <p className="col-span-full text-center text-slate-500 dark:text-slate-400">{t("team.noMembers")}</p>
-            )}
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-10 md:p-0">
+          <div className="flex flex-wrap items-center justify-center gap-8 mb-8">
+  {teamLoading ? (
+    <div className="col-span-full flex justify-center items-center h-32">
+      <Loader2 className="animate-spin w-8 h-8 text-blue-400" />
+    </div>
+  ) : team.length > 0 ? (
+    <>
+      {team[0] && (
+        <div className="md:col-start-2">
+          <TeamCard key={team[0].id || team[0].name} member={team[0]} index={0} />
+        </div>
+      )}
+      {team[1] && (
+        <div>
+          <TeamCard key={team[1].id || team[1].name} member={team[1]} index={1} />
+        </div>
+      )}
+    </>
+  ) : (
+    <p className="col-span-full text-center text-slate-500 dark:text-slate-400">
+      {t("team.noMembers")}
+    </p>
+  )}
+</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {teamLoading ? (
               <div className="col-span-full flex justify-center items-center h-32">
                 <Loader2 className="animate-spin w-8 h-8 text-blue-400" />
@@ -202,9 +213,9 @@ function TeamCard({ member, index }: { member: any; index: number }) {
   variants={fadeInUp}
   transition={{ delay: index * 0.1 }}
   whileHover={{ y: -10, rotateX: 5, rotateY: 5 }}
-  className="group"
+  className="group flex justify-center"
 >
-  <Card className="overflow-hidden bg-white dark:bg-slate-900 shadow-lg dark:shadow-gray-800 hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
+  <Card className="w-full max-w-sm overflow-hidden bg-white dark:bg-slate-900 shadow-lg dark:shadow-gray-800 hover:shadow-2xl transition-all duration-500 transform-gpu perspective-1000">
     <div className="relative overflow-hidden">
       <img
         src={`/images/${member.imageUrl}` || "/placeholder.svg"}

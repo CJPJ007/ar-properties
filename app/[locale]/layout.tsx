@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import GoogleAnalytics from "@/components/GAConfigClient";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
+import MobileRedirectWrapper from "@/components/providers/mobile-redirect-wrapper";
 
 async function getMessages(locale: string) {
   try {
@@ -53,11 +54,13 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ThemeProvider>
             <AuthSessionProvider>
+            <MobileRedirectWrapper>
               <NotificationProvider>
                 {children}
                 <MobileNavigation />
                 <Toaster />
               </NotificationProvider>
+            </MobileRedirectWrapper>
             </AuthSessionProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

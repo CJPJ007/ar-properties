@@ -59,12 +59,12 @@ const sidebarNavigation = [
 
 export default function MobileNavigation() {
   const pathname = usePathname();
+  if (pathname.includes("/auth/login")) return null;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Property[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const currentLocale = useLocale();
-  if (pathname === "/auth/login") return null;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const { data: session } = useSession();
@@ -365,7 +365,7 @@ export default function MobileNavigation() {
       </>
 
       {/* 🔥 Live Scrolling Banner */}
-      <div className="md:hidden w-full relative top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
+      <div className="md:hidden block w-full fixed top-[3.5rem] overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2">
         <motion.div
           className="whitespace-nowrap text-sm md:text-base font-medium"
           animate={{ x: ["100%", "-100%"] }}
@@ -492,7 +492,7 @@ export default function MobileNavigation() {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="md:hidden fixed top-0 left-0 h-screen w-100 max-w-[85vw] bg-white dark:bg-gray-900 shadow-xl z-50"
+            className="md:hidden fixed top-0 left-0 h-screen w-100 max-w-[85vw] overflow-hidden rounded-r-xl bg-white dark:bg-gray-900 shadow-xl z-50"
           >
             <div className="flex flex-col h-screen">
               {/* Header */}

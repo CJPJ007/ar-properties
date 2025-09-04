@@ -161,6 +161,15 @@ export default function ProfilePage() {
         operations: ["AND"],
       }
 
+      if (session?.user.mobile){
+        requestBody.criteriaList.push({
+          key: "mobile",
+          operation: "contains",
+          value: session.user.mobile,
+        })
+        requestBody.operations.push("OR")
+      }
+
       if (search) {
         requestBody.criteriaList.push({
           key: "property",
@@ -209,7 +218,15 @@ export default function ProfilePage() {
         ],
         operations: ["AND"],
       }
-
+      
+      if (session?.user.mobile){
+        requestBody.criteriaList.push({
+          key: "mobile",
+          operation: "contains",
+          value: session.user.mobile,
+        })
+        requestBody.operations.push("OR")
+      }
       if (search) {
         requestBody.criteriaList.push({
           key: "property",
@@ -253,6 +270,15 @@ export default function ProfilePage() {
           },
         ],
         operations: [],
+      }
+
+      if (session?.user.mobile){
+        requestBody.criteriaList.push({
+          key: "mobile",
+          operation: "contains",
+          value: session.user.mobile,
+        })
+        requestBody.operations.push("OR")
       }
 
       if (search) {
@@ -574,7 +600,7 @@ export default function ProfilePage() {
     redirect("/auth/login")
   }
   return (
-<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900 pb-16 md:pb-0">
+<div className="min-h-screen bg-gradient-to-br mt-4 from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900 pb-16 md:pb-0">
   <Header />
 
   {/* Back Button */}
@@ -785,24 +811,61 @@ export default function ProfilePage() {
 
           <CardContent>
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="flex w-full overflow-x-auto overflow-y-hidden scroll-p-0 md:grid md:grid-cols-4 gap-2">
-  <TabsTrigger value="inquiries" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
-    <MessageSquare className="w-4 h-4" />
+             
+
+ <div className="w-full overflow-x-auto">
+            <div className="flex min-w-max gap-1 p-1 bg-muted rounded-lg">
+              <button
+                onClick={() => setActiveTab("inquiries")}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                  activeTab === "inquiries"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
     {t("inquiries")} ({inquiriesData?.totalRecords || 0})
-  </TabsTrigger>
-  <TabsTrigger value="site-visits" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
-    <Eye className="w-4 h-4" />
-    {t("siteVisits")} ({siteVisitsData?.totalRecords || 0})
-  </TabsTrigger>
-  <TabsTrigger value="wishlist" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
-    <Heart className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => setActiveTab("site-visits")}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                  activeTab === "site-visits"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
+{t("siteVisits")} ({siteVisitsData?.totalRecords || 0})
+              </button>
+
+              <button
+                onClick={() => setActiveTab("wishlist")}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                  activeTab === "wishlist"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Heart className="w-4 h-4" />
     {t("wishlist")} ({wishlistData?.totalRecords || 0})
-  </TabsTrigger>
-  <TabsTrigger value="referrals" className="flex items-center gap-2 px-4 py-2 shrink-0 dark:text-white">
-    <Users className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => setActiveTab("referrals")}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                  activeTab === "referrals"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Users className="w-4 h-4" />
     {t("referrals")} ({referralsData?.totalRecords || 0})
-  </TabsTrigger>
-</TabsList>
+              </button>
+            </div>
+          </div>
+
+
 
 
               {/* Tabs Content */}

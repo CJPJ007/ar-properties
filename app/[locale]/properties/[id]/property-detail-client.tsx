@@ -455,6 +455,153 @@ export default function PropertyDetailClient({
         </div>
       </section>
 
+{property.virtualTourLink && (
+        <section className="px-4 mb-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div {...fadeInUp} transition={{ delay: 0.3 }}>
+              <h2 className="text-3xl font-bold dark:text-gray-100 text-slate-800 mb-6">Virtual Tours</h2>
+
+              <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden bg-black">
+                <AnimatePresence mode="wait">
+                  <motion.iframe
+                    key={currentVideoIndex}
+                    src={property.virtualTourLink.split("#")[currentVideoIndex]}
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </AnimatePresence>
+
+                {/* Navigation Arrows */}
+                {property.virtualTourLink.split("#").length > 1 && (
+                  <>
+                    <Button
+                      onClick={prevVideo}
+                      variant="ghost"
+                      size="sm"
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40"
+                    >
+                      <ChevronLeft className="w-6 h-6" />
+                    </Button>
+                    <Button
+                      onClick={nextVideo}
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40"
+                    >
+                      <ChevronRight className="w-6 h-6" />
+                    </Button>
+                  </>
+                )}
+
+                {/* Video Counter */}
+                {property.virtualTourLink.split("#").length > 1 && (
+                  <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                    {currentVideoIndex + 1} / {property.virtualTourLink.split("#").length}
+                  </div>
+                )}
+
+                {/* Play Button Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Button
+                    onClick={() => setShowVirtualTour(true)}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-full shadow-lg"
+                  >
+                    <Play className="w-6 h-6 mr-2" />
+                    Full Screen View
+                  </Button>
+                </div>
+              </div>
+
+              {/* Video Thumbnail Strip */}
+              {property.virtualTourLink.split("#").length > 1 && (
+                <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+                  {property.virtualTourLink.split("#").map((video, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentVideoIndex(index)}
+                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all bg-slate-200 flex items-center justify-center ${
+                        index === currentVideoIndex ? "border-blue-500" : "border-transparent"
+                      }`}
+                    >
+                      <Play className="w-6 h-6 text-slate-600" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Virtual Tour Modal */}
+      <AnimatePresence>
+        {showVirtualTour && property.virtualTourLink && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowVirtualTour(false)}
+          >
+            <motion.div
+              className="relative w-full max-w-6xl mx-4 aspect-video bg-black rounded-lg overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Button
+                onClick={() => setShowVirtualTour(false)}
+                variant="ghost"
+                size="sm"
+                className="absolute top-4 right-4 z-10 text-white hover:bg-white/20"
+              >
+                <X className="w-6 h-6" />
+              </Button>
+
+              {/* Video Navigation in Modal */}
+              {property.virtualTourLink.split("#").length > 1 && (
+                <>
+                  <Button
+                    onClick={prevVideo}
+                    variant="ghost"
+                    size="sm"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40 z-10"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </Button>
+                  <Button
+                    onClick={nextVideo}
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40 z-10"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </Button>
+                  <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm z-10">
+                    {currentVideoIndex + 1} / {property.virtualTourLink.split("#").length}
+                  </div>
+                </>
+              )}
+
+              <iframe
+                src={property.virtualTourLink.split("#")[currentVideoIndex]}
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Footer />
     </div>
   );
