@@ -72,7 +72,7 @@ export default function PropertyDetailClient({
 
   const prevVideo = () => {
     if (property.virtualTourLink) {
-      const videos = property.virtualTourLink.split("#");
+      const videos = property.virtualTourLink.split("#VIDEO#");
       setCurrentVideoIndex(
         (prev) => (prev - 1 + videos.length) % videos.length
       );
@@ -141,7 +141,7 @@ export default function PropertyDetailClient({
   const t = useTranslations("PropertyDetail");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 dark:from-gray-900 to-blue-50 dark:to-gray-800 pb-16 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 dark:from-gray-900 to-blue-50 dark:to-gray-800 mt-4 pb-16 md:pb-0">
       <Header />
 
       {/* Back Button */}
@@ -484,7 +484,7 @@ export default function PropertyDetailClient({
                       onClick={prevVideo}
                       variant="ghost"
                       size="sm"
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40"
+                      className="absolute left-4 z-[99] top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40"
                     >
                       <ChevronLeft className="w-6 h-6" />
                     </Button>
@@ -492,7 +492,7 @@ export default function PropertyDetailClient({
                       onClick={nextVideo}
                       variant="ghost"
                       size="sm"
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40"
+                      className="absolute right-4 z-[99] top-1/2 transform -translate-y-1/2 bg-black/20 text-white hover:bg-black/40"
                     >
                       <ChevronRight className="w-6 h-6" />
                     </Button>
@@ -521,7 +521,7 @@ export default function PropertyDetailClient({
               {/* Video Thumbnail Strip */}
               {property.virtualTourLink.split("#").length > 1 && (
                 <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-                  {property.virtualTourLink.split("#").map((video, index) => (
+                  {property.virtualTourLink.split("#VIDEO#").map((video, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentVideoIndex(index)}
