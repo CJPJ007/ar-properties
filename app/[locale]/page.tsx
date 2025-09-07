@@ -263,13 +263,13 @@ export default function HomePage() {
   className="py-20 px-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
 >
   <div className="max-w-7xl mx-auto">
-    <motion.div className="text-center mb-16" {...fadeInUp}>
+    <div className="text-center mb-16" {...fadeInUp}>
       <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("Home.featuredProperties")}</h2>
       <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 mx-auto mb-6" />
       <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
   {t("Home.featuredDescription")}
       </p>
-    </motion.div>
+    </div>
 
     {loading ? (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -278,7 +278,7 @@ export default function HomePage() {
         ))}
       </div>
     ) : (
-      <motion.div
+      <div
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         variants={staggerContainer}
         initial="initial"
@@ -288,7 +288,7 @@ export default function HomePage() {
         {featuredProperties.map((property) => (
           <PropertyCard key={property.id} property={property} />
         ))}
-      </motion.div>
+      </div>
     )}
   </div>
 </section>

@@ -152,7 +152,7 @@ export default function ProfilePage() {
   // Generate referral link
   const referralLink = `${
     typeof window !== "undefined" ? window.location.origin : ""
-  }/auth/login?ref=${session?.user?.email}`;
+  }/auth/login?ref=${session?.user?.referralCode}`;
 
   // Fetch inquiries data
   const fetchInquiries = async (page = 1, search?: string) => {
@@ -164,23 +164,32 @@ export default function ProfilePage() {
             key: "appointmentDate",
             operation: "isEmpty",
             value: null,
-          },
+          }
+        ],
+        operations: [],
+      };
+
+      if(session?.user.email){
+        requestBody.criteriaList.push(
           {
             key: "email",
             operation: "equals",
-            value: session?.user.email,
-          },
-        ],
-        operations: ["AND"],
-      };
-
-      if (session?.user.mobile) {
+            value: session?.user?.email,
+          }
+        );
+        requestBody.operations.push("AND");
+      }
+      if(session?.user.mobile){
         requestBody.criteriaList.push({
-          key: "mobile",
-          operation: "contains",
-          value: session.user.mobile,
-        });
-        requestBody.operations.push("OR");
+            key: "mobile",
+            operation: "equals",
+            value: session?.user?.mobile,
+          });
+
+        if(session.user.email)
+          requestBody.operations.push("OR");
+        else
+          requestBody.operations.push("AND");
       }
 
       if (search) {
@@ -222,23 +231,31 @@ export default function ProfilePage() {
           {
             key: "appointmentDate",
             operation: "isNotEmpty",
-          },
+          }
+        ],
+        operations: [],
+      };
+
+      if(session?.user.email){
+        requestBody.criteriaList.push(
           {
             key: "email",
             operation: "equals",
-            value: session?.user.email,
-          },
-        ],
-        operations: ["AND"],
-      };
-
-      if (session?.user.mobile) {
+            value: session?.user?.email,
+          }
+        );
+        requestBody.operations.push("AND")
+      }
+      if(session?.user.mobile){
         requestBody.criteriaList.push({
-          key: "mobile",
-          operation: "contains",
-          value: session.user.mobile,
-        });
-        requestBody.operations.push("OR");
+            key: "mobile",
+            operation: "equals",
+            value: session?.user?.mobile,
+          });
+        if(session.user.email)
+          requestBody.operations.push("OR");
+        else
+          requestBody.operations.push("AND");
       }
       if (search) {
         requestBody.criteriaList.push({
@@ -276,22 +293,29 @@ export default function ProfilePage() {
     try {
       const requestBody: AdvancedSearchRequest = {
         criteriaList: [
-          {
-            key: "customer.email",
-            operation: "equals",
-            value: session?.user?.email,
-          },
+          
         ],
         operations: [],
       };
 
-      if (session?.user.mobile) {
+      if(session?.user.email){
+        requestBody.criteriaList.push(
+          {
+            key: "customer.email",
+            operation: "equals",
+            value: session?.user?.email,
+          }
+        );
+
+      }
+      if(session?.user.mobile){
         requestBody.criteriaList.push({
-          key: "mobile",
-          operation: "contains",
-          value: session.user.mobile,
-        });
-        requestBody.operations.push("OR");
+            key: "customer.mobile",
+            operation: "equals",
+            value: session?.user?.mobile,
+          });
+          if(session.user.email)
+          requestBody.operations.push("OR");
       }
 
       if (search) {
@@ -330,15 +354,29 @@ export default function ProfilePage() {
     try {
       const requestBody: AdvancedSearchRequest = {
         criteriaList: [
+          
+        ],
+        operations: [],
+      };
+      if(session?.user.email){
+        requestBody.criteriaList.push(
           {
             key: "email",
             operation: "equals",
             value: session?.user?.email,
-          },
-        ],
-        operations: [],
-      };
+          }
+        );
 
+      }
+      if(session?.user.mobile){
+        requestBody.criteriaList.push({
+            key: "mobile",
+            operation: "equals",
+            value: session?.user?.mobile,
+          });
+          if(session.user.email)
+          requestBody.operations.push("OR");
+      }
       if (search) {
         requestBody.criteriaList.push({
           key: "referredName",
@@ -398,28 +436,6 @@ export default function ProfilePage() {
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
   }, []);
-
-  // useEffect to fetch data when component mounts or search changes
-  useEffect(() => {
-    if (status === "loading") return;
-    if (activeTab === "inquiries") {
-      fetchInquiries(inquiriesPage, debouncedSearchQuery);
-    } else if (activeTab === "site-visits") {
-      fetchSiteVisits(siteVisitsPage, debouncedSearchQuery);
-    } else if (activeTab === "wishlist") {
-      fetchWishlist(wishlistPage, debouncedSearchQuery);
-    } else if (activeTab === "referrals") {
-      fetchReferrals(referralsPage, debouncedSearchQuery);
-      fetchReferralStats();
-    }
-  }, [
-    activeTab,
-    inquiriesPage,
-    siteVisitsPage,
-    wishlistPage,
-    referralsPage,
-    debouncedSearchQuery,
-  ]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -594,18 +610,43 @@ export default function ProfilePage() {
     setReferralsPage(1);
   };
 
-  // useEffect(() => {
-  //   // Reset to page 1 when searching
-  //   if (activeTab === "inquiries") {
-  //     setInquiriesPage(1)
-  //   } else if (activeTab === "site-visits") {
-  //     setSiteVisitsPage(1)
-  //   } else if (activeTab === "wishlist") {
-  //     setWishlistPage(1)
-  //   } else if (activeTab === "referrals") {
-  //     setReferralsPage(1)
-  //   }
-  // }, [activeTab, handleSearch])
+  useEffect(() => {
+    // Reset to page 1 when searching
+    console.log("activeTab : ",activeTab);
+    if (activeTab === "inquiries") {
+      setInquiriesPage(1)
+    } else if (activeTab === "site-visits") {
+      setSiteVisitsPage(1)
+    } else if (activeTab === "wishlist") {
+      setWishlistPage(1)
+    } else if (activeTab === "referrals") {
+      setReferralsPage(1)
+    }
+  }, [activeTab, handleSearch])
+
+  // useEffect to fetch data when component mounts or search changes
+  useEffect(() => {
+    console.log("activeTab : ",activeTab,"status : ",status);
+    if (status === "loading") return;
+    if (activeTab === "inquiries") {
+      fetchInquiries(inquiriesPage, debouncedSearchQuery);
+    } else if (activeTab === "site-visits") {
+      fetchSiteVisits(siteVisitsPage, debouncedSearchQuery);
+    } else if (activeTab === "wishlist") {
+      fetchWishlist(wishlistPage, debouncedSearchQuery);
+    } else if (activeTab === "referrals") {
+      fetchReferrals(referralsPage, debouncedSearchQuery);
+      fetchReferralStats();
+    }
+  }, [
+    activeTab,
+    inquiriesPage,
+    siteVisitsPage,
+    wishlistPage,
+    referralsPage,
+    debouncedSearchQuery,
+    status
+  ]);
 
   const handleGoogleLogin = () => {
     if (session) {
@@ -618,7 +659,7 @@ export default function ProfilePage() {
 
   // Redirect if not authenticated
   if (status === "loading") {
-    return <Loader2 />;
+    return <div className="flex items-center justify-center h-screen"><Loader2 /></div>;
   }
 
   if (status === "unauthenticated") {
@@ -1489,104 +1530,105 @@ export default function ProfilePage() {
     onShare: () => void;
   }) {
     return (
-      <Card className="overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-        <div className="relative overflow-hidden">
-          <Image
-            src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
-            alt={property.title}
-            width={400}
-            height={192}
-            className="w-full h-48 object-cover"
-          />
+      <Card className="overflow-hidden bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl transition-all duration-300 group">
+  <div className="relative overflow-hidden">
+    <Image
+      src={`/images/${property.thumbnailImage}` || "/placeholder.svg"}
+      alt={property.title}
+      width={400}
+      height={192}
+      className="w-full h-48 object-cover"
+    />
 
-          {/* Status Badge */}
-          <Badge
-            className={`absolute top-3 left-3 ${
-              property.sold
-                ? "bg-red-100 text-red-800"
-                : "bg-green-100 text-green-800"
-            }`}
-          >
-            {property.sold ? t("sold") : t("available")}
-          </Badge>
+    {/* Status Badge */}
+    <Badge
+      className={`absolute top-3 left-3 ${
+        property.sold
+          ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+          : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+      }`}
+    >
+      {property.sold ? t("sold") : t("available")}
+    </Badge>
 
-          {/* Featured Badge */}
-          {property.featured && (
-            <Badge className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
-              {t("featured")}
-            </Badge>
-          )}
+    {/* Featured Badge */}
+    {property.featured && (
+      <Badge className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md">
+        {t("featured")}
+      </Badge>
+    )}
 
-          {/* Action Buttons */}
-          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button
-              onClick={onShare}
-              variant="ghost"
-              size="sm"
-              className="bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm"
-            >
-              <Share2 className="w-4 h-4" />
-            </Button>
-            <Button
-              onClick={onRemove}
-              variant="ghost"
-              size="sm"
-              className="bg-black/20 text-white hover:bg-red-500 backdrop-blur-sm"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
+    {/* Action Buttons (show on hover) */}
+    <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <Button
+        onClick={onShare}
+        variant="ghost"
+        size="sm"
+        className="bg-black/20 dark:bg-white/20 text-white hover:bg-black/40 dark:hover:bg-white/40 backdrop-blur-sm"
+      >
+        <Share2 className="w-4 h-4" />
+      </Button>
+      <Button
+        onClick={onRemove}
+        variant="ghost"
+        size="sm"
+        className="bg-black/20 dark:bg-white/20 text-white hover:bg-red-500 dark:hover:bg-red-600 backdrop-blur-sm"
+      >
+        <Trash2 className="w-4 h-4" />
+      </Button>
+    </div>
+  </div>
 
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-lg font-bold text-slate-800 line-clamp-1">
-              {property.title}
-            </h3>
-            <Heart className="w-5 h-5 text-red-500 fill-current flex-shrink-0" />
-          </div>
+  <CardContent className="p-4">
+    <div className="flex items-start justify-between mb-2">
+      <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 line-clamp-1">
+        {property.title}
+      </h3>
+      <Heart className="w-5 h-5 text-red-500 fill-current flex-shrink-0" />
+    </div>
 
-          <p className="text-xl font-bold text-amber-600 mb-3">
-            {formatPrice(property.price)}
-          </p>
+    <p className="text-xl font-bold text-amber-600 dark:text-amber-400 mb-3">
+      {formatPrice(property.price)}
+    </p>
 
-          <div className="flex items-center gap-3 text-slate-600 mb-3">
-            <div className="flex items-center gap-1">
-              <Bed className="w-4 h-4" />
-              <span className="text-sm">{property.bedrooms}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Bath className="w-4 h-4" />
-              <span className="text-sm">{property.bathrooms || 0}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Square className="w-4 h-4" />
-              <span className="text-sm">{property.areaSqft} sqft</span>
-            </div>
-          </div>
+    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 mb-3">
+      <div className="flex items-center gap-1">
+        <Bed className="w-4 h-4" />
+        <span className="text-sm">{property.bedrooms}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <Bath className="w-4 h-4" />
+        <span className="text-sm">{property.bathrooms || 0}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <Square className="w-4 h-4" />
+        <span className="text-sm">{property.areaSqft} sqft</span>
+      </div>
+    </div>
 
-          <div className="flex items-center gap-2 text-slate-500 mb-3">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm">{property.location}</span>
-          </div>
+    <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-3">
+      <MapPin className="w-4 h-4" />
+      <span className="text-sm">{property.location}</span>
+    </div>
 
-          <div className="flex gap-2">
-            <Link href={`/properties/${property.slug}`} className="flex-1">
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm">
-                {t("viewDetails")}
-              </Button>
-            </Link>
-            <Button
-              onClick={onRemove}
-              variant="outline"
-              size="sm"
-              className="px-3 hover:bg-red-50 hover:border-red-200 hover:text-red-600 bg-transparent"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="flex gap-2">
+      <Link href={`/properties/${property.slug}`} className="flex-1">
+        <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm">
+          {t("viewDetails")}
+        </Button>
+      </Link>
+      <Button
+        onClick={onRemove}
+        variant="outline"
+        size="sm"
+        className="px-3 bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-200 dark:hover:border-red-600 hover:text-red-600 dark:hover:text-red-300"
+      >
+        <Trash2 className="w-4 h-4" />
+      </Button>
+    </div>
+  </CardContent>
+</Card>
+
     );
   }
 }

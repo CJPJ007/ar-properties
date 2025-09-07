@@ -8,12 +8,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { InquiryFormProps, InquiryFormData } from "@/lib/interfaces"
 import { useTranslations } from "next-intl"
+import { useSession } from "next-auth/react"
 
 export default function InquiryForm({
   property,
   showAppointmentDate = false,
   className = "",
 }: InquiryFormProps) {
+  const {data: session} = useSession();
   const [formData, setFormData] = useState<InquiryFormData>({
     name: "",
     email: "",
@@ -35,13 +37,17 @@ export default function InquiryForm({
     setIsSubmitting(true)
 
     try {
+        const requestFormData = {...formData, mobile:`+91${formData.mobile}`}
+        if(!requestFormData.email && session?.user.email){
+          requestFormData.email = session?.user.email;
+        }
         // Default behavior - send to inquiries API
         const response = await fetch("/api/inquiries", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(requestFormData),
         })
 
         if (!response.ok) {
@@ -114,6 +120,7 @@ export default function InquiryForm({
           onChange={handleInputChange}
           placeholder={t("placeholders.phone")}
           required
+          maxLength={10}
           className="h-12 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-300"
         />
       </div>

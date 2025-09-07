@@ -27,7 +27,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [otpSent, setOtpSent] = useState(false)
   const [countdown, setCountdown] = useState(0)
-  const [referralEmail, setReferralEmail] = useState<string | null>(null)
+  const [referralCode, setReferralCode] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const recaptchaContainerRef = useRef<HTMLDivElement>(null)
   const [customerExists, setCustomerExists] = useState<Customer>();
@@ -44,10 +44,10 @@ export default function LoginPage() {
   useEffect(() => {
     const ref = searchParams.get("ref")
     if (ref) {
-      setReferralEmail(ref)
+      setReferralCode(ref)
       toast({
         title: "Referral Detected! 🎉",
-        description: `You've been referred by ${ref}. Complete registration to activate your referral bonus!`,
+        description: `You've referral code : ${ref}. Complete registration to activate referr's referral bonus!`,
       })
     }
   }, [searchParams])
@@ -98,10 +98,10 @@ export default function LoginPage() {
   }
 
   const handleReferralSubmission = async (userEmail: string, userName: string) => {
-    if (!referralEmail) return
+    if (!referralCode) return
 
     try {
-      const response = await fetch("/api/public/referrals/", {
+      const response = await fetch("/api/referrals/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +109,8 @@ export default function LoginPage() {
         body: JSON.stringify({
           referredEmail: userEmail,
           referredName: userName,
-          email: referralEmail,
+          referredMobile: `+91${mobileForm.mobile?mobileForm.mobile:""}`,
+          referralCode: referralCode,
           status: "completed",
           referralAmount: 1000,
         }),
@@ -118,7 +119,7 @@ export default function LoginPage() {
       if (response.ok) {
         toast({
           title: "Referral Activated! 🎉",
-          description: "Your referral bonus has been processed successfully!",
+          description: "Referr's referral bonus has been processed successfully!",
         })
       } else {
         console.warn("Failed to process referral:", response.status)
@@ -211,7 +212,7 @@ export default function LoginPage() {
 
       if (result?.ok) {
         // Process referral if present
-        if (referralEmail && mobileForm.email) {
+        if (referralCode) {
           await handleReferralSubmission(mobileForm.email, mobileForm.name)
         }
 
@@ -234,7 +235,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     // Include referral email in the callback URL for Google login
-    const callbackUrl = referralEmail ? `/auth/callback?ref=${encodeURIComponent(referralEmail)}` : "/"
+    const callbackUrl = referralCode ? `/auth/callback?ref=${encodeURIComponent(referralCode)}` : "/"
 
     signIn("google", { callbackUrl })
   }
@@ -293,7 +294,7 @@ export default function LoginPage() {
         </motion.div>
 
         {/* Referral Banner */}
-        {referralEmail && (
+        {referralCode && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -301,10 +302,10 @@ export default function LoginPage() {
           >
             <div className="flex items-center gap-2 text-white">
               <Gift className="w-4 h-4" />
-              <span className="text-sm font-medium">Referred by: {referralEmail}</span>
+              <span className="text-sm font-medium">Referral Code: {referralCode}</span>
             </div>
             <p className="text-xs text-white/70 mt-1">
-              Complete registration to activate your referral bonus!
+              Complete registration to activate referr's referral bonus!
             </p>
           </motion.div>
         )}
@@ -437,7 +438,7 @@ export default function LoginPage() {
 
                           <div className="space-y-2">
                             <Label htmlFor="email" className="text-gray-200 font-medium">
-                              Email
+                              Email (Optional)
                             </Label>
                             <div className="relative">
                               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -450,14 +451,10 @@ export default function LoginPage() {
                                   setMobileForm((prev) => ({ ...prev, email: e.target.value }))
                                 }
                                 className="pl-12 h-12 rounded-2xl border-gray-600 bg-gray-700 text-white focus:border-blue-500 focus:ring-blue-500"
-                                required
+                                
                               />
                             </div>
-                            {referralEmail && (
-                              <p className="text-xs text-blue-400">
-                                Email is required to process your referral bonus
-                              </p>
-                            )}
+                            
                           </div>
 
                           {/* Avatar Upload
@@ -500,7 +497,6 @@ export default function LoginPage() {
                           !mobileForm.otp ||
                           mobileForm.otp.length !== 6 ||
                           (!mobileForm.name && !customerExists) ||
-                          (referralEmail && !mobileForm.email && !customerExists) ||
                           isLoading
                         }
                         className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-2xl font-semibold text-white shadow-lg"
@@ -522,10 +518,10 @@ export default function LoginPage() {
                       </p>
                     </div>
 
-                    {referralEmail && (
+                    {referralCode && (
                       <div className="p-3 bg-gray-700 border border-gray-600 rounded-2xl">
                         <p className="text-xs text-blue-400">
-                          Your referral will be automatically processed after Google login
+                          Referr's referral will be automatically processed after Google login
                         </p>
                       </div>
                     )}

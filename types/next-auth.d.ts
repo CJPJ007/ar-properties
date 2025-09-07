@@ -11,6 +11,7 @@ declare module "next-auth" {
       mobile?: string
       avatar?: string
       mobileFetched?: boolean
+      referralCode?:string
     }
   }
 
@@ -21,6 +22,7 @@ declare module "next-auth" {
     image?: string | null
     mobile?: string
     avatar?: string
+    referralCode?: string
   }
 }
 
@@ -29,5 +31,6 @@ declare module "next-auth/jwt" {
     accessToken?: string
     mobile?: string
     avatar?: string
+    referralCode?: string
   }
 } 

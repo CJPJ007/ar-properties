@@ -1,78 +1,42 @@
-"use client"
+// app/auth/callback/page.tsx (Server Component)
 
-import { useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useSession } from "next-auth/react"
-import { Loader2 } from "lucide-react"
-import { toast } from "@/hooks/use-toast"
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
 
-export default function AuthCallbackPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { data: session, status } = useSession()
+export default async function AuthCallbackPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const session = await getServerSession()
 
-  useEffect(() => {
-    const processReferral = async () => {
-      const referralEmail = searchParams.get("ref")
-
-      if (referralEmail && session?.user?.email) {
-        try {
-          const response = await fetch("/api/referrals/create", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              referredEmail: session.user.email,
-              referredName: session.user.name || "",
-              referredMobile: session.user.mobile,
-              email: referralEmail,
-              status: "completed",
-              referralAmount: 1000,
-            }),
-          })
-
-          if (response.ok) {
-            toast({
-              title: "Referral Activated! 🎉",
-              description: "Your referral bonus has been processed successfully!",
-            })
-          } else {
-            console.warn("Failed to process referral:", response.status)
-          }
-        } catch (error) {
-          console.error("Error processing referral:", error)
-        }
-      }
-
-      // Redirect to home after processing
-      router.push("/")
-    }
-
-    if (status === "authenticated") {
-      processReferral()
-    } else if (status === "unauthenticated") {
-      router.push("/auth/login")
-    }
-  }, [session, status, searchParams, router])
-
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-          <p className="text-slate-600">Processing your login...</p>
-        </div>
-      </div>
-    )
+  if (!session) {
+    redirect("/auth/login")
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-        <p className="text-slate-600">Redirecting...</p>
-      </div>
-    </div>
-  )
+  const referralCode = searchParams?.ref as string | undefined
+  console.log("Referral Code : ",referralCode);
+  if (referralCode && session.user?.email) {
+    try {
+      await fetch(`${process.env.BACKEND_URL}/api/public/referrals/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          referredEmail: session.user.email,
+          referredName: session.user.name || "",
+          referredMobile: (session.user as any).mobile || "",
+          referralCode: referralCode,
+          status: "completed",
+          referralAmount: 1000,
+        }),
+      })
+    } catch (error) {
+      console.error("Error processing referral:", error)
+    }
+  }
+
+  // Always redirect home after processing
+  redirect("/")
 }
