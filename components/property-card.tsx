@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { MapPin, Bed, Bath, Square, Heart, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -32,6 +32,9 @@ const {data:session} = useSession();
   const { toast } = useToast()
   const [isLiked, setIsLiked] = useState(isInWishlist(property.id))
 
+  useEffect(() => {
+  setIsLiked(isInWishlist(property.id))
+}, [property.id, isInWishlist])
   const handleWishlistToggle = async (e: React.MouseEvent) => {
     e.preventDefault() // Prevent navigation when clicking heart
     e.stopPropagation()
@@ -125,12 +128,12 @@ const {data:session} = useSession();
 
           {/* Action Buttons */}
           <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button onClick={handleShare} variant="ghost" size="sm" className="bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm">
+            <Button onClick={handleShare} variant="ghost" size="sm" className="bg-black/20 z-50 text-white hover:bg-black/40 backdrop-blur-sm">
               <Share2 className="w-4 h-4" />
             </Button>
 
             {session?.user && showWishlistButton && (
-              <Button onClick={handleWishlistToggle} disabled={loading} variant="ghost" size="sm" className="bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm">
+              <Button onClick={handleWishlistToggle} disabled={loading} variant="ghost" size="sm" className="bg-black/20 z-50 text-white hover:bg-black/40 backdrop-blur-sm">
                 <Heart className={`w-4 h-4 transition-colors ${isLiked ? "fill-red-500 text-red-500" : ""}`} />
               </Button>
             )}

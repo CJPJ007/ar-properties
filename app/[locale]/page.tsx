@@ -17,6 +17,7 @@ import Link from "next/link"
 import { Slider } from "@/components/slider"
 import PropertyCard from "@/components/property-card"
 import { useTranslations } from "next-intl"
+import { useWishlist } from "@/hooks/user-wishlist"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -43,10 +44,12 @@ export default function HomePage() {
   const [currentVideo, setCurrentVideo] = useState("")
   const [totalTestimonials, setTotalTestimonials] = useState(0);
   const [spotlightProperties, setSpotlightProperties] = useState<Property[]>([]);
+  // const {loadWishlist} = useWishlist();
   useEffect(() => {
     fetchProperties()
     fetchTestimonials()
     fetchSpotLighProperties();
+    // loadWishlist();
   }, [])
 
   const fetchProperties = async () => {

@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { useToast } from "@/hooks/use-toast"
-import type { WishlistItem } from "@/lib/interfaces"
+import type { AdvancedSearchRequest, WishlistItem } from "@/lib/interfaces"
 import { useSession } from "next-auth/react"
 
 export function useWishlist() {
@@ -136,22 +136,62 @@ export function useWishlist() {
   )
 
   // Load user's wishlist
-  const loadWishlist = useCallback(async () => {
-    if (!session || !session.user) {
+  useEffect(() => {
+   const fetchWishList = async ()=>{ if (!session || !session.user) {
       setWishlistItems(new Set())
       return
     }
 
     try {
-      const response = await fetch(`/api/wishlist?customerId=${session?.user.email}`)
-      if (response.ok) {
-        const data: WishlistItem[] = await response.json()
-        const propertyIds = data.map((item) => item.propertyId)
+         const requestBody: AdvancedSearchRequest = {
+              criteriaList: [
+                
+              ],
+              operations: [],
+            };
+      
+            if(session?.user.email){
+              requestBody.criteriaList.push(
+                {
+                  key: "customer.email",
+                  operation: "equals",
+                  value: session?.user?.email,
+                }
+              );
+      
+            }
+            if(session?.user.mobile){
+              requestBody.criteriaList.push({
+                  key: "customer.mobile",
+                  operation: "equals",
+                  value: session?.user?.mobile,
+                });
+                if(session.user.email)
+                requestBody.operations.push("OR");
+            }
+      
+            const response = await fetch(`/api/wishlistSearch?page=${1}&size=100`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(requestBody),
+            });
+      
+            if (!response.ok) {
+              throw new Error("Failed to fetch wishlist");
+            }
+      
+        if (response.ok) {
+        const data: WishlistItem[] = (await response.json()).data;
+        const propertyIds = data.map((item) => item.property.id)
         setWishlistItems(new Set(propertyIds))
       }
     } catch (error) {
       console.error("Error loading wishlist:", error)
     }
+    }
+    fetchWishList();
   }, [session?.user.email])
 
   return {
@@ -161,6 +201,5 @@ export function useWishlist() {
     removeFromWishlist,
     toggleWishlist,
     isInWishlist,
-    loadWishlist,
   }
 }
