@@ -465,7 +465,7 @@ export default function PropertyDetailClient({
                 <AnimatePresence mode="wait">
                   <motion.iframe
                     key={currentVideoIndex}
-                    src={property.virtualTourLink.split("#")[currentVideoIndex]}
+                    src={property.virtualTourLink.split("#VIDEO#")[currentVideoIndex]}
                     className="w-full h-full"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -478,7 +478,7 @@ export default function PropertyDetailClient({
                 </AnimatePresence>
 
                 {/* Navigation Arrows */}
-                {property.virtualTourLink.split("#").length > 1 && (
+                {property.virtualTourLink.split("#VIDEO#").length > 1 && (
                   <>
                     <Button
                       onClick={prevVideo}
@@ -500,9 +500,9 @@ export default function PropertyDetailClient({
                 )}
 
                 {/* Video Counter */}
-                {property.virtualTourLink.split("#").length > 1 && (
+                {property.virtualTourLink.split("#VIDEO#").length > 1 && (
                   <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                    {currentVideoIndex + 1} / {property.virtualTourLink.split("#").length}
+                    {currentVideoIndex + 1} / {property.virtualTourLink.split("#VIDEO#").length}
                   </div>
                 )}
 
@@ -519,7 +519,7 @@ export default function PropertyDetailClient({
               </div>
 
               {/* Video Thumbnail Strip */}
-              {property.virtualTourLink.split("#").length > 1 && (
+              {property.virtualTourLink.split("#VIDEO#").length > 1 && (
                 <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
                   {property.virtualTourLink.split("#VIDEO#").map((video, index) => (
                     <button
@@ -566,7 +566,7 @@ export default function PropertyDetailClient({
               </Button>
 
               {/* Video Navigation in Modal */}
-              {property.virtualTourLink.split("#").length > 1 && (
+              {property.virtualTourLink.split("#VIDEO#").length > 1 && (
                 <>
                   <Button
                     onClick={prevVideo}
@@ -585,13 +585,13 @@ export default function PropertyDetailClient({
                     <ChevronRight className="w-6 h-6" />
                   </Button>
                   <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm z-10">
-                    {currentVideoIndex + 1} / {property.virtualTourLink.split("#").length}
+                    {currentVideoIndex + 1} / {property.virtualTourLink.split("#VIDEO#").length}
                   </div>
                 </>
               )}
 
               <iframe
-                src={property.virtualTourLink.split("#")[currentVideoIndex]}
+                src={property.virtualTourLink.split("#VIDEO#")[currentVideoIndex]}
                 className="w-full h-full"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
