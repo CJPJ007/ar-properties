@@ -18,6 +18,7 @@ import { Slider } from "@/components/slider"
 import PropertyCard from "@/components/property-card"
 import { useTranslations } from "next-intl"
 import { useWishlist } from "@/hooks/user-wishlist"
+import StatsSection from "@/components/stats-section"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -258,6 +259,8 @@ export default function HomePage() {
           </motion.div>
         )}
       </motion.div>
+
+      <StatsSection />
 
       
       {/* Featured Properties */}
