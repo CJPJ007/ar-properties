@@ -173,7 +173,7 @@ const {data:session} = useSession();
 
           <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-4">
             <MapPin className="w-4 h-4" />
-            <span>{property.location}</span>
+            <Link href={property.googleMapsUrl?property.googleMapsUrl:""} target="_blank"><span>{property.location}</span></Link>
           </div>
 
           <div className="flex gap-2">

@@ -1,0 +1,127 @@
+Pages and Their API Calls
+1. Home Page
+File: app/[locale]/page.tsx
+APIs Called:
+/api/properties/featured → Backend: /api/public/featuredProperties
+/api/testimonials (POST) → Backend: /api/public/advancedSearch/Testimonial
+/api/properties/search?q=... → Backend: /api/public/advancedSearch/Property
+/api/properties?sortBy=... (POST) → Backend: /api/public/advancedSearch/Property
+Notes: Uses Next.js API routes as proxies to backend.
+2. Properties Listing Page
+File: app/[locale]/properties/page.tsx
+APIs Called:
+/api/properties (POST) → Backend: /api/public/advancedSearch/Property
+/api/properties/search?q=... → Backend: /api/public/advancedSearch/Property
+Notes: Filtering, sorting, and searching all go through Next.js API routes.
+3. Property Detail Page
+File: app/[locale]/properties/[id]/property-detail-client.tsx
+APIs Called:
+/api/viewProperty (POST) → Backend: /api/public/viewProperty
+Notes: Logs property views via API route.
+4. Wishlist Page
+File: app/[locale]/wishlist/page.tsx
+APIs Called:
+/api/wishlistSearch (POST) → Backend: /api/public/advancedSearch/Wishlist
+/api/wishlist (POST/DELETE) → Backend: /api/public/wishlist
+Notes: Uses API routes for wishlist CRUD.
+5. Profile Page
+File: app/[locale]/profile/page.tsx
+APIs Called:
+/api/user/inquiries (POST) → Backend: /api/public/advancedSearch/Inquiries
+/api/site-visits (POST) → Backend: /api/public/advancedSearch/Inquiries
+/api/user/site-visits (GET) → (Mock, replace with backend)
+/api/user/profile (GET/PUT) → (Mock, replace with backend)
+/api/referrals (POST) → Backend: /api/public/advancedSearch/Referral
+/api/referrals/create (POST) → Backend: /api/public/referrals/
+/api/user/referrals/stats (GET) → Backend: /api/public/referrals/stats
+/api/wishlist (POST/DELETE) → Backend: /api/public/wishlist
+Notes: Uses multiple API routes for user data, referrals, and wishlist.
+6. About Page
+File: app/[locale]/about/page.tsx
+APIs Called:
+/api/public/company-details/about-us → Backend: /api/public/company-details/about-us
+/api/public/company-details/team-members → Backend: /api/public/company-details/team-members
+/api/public/company-details/company-values → Backend: /api/public/company-details/company-values
+Notes: Calls backend directly from client.
+7. Services Page
+File: app/[locale]/services/page.tsx
+APIs Called:
+/api/public/company-details/services → Backend: /api/public/company-details/services
+Notes: Calls backend directly from client.
+8. Contact Page
+File: app/[locale]/contact/page.tsx
+APIs Called:
+No direct API calls, but uses company details hook.
+9. Terms Page
+File: app/[locale]/terms/page.tsx
+APIs Called:
+/api/public/company-details/legal-content → Backend: /api/public/company-details/legal-content
+Notes: Calls backend directly from client.
+10. Privacy Page
+File: app/[locale]/privacy/page.tsx
+APIs Called:
+/api/public/company-details/legal-content → Backend: /api/public/company-details/legal-content
+Notes: Calls backend directly from client.
+11. Blogs Page
+File: app/[locale]/blogs/page.tsx
+APIs Called:
+/api/blogs (GET) → Backend: /api/public/blogs
+Notes: Uses API route as proxy.
+12. Blog Detail Page
+File: app/[locale]/blogs/[slug]/page.tsx
+APIs Called:
+/api/blogs/[slug] (GET) → Backend: /api/public/blogs/[slug]
+Notes: Uses API route as proxy.
+13. Gallery Page
+File: app/[locale]/gallery/page.tsx
+APIs Called:
+/api/galleryItems (GET) → Backend: /api/public/galleryItems
+Notes: Uses API route as proxy.
+14. Delete Account Page
+File: app/[locale]/delete-account/page.tsx
+APIs Called:
+/api/deleteAccount/[email] (DELETE) → Backend: (should be /api/public/deleteAccount/[email] or similar)
+Notes: Uses API route as proxy.
+15. Authentication Pages
+Files:
+app/[locale]/auth/login/page.tsx
+app/[locale]/auth/callback/page.tsx
+APIs Called:
+/api/auth/send-otp (POST) → Backend: /api/auth/send-otp
+/api/auth/verify-otp (POST) → Backend: /api/auth/verify-otp
+/api/auth/verify-firebase-token (POST) → Backend: /api/auth/verify-firebase-token
+/api/referrals/create (POST) → Backend: /api/public/referrals/
+Notes: Uses API routes as proxies for authentication and referral.
+API Route Handlers and Their Backend Mappings
+API Route File	Frontend Route	Backend API Called
+route.ts	/api/properties	/api/public/advancedSearch/Property
+route.ts	/api/properties/featured	/api/public/featuredProperties
+route.ts	/api/properties/search	/api/public/advancedSearch/Property
+app/api/properties/[slug]/route.ts	/api/properties/[slug]	/api/public/advancedSearch/Property
+route.ts	/api/inquiries	/api/public/createInquiry
+route.ts	/api/wishlist	/api/public/wishlist
+route.ts	/api/wishlistSearch	/api/public/advancedSearch/Wishlist
+route.ts	/api/user/inquiries	/api/public/advancedSearch/Inquiries
+route.ts	/api/user/site-visits	(Mock, replace with backend)
+route.ts	/api/user/profile	(Mock, replace with backend)
+route.ts	/api/referrals	/api/public/advancedSearch/Referral
+route.ts	/api/referrals/create	/api/public/referrals/
+route.ts	/api/notifications	/api/public/recentNotifications
+route.ts	/api/blogs	/api/public/blogs
+app/api/blogs/[slug]/route.ts	/api/blogs/[slug]	/api/public/blogs/[slug]
+route.ts	/api/testimonials	/api/public/advancedSearch/Testimonial
+route.ts	/api/testimonial	/api/public/testimonial/create/
+route.ts	/api/viewProperty	/api/public/viewProperty
+route.ts	/api/galleryItems	/api/public/galleryItems
+route.ts	/api/faqs	/api/public/faqs
+route.ts	/api/company-details	/api/public/company-details/company-info
+app/api/deleteAccount/[email]/route.ts	/api/deleteAccount/[email]	(Should map to backend delete account endpoint)
+route.ts	/api/auth/send-otp	/api/auth/send-otp
+route.ts	/api/auth/verify-otp	/api/auth/verify-otp
+route.ts	/api/auth/verify-firebase-token	/api/auth/verify-firebase-token
+route.ts	/api/auth/upload-avatar	(Backend upload endpoint)
+Notes
+Direct Backend Calls: Some pages (like About, Services, Terms, Privacy) call backend APIs directly from the client, not via /api routes.
+API Route Proxies: Most data-fetching in pages is routed through /api handlers, which then proxy to backend APIs.
+Authentication: Auth-related pages use /api/auth/* routes, which proxy to backend endpoints for OTP and Firebase verification.
+Mock Data: Some /api/user/* routes return mock data and should be replaced with real backend calls.

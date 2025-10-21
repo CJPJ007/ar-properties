@@ -288,7 +288,7 @@ export default function PropertyDetailClient({
                     </h1>
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300 mb-4">
                       <MapPin className="w-5 h-5" />
-                      <span className="text-lg">{property.location}</span>
+                      <Link href={property.googleMapsUrl?property.googleMapsUrl:""} target="_blank"><span className="text-lg">{property.location}</span></Link>
                     </div>
                   </div>
                   <div className="text-right">
